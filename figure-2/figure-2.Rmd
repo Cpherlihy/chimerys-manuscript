@@ -1,0 +1,259 @@
+---
+title: "figure 2 applications"
+author: "MSAID"
+date: "Current version `r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+
+#set figure dimensions and project path
+knitr::opts_chunk$set(dpi=92, fig.dim=c(10,5))
+path <- "figure-2"
+
+#source libraries and functions
+source("scripts/load-dependencies.R")
+
+dataPath <- "/mnt/paper/01_paper/figures/plotting/figure-2"
+msaid_SE <- c("Sequest HT" = msaid_orange,
+              "MSFragger" = msaid_green,
+              "CHIMERYS" = msaid_blue,
+              "CHIMERYS\ntop 15 peaks" = msaid_lightblue)
+
+```
+
+# Data
+
+## Gradient
+
+```{r}
+
+data_gradient <- fread(file.path(dataPath, "Gradient_withMF.csv"))
+data_gradient[, condition_SE := factor(gsub("^.*_(.)$", "\\1", studies),
+                                       levels = c("S", "M", "C"),
+                                       labels = c("Sequest HT", "MSFragger", "CHIMERYS"))]
+data_gradient[, condition_gradient := factor(gsub("^(.*)_.$", "\\1", studies),
+                                       levels = c("015min", "030min", "060min", "090min", "120min"),
+                                       labels = c("15", "30", "60", "90", "120"))]
+
+#upset_margin <- median(nchar(count_total[, as.character(group)]))
+#upset_margin <- nchar("CHIMERYS")
+#axis.title.x = element_text(margin = margin(t = -2*upset_margin, unit = "pt"))
+
+p_gradient_psm <- ggplot(data_gradient[!is.na(psms_FDR)],
+                         aes(x=condition_gradient, y=psms_FDR, fill=condition_SE)) +
+  geom_bar(stat = "summary", fun = mean, position = "dodge") +
+  geom_jitter(shape = 1L, position = position_jitterdodge(0.1, 0, 0.9), show.legend = F) +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
+  scale_fill_manual(NULL, values = msaid_SE) +
+  xlab("Gradient\nlength [min]") + ylab("PSMs") +
+  theme(legend.position = "none") +
+  theme_tilt_xaxis(90, T)
+
+p_gradient_pep <- ggplot(data_gradient[!is.na(peptideGroups_FDR)],
+                         aes(x=condition_gradient, y=peptideGroups_FDR, fill=condition_SE)) +
+  geom_bar(stat = "summary", fun = mean, position = "dodge") +
+  geom_jitter(shape = 1L, position = position_jitterdodge(0.1, 0, 0.9)) +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
+  scale_fill_manual(NULL, values = msaid_SE) +
+  xlab("Gradient\nlength [min]") + ylab("Peptide groups") +
+  theme(legend.position = "none") +
+  theme_tilt_xaxis(90, T)
+
+p_gradient_prot <- ggplot(data_gradient[!is.na(proteinGroups_FDR)],
+                          aes(x=condition_gradient, y=proteinGroups_FDR, fill=condition_SE)) +
+  geom_bar(stat = "summary", fun = mean, position = "dodge") +
+  geom_jitter(shape = 1L, position = position_jitterdodge(0.1, 0, 0.9)) +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
+  scale_fill_manual(NULL, values = msaid_SE) +
+  xlab("Gradient\nlength [min]") + ylab("Protein groups") +
+  theme(legend.position = "none") +
+  theme_tilt_xaxis(90, T)
+
+```
+
+## OTIT CID
+
+```{r}
+
+data_OTITCID <- fread(file.path(dataPath, "CID_withMF.csv"))
+data_OTITCID[, condition_SE := factor(studies,
+                                      levels = c("S", "M", "C", "C_Top15"),
+                                      labels = c("Sequest HT", "MSFragger",
+                                                 "CHIMERYS", "CHIMERYS\ntop 15 peaks"))]
+
+p_iontrap_psm <- ggplot(data_OTITCID[!is.na(psms_FDR)],
+                        aes(x=condition_SE, y=psms_FDR, fill=condition_SE)) +
+  geom_bar(stat = "summary", fun = mean, position = "dodge") +
+  geom_point(shape = 1L, show.legend = F) +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
+  scale_fill_manual(NULL, values = msaid_SE) +
+  xlab(NULL) + ylab("PSMs") + theme(legend.position = "none") +
+  theme_tilt_xaxis(90, T)
+
+p_iontrap_pep <- ggplot(data_OTITCID[!is.na(peptideGroups_FDR)],
+                        aes(x=condition_SE, y=peptideGroups_FDR, fill=condition_SE)) +
+  geom_bar(stat = "summary", fun = mean, position = "dodge") +
+  geom_point(shape = 1L) +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
+  scale_fill_manual(NULL, values = msaid_SE) +
+  xlab(NULL) + ylab("Peptide groups") + theme(legend.position = "none") +
+  theme_tilt_xaxis(90, T)
+
+p_iontrap_prot <- ggplot(data_OTITCID[!is.na(proteinGroups_FDR)],
+                         aes(x=condition_SE, y=proteinGroups_FDR, fill=condition_SE)) +
+  geom_bar(stat = "summary", fun = mean, position = "dodge") +
+  geom_point(shape = 1L) +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
+  scale_fill_manual(NULL, values = msaid_SE) +
+  xlab(NULL) + ylab("Protein groups") + theme(legend.position = "none") +
+  theme_tilt_xaxis(90, T)
+
+seq_psm <- data_OTITCID[condition_SE=="Sequest HT", psms_FDR]
+data_OTITCID[, .(condition_SE, round((psms_FDR-seq_psm)/seq_psm, 2))]
+
+seq_pep <- data_OTITCID[condition_SE=="Sequest HT", peptideGroups_FDR]
+data_OTITCID[, .(condition_SE, round((peptideGroups_FDR-seq_pep)/seq_pep, 2))]
+
+seq_prot <- data_OTITCID[condition_SE=="Sequest HT", proteinGroups_FDR]
+data_OTITCID[, .(condition_SE, round((proteinGroups_FDR-seq_prot)/seq_prot, 2))]
+
+```
+
+## MS Instruments
+
+```{r}
+
+data_MS <- fread(file.path(dataPath, "Instruments_withMF.csv"))
+data_MS[, condition_SE := factor(gsub("^.*_(.)$", "\\1", studies),
+                                 levels = c("S", "M", "C"),
+                                 labels = c("Sequest HT", "MSFragger", "CHIMERYS"))]
+MS_labels <- c("Orbitrap\nVelos", "Orbitrap\nElite",
+               "Q Exactive", "Q Exactive\nHF",
+               "Orbitrap\nFusion\nLumos", "Orbitrap\nExploris\n480")
+data_MS[, condition_MS := factor(gsub("^._(.*)_.$", "\\1", studies),
+                                 levels = c("Velos", "Elite", "QE", "HF", "Lumos", "Exploris"),
+                                 labels = MS_labels)]
+
+p_instruments_pep <- ggplot(data_MS[!is.na(psms_FDR)],
+                            aes(x=condition_MS, y=psms_FDR, fill=condition_SE)) +
+  geom_bar(stat = "summary", fun = mean, position = "dodge") +
+  geom_jitter(shape = 1L, position = position_jitterdodge(0.1, 0, 0.9)) +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
+  scale_fill_manual(NULL, values = msaid_SE) +
+  xlab(NULL) + ylab("PSMs") + theme(legend.position = "none")
+  #theme_tilt_xaxis(90, T)
+
+```
+
+## Isolation Window
+
+```{r}
+
+data_IW_C <- fread(file.path(dataPath, "wwDDA_60min_C.csv"))
+data_IW_S <- fread(file.path(dataPath, "wwDDA_60min_S.csv"))
+data_IW_M <- fread(file.path(dataPath, "wwDDA_60min_M.csv"))
+
+data_IW <- rbind(cbind(condition_SE = "Sequest HT", data_IW_S),
+                 cbind(condition_SE = "MSFragger", data_IW_M),
+                 cbind(condition_SE = "CHIMERYS", data_IW_C),
+                 fill=T)
+
+data_IW[, condition_SE := factor(condition_SE,
+                                 levels = c("Sequest HT", "MSFragger", "CHIMERYS"))]
+
+IW_levels <- c("1.4", "3.4", "6.4", "8.4", "10.4", "12.4", "15.4", "20.4")
+data_IW[, condition_IW := factor(studies, levels = IW_levels)]
+
+p_IW_psms <- ggplot(data_IW[!is.na(psms_FDR)],
+                    aes(x=condition_IW, y=psms_FDR, group=condition_SE, color=condition_SE)) +
+  geom_line() +
+  geom_point(shape = 1L) +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
+  scale_color_manual(NULL, values = msaid_SE) +
+  xlab("Isolation window [Th]") + ylab("PSMs") + theme(legend.position = "none")
+
+p_IW_pep <- ggplot(data_IW[!is.na(peptideGroups_FDR)],
+                   aes(x=condition_IW, y=peptideGroups_FDR, group=condition_SE, color=condition_SE)) +
+  geom_line() +
+  geom_point(shape = 1L) +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
+  scale_color_manual(NULL, values = msaid_SE) +
+  xlab("Isolation window [Th]") + ylab("Peptide groups") + theme(legend.position = "none")
+
+p_IW_prot <- ggplot(data_IW[!is.na(proteinGroups_FDR)],
+                    aes(x=condition_IW, y=proteinGroups_FDR, group=condition_SE, color=condition_SE)) +
+  geom_line() +
+  geom_point(shape = 1L) +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
+  scale_color_manual(NULL, values = msaid_SE) +
+  xlab("Isolation window [Th]") + ylab("Protein groups") + theme(legend.position = "none")
+
+```
+
+## spectra per IW
+
+```{r}
+
+filePaths <- list.files(file.path(dataPath, "spectra-per-IW"), full.names = T)
+data_spectra <- foreach(i = 1:length(filePaths), .combine = rbind) %do% {
+  temp <- fread(filePaths[i])
+  return(cbind(file_name = basename(filePaths[i]), temp))
+}
+# Filter the data to exclude values equal to 0
+data_spectra <- data_spectra[`Number of PSMs`>0]
+
+IW_levels <- c(1, 3, 6, 8, 10, 12, 15, 20)
+IW_labels <- c("1.4", "3.4", "6.4", "8.4", "10.4", "12.4", "15.4", "20.4")
+data_spectra[, condition_IW := factor(gsub("^.*IW(.*)-\\(2\\).*$", "\\1", file_name),
+                                      levels = IW_levels, labels = IW_labels)]
+count_psms_levels <- c(16:1)
+count_psms_labels <- c(rep("≥7", length(count_psms_levels)-6), 6:1)
+data_spectra[, counts_PSMs := factor(`Number of PSMs`, count_psms_levels, count_psms_labels)]
+
+count_psms_labels_n <- length(unique(count_psms_labels))
+msaid_col_grad <- msaid_gradient_2b(count_psms_labels_n)[count_psms_labels_n:1]
+p_IW_spectra <- ggplot(data_spectra, aes(x=condition_IW, fill=counts_PSMs)) +
+  geom_bar() +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
+  scale_fill_manual("PSMs", values = msaid_col_grad) +
+  #theme(axis.title.x = element_text(margin = margin(t = -10, unit = "pt"))) +
+  theme(legend.position = "none") +
+  xlab("Isolation window [Th]") + ylab("MS2 spectra")
+
+```
+
+# Plot
+
+```{r}
+
+p_legend_a <-
+  ggdraw(get_plot_component(p_iontrap_psm + theme(legend.position = "top"),
+                            'guide-box-top', return_all = TRUE))
+p_legend_b <-
+  ggdraw(get_plot_component(p_IW_spectra + theme(legend.position = "top") +
+                                          guides(fill = guide_legend(ncol = 7, reverse = T)),
+                            'guide-box-top', return_all = TRUE))
+
+layout_annotation <- list(c("A", "B", "", "", "", "", "C", "", "", "D", "E", "", ""))
+layout_design <- "1112AB\nCCCDDD\nEFGHHH\nIIJJKK"
+
+p_applications <- p_instruments_pep + p_iontrap_psm + p_iontrap_pep + p_iontrap_prot +
+  p_legend_a + p_legend_b +
+  p_gradient_psm + p_gradient_pep + p_gradient_prot + p_IW_spectra +
+  p_IW_psms + p_IW_pep + p_IW_prot +
+  plot_layout(heights = c(1, 0.2, 1, 1), design = layout_design) +
+  plot_annotation(tag_levels = layout_annotation)
+
+ggsave2(file.path(path, "figure-2.pdf"), plot = p_applications,
+        width = 180, height = 120, units = "mm", device = cairo_pdf)
+ggsave2(file.path(path, "figure-2.png"), plot = p_applications,
+        width = 180, height = 120, units = "mm") #, dpi = 92
+
+```
+
