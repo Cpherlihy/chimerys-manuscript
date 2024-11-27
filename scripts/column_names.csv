@@ -1,0 +1,75 @@
+column,PTM,slow,psmToPcm,PD_psms,PD_ptmGroups,PD_proteinGroups,MaxQuant_psms,MaxQuant_pcms,MaxQuant_ptmGroups,FragPipe_psms,FragPipe_pcms,Sage,DIANN,Percolator_psms,Metamorpheus_psms,MSGFplus,PD_MSAmanda_psms,PD_MSAmanda_ptmGroups
+scan_ms1,FALSE,FALSE,,as.integer(old_MasterScanNumbers),,,old_Precursor.full.scan.number,,,,,,,,old_Precursor.Scan.Number,,as.integer(old_MasterScanNumbers),
+scan_ms2,FALSE,FALSE,,as.integer(old_FirstScan),,,old_Scan.number,old_MS.MS.scan.number,,"as.integer(gsub('^.*\\.(\\d*)\\.\\d*\\.\\d*$', '\\1', old_Spectrum))",,"as.integer(gsub('^.*scan=(\\d*)$', '\\1', old_scannr))",old_MS2.Scan,"gsub('^.*\\.(\\d*)\\.\\d*\\.\\d_\\d$', '\\1', old_PSMId)",old_Scan.Number,old_ScanNum,as.integer(old_FirstScan),
+charge,FALSE,FALSE,first,old_Charge,,,old_Charge,old_Charge,old_Charges,old_Charge,old_Charge,old_charge,old_Precursor.Charge,"gsub('^.*\\.\\d*\\.\\d*\\.(\\d)_\\d$', '\\1', old_PSMId)",old_Precursor.Charge,old_Charge,old_Charge,
+peptide,FALSE,FALSE,first,old_Sequence,old_Sequence,,old_Sequence,old_Sequence,old_Sequence,old_Peptide,old_Peptide.Sequence,"gsub('-{0,1}\\[[^]]*\\]-{0,1}', '', old_peptide)",old_Stripped.Sequence,"gsub('\\[[^[]*\\]', '', gsub('^.\\.n{0,1}(.*)\\..$', '\\1', old_peptide))",old_Base.Sequence,"gsub('\\+\\d*\\.\\d*', '', substr(old_Peptide, 3, nchar(old_Peptide)-2))",old_Sequence,old_Sequence
+peptide_id,FALSE,FALSE,,old_PeptideID,old_PeptideGroupID,,,,,,,,,,,,old_PeptideID,old_PeptideGroupID
+peptide_unambiguous,FALSE,FALSE,first,old_UniqueSequence,,,,,,,,,,,,,,
+peptide_unambiguous_id,FALSE,FALSE,,old_UniqueSequenceID,old_UniqueSequenceID,,,,,,,,,,,,old_UniqueSequenceID,old_UniqueSequenceID
+ptm_group,FALSE,FALSE,,,ptm_group,,,,old_ptm_group,,,,,,,,,ptm_group
+ptm_group_J,FALSE,FALSE,,,"gsub('(I|L)', 'J', ptm_group)",,,,"gsub('(I|L)', 'J', ptm_group)",,,,,,,,,"gsub('(I|L)', 'J', ptm_group)"
+ptm_group_id,FALSE,FALSE,,,old_PeptideGroupID,,,,,,,,,,,,,old_PeptideGroupID
+ptm,FALSE,FALSE,first,"parsePtmUnimod(mapply(modSeqPdPsm, modifications=old_Modifications[1], sequence=old_Sequence[1]), 'PD'), by = .(old_Modifications, old_Sequence)",,,"parsePtmUnimod(old_Modified.sequence, 'MaxQuant')","parsePtmUnimod(old_Modified.sequence, 'MaxQuant')",,"ifelse(old_Modified.Peptide=='', old_Peptide, parsePtmUnimod(old_Modified.Peptide, 'MSFragger'))","ifelse(old_Modified.Sequence=='', old_Peptide.Sequence, parsePtmUnimod(old_Modified.Sequence, 'MSFragger'))","parsePtmUnimod(old_peptide, 'Sage')","parsePtmUnimod(old_Modified.Sequence, 'DIANN')","parsePtmUnimod(old_peptide, 'Percolator_FragPipe')","parsePtmUnimod(old_Full.Sequence, 'Metamorpheus')","parsePtmUnimod(old_Peptide, 'MSGFplus')","parsePtmUnimod(gsub('(^|\\.)\\[[A-Z-]*\\](\\.|$)', '', old_ModifiedSequence), 'PD')",
+ptm_J,FALSE,FALSE,first,"gsub('(I|L)', 'J', ptm)",,,"gsub('(I|L)', 'J', ptm)","gsub('(I|L)', 'J', ptm)",,"gsub('(I|L)', 'J', ptm)","gsub('(I|L)', 'J', ptm)","gsub('(I|L)', 'J', ptm)","gsub('(I|L)', 'J', ptm)","gsub('(I|L)', 'J', ptm)","gsub('(I|L)', 'J', ptm)","gsub('(I|L)', 'J', ptm)","gsub('(I|L)', 'J', ptm)",
+pcm,FALSE,FALSE,,"paste(ptm, charge, sep='_')",,,"paste(ptm, charge, sep='_')","paste(ptm, charge, sep='_')",,"paste(ptm, charge, sep='_')","paste(ptm, charge, sep='_')","paste(ptm, charge, sep='_')","paste(ptm, charge, sep='_')","paste(ptm, charge, sep='_')","paste(ptm, charge, sep='_')","paste(ptm, charge, sep='_')","paste(ptm, charge, sep='_')",
+pcm_J,FALSE,FALSE,,"gsub('(I|L)', 'J', pcm)",,,"gsub('(I|L)', 'J', pcm)","gsub('(I|L)', 'J', pcm)",,"gsub('(I|L)', 'J', pcm)","gsub('(I|L)', 'J', pcm)","gsub('(I|L)', 'J', pcm)","gsub('(I|L)', 'J', pcm)","gsub('(I|L)', 'J', pcm)","gsub('(I|L)', 'J', pcm)","gsub('(I|L)', 'J', pcm)","gsub('(I|L)', 'J', pcm)",
+psm,FALSE,FALSE,,"paste(pcm, scan_ms2, raw_number, sep='_')",,,"paste(pcm, scan_ms2, raw_number, sep='_')",,,"paste(pcm, scan_ms2, raw_number, sep='_')",,"paste(pcm, scan_ms2, raw_number, sep='_')",,"paste(pcm, scan_ms2, raw_number, sep='_')","paste(pcm, scan_ms2, raw_number, sep='_')","paste(pcm, scan_ms2, raw_number, sep='_')","paste(pcm, scan_ms2, raw_number, sep='_')",
+psm_J,FALSE,FALSE,,"gsub('(I|L)', 'J', psm)",,,"gsub('(I|L)', 'J', psm)",,,"gsub('(I|L)', 'J', psm)",,"gsub('(I|L)', 'J', psm)",,"gsub('(I|L)', 'J', psm)","gsub('(I|L)', 'J', psm)","gsub('(I|L)', 'J', psm)","gsub('(I|L)', 'J', psm)",
+psm_id,FALSE,FALSE,,,,,,,,,,,,,,,,
+psm_rank,FALSE,FALSE,,,,,"ifelse(old_Type=='MULTI-SECPEP', 2L, 1L)","ifelse(old_Type=='MULTI-SECPEP', 2L, 1L)",,,,old_rank,,,,,,
+modifications,FALSE,FALSE,first,old_Modifications,modifications,,old_Modifications,old_Modifications,,old_Assigned.Modifications,old_Assigned.Modifications,,,,old_Mods,,old_Modifications,modifications
+proteins,FALSE,FALSE,first,"gsub('; ', ';', old_ParentProteinAccessions, fixed = T)","gsub('; ', ';', old_ParentProteinAccessions, fixed = T)",,,old_Proteins,old_Proteins,"ifelse(old_Mapped.Proteins[1]=='', old_Protein.ID[1], paste(old_Protein.ID[1], gsub(',', ';', gsub('\\s{0,1}[A-Za-z]*\\|([A-Z0-9]*)\\|[^,]*', '\\1', old_Mapped.Proteins[1]), fixed = T), sep = ';')), by = c('old_Protein.ID', 'old_Mapped.Proteins')","ifelse(old_Mapped.Proteins[1]=='', old_Protein.ID[1], paste(old_Protein.ID[1], gsub(',', ';', gsub('\\s{0,1}[A-Za-z]*\\|([A-Z0-9]*)\\|[^,]*', '\\1', old_Mapped.Proteins[1]), fixed = T), sep = ';')), by = c('old_Protein.ID', 'old_Mapped.Proteins')",,old_Protein.Ids,,,,"gsub('; ', ';', old_ParentProteinAccessions, fixed = T)","gsub('; ', ';', old_ParentProteinAccessions, fixed = T)"
+protein_group,FALSE,FALSE,first,"gsub('; ', ';', old_MasterProteinAccessions, fixed = T)","gsub('; ', ';', old_MasterProteinAccessions, fixed = T)",,old_Proteins,old_Leading.proteins,,old_Protein.ID,old_Protein.ID,"sapply(old_proteins[1], function(x) paste(gsub('^.*\\|(.*)\\|.*$', '\\1', strsplit(x, ';')[[1]]), collapse=';')), by = old_proteins",old_Protein.Group,old_proteinIds,"gsub('|', ';', old_Protein.Accession, fixed = T)","gsub('^.*\\|(.*)\\|.*$', '\\1', old_Protein)","gsub('; ', ';', old_MasterProteinAccessions, fixed = T)","gsub('; ', ';', old_MasterProteinAccessions, fixed = T)"
+protein,FALSE,FALSE,first,,,old_Accession,,old_Leading.razor.protein,,old_Protein.ID,old_Protein.ID,,,,,,,
+protein_id,FALSE,FALSE,,,,old_UniqueSequenceID,,,,,,,,,,,,
+genes,FALSE,TRUE,first,"mapFastaHeader(old_ParentProteinDescriptions[1], 'GN=', sortUnique = F), by = old_ParentProteinDescriptions","mapFastaHeader(old_MasterProteinDescriptions[1], 'GN=', sortUnique = F), by = old_MasterProteinDescriptions","mapFastaHeader(old_FastaTitleLines[1], 'GN=', sortUnique = F), by = old_FastaTitleLines",old_Gene.Names,old_Gene.names,old_Gene.Names,"ifelse(old_Mapped.Genes[1]=='', old_Gene[1], paste(old_Gene[1], gsub(', ', ';', old_Mapped.Genes[1]), sep=';')), by = old_Gene","ifelse(old_Mapped.Genes[1]=='', old_Gene[1], paste(old_Gene[1], gsub(', ', ';', old_Mapped.Genes[1]), sep=';')), by = old_Gene",,old_Genes,,"gsub('primary:', '', old_Gene.Name, fixed = T)",,"mapFastaHeader(old_ParentProteinDescriptions[1], 'GN=', sortUnique = F), by = old_ParentProteinDescriptions","mapFastaHeader(old_MasterProteinDescriptions[1], 'GN=', sortUnique = F), by = old_MasterProteinDescriptions"
+gene,FALSE,FALSE,first,,,,,,,old_Gene,old_Gene,,,,,,,
+organism,FALSE,TRUE,first,"factor(mapFastaHeader(old_ParentProteinDescriptions[1], 'OS=')), by = old_ParentProteinDescriptions","factor(mapFastaHeader(old_MasterProteinDescriptions[1], 'OS=')), by = old_MasterProteinDescriptions","factor(mapFastaHeader(old_FastaTitleLines[1], 'OS=')), by = old_FastaTitleLines",,,,"factor(gsub('^.*\\|.*\\|.*_(.*)$', '\\L\\1', old_Protein[1], perl=T)), by = old_Protein",,,,,factor(old_Organism.Name),,"factor(mapFastaHeader(old_ParentProteinDescriptions[1], 'OS=')), by = old_ParentProteinDescriptions","factor(mapFastaHeader(old_MasterProteinDescriptions[1], 'OS=')), by = old_MasterProteinDescriptions"
+missed_cleavages,FALSE,FALSE,first,,,,,,,old_Number.of.Missed.Cleavages,,as.integer(old_missed_cleavages),,,old_Missed.Cleavages,,,
+protein_coverage,FALSE,FALSE,,,,old_Coverage,,,,,,,,,,,,
+protein_length,FALSE,FALSE,,,,old_NumberOfAminoAcids,,,,,,,,,,,,
+protein_weight,FALSE,FALSE,,,,old_MolecularWeight,,,,,,,,,,,,
+is_decoy,FALSE,FALSE,first,old_is_decoy,old_is_decoy,old_is_decoy,old_Reverse=='+',old_Reverse=='+',,,,old_label<0,is_decoy,,old_Decoy=='Y',"grepl('^XXX_.*$', old_Protein)",old_is_decoy,
+is_il_ambiguous,FALSE,FALSE,first,as.logical(old_ILAmbiguity),,,,,,,,,,,,,,
+is_master_protein,FALSE,FALSE,,,,old_IsMasterProtein==0,,,,,,,,,,,,
+retention_time,FALSE,FALSE,,old_RetentionTime,"sapply(old_RTminbySearchEngine, convertBlobAsDoublePd)",,old_Retention.time,old_Retention.time,old_Retention.time,old_Retention,,old_rt,old_RT,,old_Scan.Retention.Time,old_ScanTime.Min.,old_RetentionTime,"sapply(old_RTminbySearchEngine, convertBlobAsDoublePd)"
+retention_time_start,FALSE,FALSE,,,,,,,,,,,old_RT.Start,,,,,
+retention_time_stop,FALSE,FALSE,,,,,,,,,,,old_RT.Stop,,,,,
+retention_time_indexed,FALSE,FALSE,,,,,,,,,,,old_iRT,,,,,
+retention_time_predicted,FALSE,FALSE,,old_PredictedRTmin,,,,,,,,,,,,,,
+nce,FALSE,FALSE,,old_IDNCE,,,,,,,,,,,,,,
+mz_ratio,FALSE,FALSE,first,old_MassOverCharge,"sapply(old_mzDabySearchEngine, convertBlobAsDoublePd)",,old_m.z,old_m.z,,old_Observed.M.Z,old_M.Z,(old_expmass+old_charge-1)/old_charge,,,old_Precursor.MZ,,old_MassOverCharge,"sapply(old_mzDabySearchEngine, convertBlobAsDoublePd)"
+mz_ms1_ppm,FALSE,FALSE,,,,,,,,,,old_precursor_ppm,,,,,,
+mz_ms2_ppm,FALSE,FALSE,,,,,,,,,,old_fragment_ppm,,,,,,
+intensity,FALSE,FALSE,max,,log2(intensity),log2(intensity),log2(old_Precursor.Intensity),log2(old_Intensity),log2(old_Intensity),"ifelse(old_Intensity==0, NA, log2(old_Intensity))","ifelse(old_Intensity==0, NA, log2(old_Intensity))",log2(old_ms1_intensity),"ifelse(old_Precursor.Normalised==0, NA, log2(old_Precursor.Normalised))",,,,log2(old_PrecursorAbundance),log2(intensity)
+intensity_ms1,FALSE,FALSE,max,log2(old_PrecursorAbundance),,,log2(old_Precursor.Intensity),log2(old_Intensity),log2(old_Intensity),"ifelse(old_Intensity==0, NA, log2(old_Intensity))","ifelse(old_Intensity==0, NA, log2(old_Intensity))",log2(old_ms1_intensity),"ifelse(old_Ms1.Translated==0, NA, log2(old_Ms1.Translated))",,,,log2(old_PrecursorAbundance),
+intensity_ms2,FALSE,FALSE,max,log2(old_QuanValue),,,,,,,,log2(old_ms2_intensity),"ifelse(old_Precursor.Normalised==0, NA, log2(old_Precursor.Normalised))",,,,,
+intensity_normalized,FALSE,FALSE,max,,log2(intensity_normalized),log2(intensity_normalized),,,,,,,,,,,,
+psm_count,FALSE,FALSE,,,old_PsmCount,old_PsmCount,,old_MS.MS.count,,,old_Spectral.Count,,,,,,,old_PsmCount
+peptide_count,FALSE,FALSE,,,,old_GroupUniquePeptidesCount,,,,,,,,,,,,
+qvalue_psm,FALSE,FALSE,min,old_qValue,,,,,,,,old_spectrum_q,,old_q.value,old_QValue,old_QValue,old_PercolatorqValue,
+qvalue_pcm,FALSE,FALSE,,,,,,,,,,,old_Q.Value,,,,,
+qvalue_pcm_global,FALSE,FALSE,,,,,,,,,,,old_Global.Q.Value,,,,,
+qvalue_ptm_group,FALSE,FALSE,,,old_qValue,,,,,,,,,,,,,old_Qvalityqvalue
+qvalue_peptide,FALSE,FALSE,,,,,,,,,,old_peptide_q,,,,old_PepQValue,,
+qvalue_protein,FALSE,FALSE,,,,old_qvalue_protein,,,,,,,old_Protein.Q.Value,,,,,
+qvalue_protein_label,FALSE,FALSE,,,,old_qvalue_protein_label,,,,,,,,,,,,
+qvalue_protein_group,FALSE,FALSE,,,,,,,,,,old_protein_q,old_PG.Q.Value,,,,,
+qvalue_protein_group_global,FALSE,FALSE,,,,,,,,,,,old_Global.PG.Q.Value,,,,,
+qvalue_gene_group,FALSE,FALSE,,,,,,,,,,,old_GG.Q.Value,,,,,
+qvalue_library,FALSE,FALSE,,,,,,,,,,,old_Lib.Q.Value,,,,,
+qvalue_site,FALSE,FALSE,,,,,,,,,,,,,,,,
+score_coefficient,FALSE,FALSE,,old_CHIMERYSIonCoefficient,,,,,,,,,,,,,,
+score_coefficient_normalized,FALSE,FALSE,,old_NormalizedCHIMERYSCoefficient,,,,,,,,,,,,,,
+score_coefficient_lasso,FALSE,FALSE,,old_MS8_feature_7,,,,,,,,,,,,,,
+score_spectral_similarity,FALSE,FALSE,max,,,,,,,old_SpectralSim,,,,,old_Normalized.Spectral.Angle,,,
+score_svm,FALSE,FALSE,max,old_SVMScore,old_SVMScore,,,,,,,old_sage_discriminant_score,,old_score,,,old_PercolatorSVMScore,old_SVM_Score
+score_hyper,FALSE,FALSE,max,,,,,,,old_Hyperscore,,old_hyperscore,,,old_Score,,,
+score_delta_hyper,FALSE,FALSE,max,,,,,,,old_Nextscore,,old_delta_next,,,old_Delta.Score,,,
+score_andromeda,FALSE,FALSE,max,,,,old_Score,old_Score,,,,,,,,,,
+score_pep,FALSE,FALSE,min,old_PEP,old_PEP,,old_PEP,old_PEP,old_PEP,,,old_posterior_error,old_PEP,old_posterior_error_prob,old_PEP,,old_PercolatorPEP,old_QvalityPEP
+score_evalue,FALSE,FALSE,min,,,,,,,old_Expectation,old_Expectation,,,,,old_Evalue,,
+score_xcorr,FALSE,FALSE,max,,,,,,,,,,,,,,,
+ptm_localization,TRUE,FALSE,max,old_ptmRSIsoformConfidenceProbability,,,old_Localization.prob,,,old_STY.79.9663.Best.Localization,,,old_PTM.Site.Confidence,,,,old_ptmRSIsoformConfidenceProbability,
+ptm_probabilities,TRUE,FALSE,max,old_ptmRSBestSiteProbabilities,,,old_Phospho..STY..Probabilities,old_Phospho..STY..Probabilities,,old_STY.79.9663,,,,,,,old_ptmRSBestSiteProbabilities,
+score_ptm,TRUE,FALSE,max,old_ptmRSBinomialPeptideScore,,,,,,,,,old_PTM.Q.Value,,,,old_ptmRSBinomialPeptideScore,
