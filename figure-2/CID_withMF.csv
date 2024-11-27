@@ -1,0 +1,5 @@
+,folder_name,file_name,studies,psms_all,psms_FDR,psms_quantified_all,psms_quantified_FDR,peptideGroups_all,peptideGroups_FDR,proteins_all,proteins_FDR,proteins_FDR_min2,proteinGroups_all,proteinGroups_FDR,proteinGroups_FDR_min2
+1,Paper_F3_CID,Chimerys_FB_60min_CID_IT_iw04.pdResult,C,441821,59829,49331,42600,307384,40112,6633,5843,4213,5792,5120,4321
+2,Paper_F3_CID,Chimerys_TopN_FB_60min_CID_IT_iw04.pdResult,C_Top15,211363,66668,50524,46596,158474,43584,6990,6189,4431,6078,5390,4538
+5,Paper_F3_CID,Sequest_FB_60min_CID_IT_iw04.pdResult,S,50884,34404,29593,29173,45015,29642,5079,4653,3012,4235,3941,3100
+1,Paper_F3_CID,221021_FB_60min_CID_IT_iw04_1,M,NA,38553,NA,NA,NA,NA,NA,NA,NA,NA,4173,NA
