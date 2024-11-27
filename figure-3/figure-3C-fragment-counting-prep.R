@@ -7,9 +7,7 @@ fragmentPath <- file.path(dataPath, "figure-3/fragment-counting")
 
 ## dia-nn
 pathToTsv <- file.path(fragmentPath, "20240429_lfq_height_entrapment_peptides_report.tsv")
-#pathToTsv <- '/mnt/paper/01_paper/figures/main/5_figure_DIA/14_LFQ_Bench_Entrapment_Peptides_DIA-NN/08_lfq_height_entrapment_peptides/20240429_lfq_height_entrapment_peptides_report.tsv'
 pathToLib <- file.path(fragmentPath, "20240429_lfq_height_entrapment_peptides_report-lib.tsv")
-#pathToLib <- '/mnt/paper/01_paper/figures/main/5_figure_DIA/14_LFQ_Bench_Entrapment_Peptides_DIA-NN/08_lfq_height_entrapment_peptides/20240429_lfq_height_entrapment_peptides_report-lib.tsv'
 
 # ---- load the data ----
 diann <- fread(pathToTsv, stringsAsFactors = F, integer64 = 'double')
@@ -201,7 +199,6 @@ length(fragment_for_quant_max$pasted)
 length(fragment_for_quant_max[NotExcludedFromQuan <= 6, pasted])
 
 # ---- save data ----
-#20240516
 write.fst(fragment_quant_raw, file.path(fragmentPath, '20241127_diann_lfq_height_pepEntr_fragment_quant_raw.fst'), compress = 100)
 write.fst(fragment_quant_corrected, file.path(fragmentPath, '20241127_diann_lfq_height_pepEntr_fragment_quant_corrected.fst'), compress = 100)
 write.fst(fragment_for_quant_min, file.path(fragmentPath, '20241127_diann_lfq_height_pepEntr_minQuanFrags.fst'), compress = 100)
@@ -218,7 +215,6 @@ setnames(fragment_for_quant_max, 'NotExcludedFromQuan', 'NotExcludedFromQuanMax'
 diann <- merge(diann, fragment_for_quant_max, by = c('Precursor.Id', 'File.Name'), all.x = T)
 
 # ---- save data ----
-#20240516
 write.fst(diann, file.path(dirname(fragmentPath), '20241127_diann_lfq_height_pepEntr_fragCounts.fst'), compress = 100)
 
 ggplot(fragment_for_quant_min, aes(NotExcludedFromQuanMin)) +

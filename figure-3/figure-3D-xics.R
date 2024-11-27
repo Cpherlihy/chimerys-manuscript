@@ -5,16 +5,11 @@ path <- file.path(here::here(), "figure-3")
 xicPath <- file.path(dataPath, "figure-3/xic")
 
 # ---- pathsToData ----
-#pathToElutionCurves_cand1 <- '/mnt/paper/01_paper/figures/main/5_figure_DIA/_GLDDESGPTHGNDSGNHR_.4.tsv'
-#pathToElutionCurves_cand2 <- '/mnt/paper/01_paper/figures/main/5_figure_DIA/_TIGGGDDSFNTFFSETGAGK_.2.tsv'
 pathToExport <- file.path(xicPath, "20240829_075057_20240829_SN19_lfq_paper_entrapment_peptides_Report_height_noNorm.tsv")
-#pathToExport <- '/mnt/paper/01_paper/figures/main/5_figure_DIA/31_LFQ_Bench_Entrapment_Peptides_SN19/20240829_075057_20240829_SN19_lfq_paper_entrapment_peptides_Report_height_noNorm.tsv'
 
 # ---- load xics ----
 pathToElutionCurves_empty <- file.path(xicPath, "_GLDDESGPTHGNDSGNHR_.4.tsv")
-#pathToElutionCurves_empty <- '/mnt/paper/01_paper/figures/main/5_figure_DIA/_GLDDESGPTHGNDSGNHR_.4.tsv'
 pathToElutionCurves_good <- file.path(xicPath, "_TIGGGDDSFNTFFSETGAGK_.2.tsv")
-#pathToElutionCurves_good <- '/mnt/paper/01_paper/figures/main/5_figure_DIA/_TIGGGDDSFNTFFSETGAGK_.2.tsv'
 
 # ---- re-load intermediately saved data; including spectronaut and chimerys ----
 combined <- read.fst(file.path(dataPath, 'figure-3/20241127_figure3a_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst'), as.data.table = T)
@@ -181,7 +176,6 @@ good_xic <- merge(good_xic,
                    all.x = T)
 
 # ---- intermediate save for AH and MF ----
-#1118
 write.fst(empty_xic_info, file.path(dataPath, 'figure-3/20241127_figure3d_exampleData_emptyXic_apexQuan_pepEntr.fst'), compress = 100)
 write.fst(empty_xic, file.path(dataPath, 'figure-3/20241127_figure3d_example_emptyXic_apexQuan_pepEntr.fst'), compress = 100)
 write.fst(good_xic, file.path(dataPath, 'figure-3/20241127_figure3d_example_goodXic_apexQuan_pepEntr.fst'), compress = 100)

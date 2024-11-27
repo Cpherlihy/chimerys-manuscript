@@ -4,7 +4,6 @@ path <- file.path(here::here(), "figure-3")
 fragmentPath <- file.path(dataPath, "figure-3/fragment-counting")
 
 # ---- pathsToData ----
-#1118
 ## chimerys
 pathToPdResult <- file.path(dataPath, "figure-3/entrapment-barplot/20241127_pdresult_height_pepEntr_pcms_localPcmGrouper.fst")
 
@@ -23,7 +22,6 @@ sn19 <- read.fst(pathToSn19, as.data.table = T)
 sn19_flaggedImputation <- read.fst(pathToSn19_flaggedImputation, as.data.table = T)
 
 # ---- load diann number of fragments ----
-#0516
 diann_quanFrags <- read.fst(file.path(dataPath, 'figure-3/20241127_diann_lfq_height_pepEntr_fragCounts.fst'), as.data.table = T)
 
 # ---- diann; add number of fragments for quantification ----
@@ -133,7 +131,6 @@ length(common_pcms) # 49837
 combined[,SHARED_PCM_J_ID := ifelse(PCM_J_ID %in% common_pcms, 1, 0)]
 
 # ---- intermediate save ----
-#1118
 write.fst(combined, file.path(fragmentPath, '20241127_figure3c_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst'), compress = 100)
 
 # ---- re-read intermediately saved data ----
@@ -155,7 +152,6 @@ idFrags_combined_fdr <- unique(idFrags_combined_fdr)
 table(idFrags_combined_fdr$ID_FRAGS)
 
 # ---- intermediate save for AH ----
-#1118
 write.fst(idFrags_combined_fdr, file.path(fragmentPath, '20241127_figure3c_idFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), compress = 100)
 
 # ---- re-read intermediately saved data ----
@@ -205,7 +201,6 @@ quanFrags_combined_fdr <- unique(quanFrags_combined_fdr)
 table(quanFrags_combined_fdr$QUAN_FRAGS)
 
 # ---- intermediate save for AH ----
-#1118
 write.fst(quanFrags_combined_fdr, file.path(dirname(fragmentPath), '20241127_figure3c_quanFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), compress = 100)
 
 # ---- re-read intermediately saved data ----

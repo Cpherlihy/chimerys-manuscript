@@ -169,7 +169,6 @@ R code to generate input file
 and [figure-3C-fragment-counting.R](figure-3C-fragment-counting.R)
 
 ``` r
-#1118
 filePathQuan <- file.path(figurePath, "20241127_figure3c_quanFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst")
 dtFragQuan <- read_fst(filePathQuan, as.data.table = T)
 softwareLevels <- c("CHIMERYS", "DIA-NN", "SPECTRONAUT")
@@ -216,7 +215,6 @@ p_fragQuan <- ggplot(dtFragCount, aes(x=FRAGS, y=N, fill=isEfdr)) +
 `20241118_figure3d_example_emptyXic_apexQuan_pepEntr.fst`](figure-3D-xics.R)
 
 ``` r
-#1118
 xicGood <- read_fst(file.path(figurePath, "20241127_figure3d_example_goodXic_apexQuan_pepEntr.fst"),
                     as.data.table = T)
 IonLabelGoodLevels <- xicGood[, unique(IonLabel)]

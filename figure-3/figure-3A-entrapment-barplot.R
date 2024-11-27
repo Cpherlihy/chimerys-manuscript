@@ -7,21 +7,16 @@ entrapmentPath <- file.path(dataPath, "figure-3/entrapment-barplot")
 # ---- pathsToData ----
 ## chimerys
 pathToPdResult <- file.path(entrapmentPath, "20240503_lfq_dia_entrapment_peptides_z1to4_localPcmFdr_True.pdResult")
-#pathToPdResult <- '/mnt/paper/01_paper/figures/main/5_figure_DIA/2_LFQ_Bench_Entrapment/20240503_lfq_dia_entrapment_peptides_z1to4_localPcmFdr_True.pdResult'
 pathToMs8 <- file.path(entrapmentPath, "20240430_lfq_dia_entrapment_peptides_z1to4_Job1207/CHIMER/main_search-3.ms8")
-#pathToMs8 <- '/mnt/paper/01_paper/figures/main/5_figure_DIA/2_LFQ_Bench_Entrapment/20240430_lfq_dia_entrapment_peptides_z1to4_Job1207/CHIMER/main_search-3.ms8'
 
 ## dia-nn
 pathToTsv <- file.path(entrapmentPath, "20240429_lfq_height_entrapment_peptides_report.tsv")
-#pathToTsv <- '/mnt/paper/01_paper/figures/main/5_figure_DIA/14_LFQ_Bench_Entrapment_Peptides_DIA-NN/20240429_lfq_height_entrapment_peptides_report.tsv'
 
 ## spectronaut
 pathToExport <- file.path(entrapmentPath, "20240925_064248_20240925_SN19_lfq_paper_entrapment_paper_Report_height_noNorm.tsv")
-#pathToExport <- '/mnt/paper/01_paper/figures/main/5_figure_DIA/31_LFQ_Bench_Entrapment_Peptides_SN19/NEW/20240925_064248_20240925_SN19_lfq_paper_entrapment_paper_Report_height_noNorm.tsv'
 
 ## fastas
 pathToFasta_peptides <- file.path(dataPath, "CHIMERYS_Benchmark_human-canonical_yeast_ecoli_AND_jpr_2022_contaminants_mimic_peptides.fasta")
-#pathToFasta_peptides <- "/mnt/paper/01_paper/fasta/CHIMERYS_Benchmark_human-canonical_yeast_ecoli_AND_jpr_2022_contaminants_mimic_peptides.fasta"
 
 
 # ---- read data including short sanity checks ----
@@ -232,8 +227,6 @@ ggplot(bardata,
                      fill = factor(CONDITION_MIN2_QUAN_FDR == 2,
                                    levels = c(FALSE, TRUE)))) +
   geom_bar(position = 'stack', stat = 'identity') +
-  # scale_fill_manual(breaks = c(FALSE, TRUE),
-  #                   values = c(msaid_orange, msaid_blue)) +
   facet_wrap(.~factor(SOFTWARE,
                       levels = c('CHIMERYS',
                                  'DIA-NN',
