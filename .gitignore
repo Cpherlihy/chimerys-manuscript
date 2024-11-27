@@ -1,0 +1,15 @@
+Rplot001.pdf
+Rplots.pdf
+.Rproj.user
+*.Rproj
+*.Rhistory
+.Rproj.user
+.RData
+.Ruserdata
+
+*.fst
+*.pin
+*.RDS
+
+old-*
+*old.R

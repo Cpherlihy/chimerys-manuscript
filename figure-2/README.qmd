@@ -1,49 +1,52 @@
 ---
-title: "figure 2 applications"
+title: "Figure 2"
 author: "MSAID"
-date: "Current version `r format(Sys.time(), '%d %B, %Y')`"
-output:
-  html_document:
-    toc: TRUE
-    toc_float: TRUE
+date: "today"
+format:
+  gfm:
+    toc: true
 editor_options: 
   chunk_output_type: console
 ---
 
-```{r setup, include=FALSE}
+# Setup
 
-#set figure dimensions and project path
-knitr::opts_chunk$set(dpi=92, fig.dim=c(10,5))
-path <- "figure-2"
+This document describes how the data analysis and plots for figure 2 were generated. To recreate the figures, make sure to download all input files (available on [PRIDE](https://www.ebi.ac.uk/pride/archive?keyword=PXD053241)), place them under `dataPath` (adjust in `load-dependencies.R` to your own folder structure) and generate intermediate results in the linked `.R` scripts.
 
-#source libraries and functions
-source("scripts/load-dependencies.R")
+<details>
+<summary>Details on setup</summary>
 
-dataPath <- "/mnt/paper/01_paper/figures/plotting/figure-2"
+```{r}
+suppressMessages(source(here::here("scripts/load-dependencies.R")))
+suppressMessages(source(here::here("scripts/data-ids.R")))
 msaid_SE <- c("Sequest HT" = msaid_orange,
               "MSFragger" = msaid_green,
               "CHIMERYS" = msaid_blue,
               "CHIMERYS\ntop 15 peaks" = msaid_lightblue)
 
+path <- file.path(here::here(), "figure-2")
+figurePath <- file.path(dataPath, "figure-2")
 ```
 
+</details>
+
 # Data
+
+<details>
+<summary>Details on data processing</summary>
+
+All `.csv` input files were generated using the `readIds(...)` function reading search engine results (`.pdResult` files and MSFragger output folders).
 
 ## Gradient
 
 ```{r}
-
-data_gradient <- fread(file.path(dataPath, "Gradient_withMF.csv"))
+data_gradient <- fread(file.path(path, "Gradient_withMF.csv"))
 data_gradient[, condition_SE := factor(gsub("^.*_(.)$", "\\1", studies),
                                        levels = c("S", "M", "C"),
                                        labels = c("Sequest HT", "MSFragger", "CHIMERYS"))]
 data_gradient[, condition_gradient := factor(gsub("^(.*)_.$", "\\1", studies),
                                        levels = c("015min", "030min", "060min", "090min", "120min"),
                                        labels = c("15", "30", "60", "90", "120"))]
-
-#upset_margin <- median(nchar(count_total[, as.character(group)]))
-#upset_margin <- nchar("CHIMERYS")
-#axis.title.x = element_text(margin = margin(t = -2*upset_margin, unit = "pt"))
 
 p_gradient_psm <- ggplot(data_gradient[!is.na(psms_FDR)],
                          aes(x=condition_gradient, y=psms_FDR, fill=condition_SE)) +
@@ -74,14 +77,12 @@ p_gradient_prot <- ggplot(data_gradient[!is.na(proteinGroups_FDR)],
   xlab("Gradient\nlength [min]") + ylab("Protein groups") +
   theme(legend.position = "none") +
   theme_tilt_xaxis(90, T)
-
 ```
 
 ## OTIT CID
 
 ```{r}
-
-data_OTITCID <- fread(file.path(dataPath, "CID_withMF.csv"))
+data_OTITCID <- fread(file.path(path, "CID_withMF.csv"))
 data_OTITCID[, condition_SE := factor(studies,
                                       levels = c("S", "M", "C", "C_Top15"),
                                       labels = c("Sequest HT", "MSFragger",
@@ -122,14 +123,12 @@ data_OTITCID[, .(condition_SE, round((peptideGroups_FDR-seq_pep)/seq_pep, 2))]
 
 seq_prot <- data_OTITCID[condition_SE=="Sequest HT", proteinGroups_FDR]
 data_OTITCID[, .(condition_SE, round((proteinGroups_FDR-seq_prot)/seq_prot, 2))]
-
 ```
 
 ## MS Instruments
 
 ```{r}
-
-data_MS <- fread(file.path(dataPath, "Instruments_withMF.csv"))
+data_MS <- fread(file.path(path, "Instruments_withMF.csv"))
 data_MS[, condition_SE := factor(gsub("^.*_(.)$", "\\1", studies),
                                  levels = c("S", "M", "C"),
                                  labels = c("Sequest HT", "MSFragger", "CHIMERYS"))]
@@ -147,17 +146,14 @@ p_instruments_pep <- ggplot(data_MS[!is.na(psms_FDR)],
   scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
   scale_fill_manual(NULL, values = msaid_SE) +
   xlab(NULL) + ylab("PSMs") + theme(legend.position = "none")
-  #theme_tilt_xaxis(90, T)
-
 ```
 
 ## Isolation Window
 
 ```{r}
-
-data_IW_C <- fread(file.path(dataPath, "wwDDA_60min_C.csv"))
-data_IW_S <- fread(file.path(dataPath, "wwDDA_60min_S.csv"))
-data_IW_M <- fread(file.path(dataPath, "wwDDA_60min_M.csv"))
+data_IW_C <- fread(file.path(path, "wwDDA_60min_C.csv"))
+data_IW_S <- fread(file.path(path, "wwDDA_60min_S.csv"))
+data_IW_M <- fread(file.path(path, "wwDDA_60min_M.csv"))
 
 data_IW <- rbind(cbind(condition_SE = "Sequest HT", data_IW_S),
                  cbind(condition_SE = "MSFragger", data_IW_M),
@@ -193,45 +189,37 @@ p_IW_prot <- ggplot(data_IW[!is.na(proteinGroups_FDR)],
   scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
   scale_color_manual(NULL, values = msaid_SE) +
   xlab("Isolation window [Th]") + ylab("Protein groups") + theme(legend.position = "none")
-
 ```
 
 ## spectra per IW
 
+[R code to generate input file `spectra-per-IW.csv`](spectra-per-IW.R)
+
 ```{r}
-
-filePaths <- list.files(file.path(dataPath, "spectra-per-IW"), full.names = T)
-data_spectra <- foreach(i = 1:length(filePaths), .combine = rbind) %do% {
-  temp <- fread(filePaths[i])
-  return(cbind(file_name = basename(filePaths[i]), temp))
-}
-# Filter the data to exclude values equal to 0
-data_spectra <- data_spectra[`Number of PSMs`>0]
-
-IW_levels <- c(1, 3, 6, 8, 10, 12, 15, 20)
+count_spectra <- fread(file.path(path, "spectra-per-IW.csv"))
 IW_labels <- c("1.4", "3.4", "6.4", "8.4", "10.4", "12.4", "15.4", "20.4")
-data_spectra[, condition_IW := factor(gsub("^.*IW(.*)-\\(2\\).*$", "\\1", file_name),
-                                      levels = IW_levels, labels = IW_labels)]
-count_psms_levels <- c(16:1)
-count_psms_labels <- c(rep("≥7", length(count_psms_levels)-6), 6:1)
-data_spectra[, counts_PSMs := factor(`Number of PSMs`, count_psms_levels, count_psms_labels)]
+count_spectra[, condition_IW := factor(condition_IW, IW_labels)]
+count_psms_labels <- c("≥7", 6:1)
+count_spectra[, counts_PSMs := factor(counts_PSMs, count_psms_labels)]
 
-count_psms_labels_n <- length(unique(count_psms_labels))
+count_psms_labels_n <- count_spectra[, uniqueN(counts_PSMs)]
 msaid_col_grad <- msaid_gradient_2b(count_psms_labels_n)[count_psms_labels_n:1]
-p_IW_spectra <- ggplot(data_spectra, aes(x=condition_IW, fill=counts_PSMs)) +
-  geom_bar() +
+p_IW_spectra <- ggplot(count_spectra, aes(x=condition_IW, y=N, fill=counts_PSMs)) +
+  geom_bar(stat = "identity") +
   scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
   scale_fill_manual("PSMs", values = msaid_col_grad) +
-  #theme(axis.title.x = element_text(margin = margin(t = -10, unit = "pt"))) +
   theme(legend.position = "none") +
   xlab("Isolation window [Th]") + ylab("MS2 spectra")
-
 ```
 
-# Plot
+</details>
+
+# Figure
+
+<details>
+<summary>Details on figure generation</summary>
 
 ```{r}
-
 p_legend_a <-
   ggdraw(get_plot_component(p_iontrap_psm + theme(legend.position = "top"),
                             'guide-box-top', return_all = TRUE))
@@ -253,7 +241,9 @@ p_applications <- p_instruments_pep + p_iontrap_psm + p_iontrap_pep + p_iontrap_
 ggsave2(file.path(path, "figure-2.pdf"), plot = p_applications,
         width = 180, height = 120, units = "mm", device = cairo_pdf)
 ggsave2(file.path(path, "figure-2.png"), plot = p_applications,
-        width = 180, height = 120, units = "mm") #, dpi = 92
-
+        width = 180, height = 120, units = "mm")
 ```
 
+</details>
+
+![figure-2](figure-2.png)
