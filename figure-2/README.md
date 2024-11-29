@@ -1,6 +1,6 @@
 # Figure 2
 MSAID
-2024-11-27
+2024-11-29
 
 - [Setup](#setup)
 - [Data](#data)
@@ -35,7 +35,7 @@ msaid_SE <- c("Sequest HT" = msaid_orange,
               "CHIMERYS\ntop 15 peaks" = msaid_lightblue)
 
 path <- file.path(here::here(), "figure-2")
-figurePath <- file.path(dataPath, "figure-2")
+figurePath <- file.path(dataPath, "data/figure-2")
 ```
 
 </details>
