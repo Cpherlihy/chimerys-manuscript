@@ -1,14 +1,14 @@
 #setup
 source(here::here("scripts/load-dependencies.R"))
 path <- file.path(here::here(), "figure-1")
-densityPath <- file.path(dataPath, "figure-1/density/PD")
+searchEnginePath <- file.path(dataPath, "LFQ_Bench_multispecies/DDA/Chimerys")
 
 #load PSMs
 filePath <-
-  file.path(densityPath, c("20240517_lfq_dda_z1to4_True_noNormalization.pdResult",
-                          "LFQ_Orbitrap_DDA_Condition_A_Sample_Alpha_01_noNorm.pdResult"))
+  file.path(searchEnginePath, c("20240517_lfq_dda_z1to4_True_noNormalization.pdResult",
+                                "LFQ_Orbitrap_DDA_Condition_A_Sample_Alpha_01_noNorm.pdResult"))
 sampleNamesPath <- writeSampleNames(filePath, outputPath = path, outputName = "density-sample-names.csv")
-data <- readPtmGroups(dataPath = filePath, sampleNamesPath = sampleNamesPath)
+data <- readPtmGroups(dataPath = filePath, sampleNamesPath = sampleNamesPath, loadBakup = F, writeBackup = F)
 #data[, .N, keyby=condition]
 
 #conditions

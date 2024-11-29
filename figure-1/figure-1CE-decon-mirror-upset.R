@@ -1,21 +1,20 @@
 #setup
 source(here::here("scripts/load-dependencies.R"))
 path <- file.path(here::here(), "figure-1")
-deconPath <- file.path(dataPath, "figure-1/decon-mirror-upset")
+searchEnginePath <- file.path(dataPath, "LFQ_Bench_human")
 
 ##load PSMs, precursors and peptide groups
-#`dataPath` needs to point to the folder containing search engine research result folders
-sampleNamesPath <- writeSampleNames(deconPath, outputPath = path, outputName = "decon-mirror-upset-sample-names2.csv")
-data_psm <- readPsms(deconPath, sampleNamesPath)
-data_pcm <- readPcms(deconPath, sampleNamesPath)
-data_ptm <- readPtmGroups(deconPath, sampleNamesPath)
+sampleNamesPath <- writeSampleNames(searchEnginePath, outputPath = path, outputName = "decon-mirror-upset-sample-names.csv")
+data_psm <- readPsms(searchEnginePath, sampleNamesPath, loadBackup = F, writeBackup = F)
+data_pcm <- readPcms(searchEnginePath, sampleNamesPath, loadBackup = F, writeBackup = F)
+data_ptm <- readPtmGroups(searchEnginePath, sampleNamesPath, loadBackup = F, writeBackup = F)
 
 ##deconvolution mirror plot
 rawScans <- 115649L
 data_sub <- data_psm[sample %in% "CHIMERYS_1" & scan_ms2 %in% rawScans, .SD,
                      .SDcols = c("sample", "scan_ms2", "mz_ratio", "ptm", "charge", "nce", "score_coefficient_normalized")]
 #export file for plotting
-fwrite(data_sub, file.path(dirname(deconPath), "decon-mirror.csv"))
+fwrite(data_sub, file.path(dataPath, "data/figure-1/decon-mirror.csv"))
 
 
 ##upset plot
@@ -39,4 +38,4 @@ data_upset <- rbind(cbind(data_psm_ptm, level = "PSM-level FDR"),
                              by = c("condition", "sample", "ptm_group_J")])
 data_upset <- data_upset[!condition %in% c("Metamorpheus-Percolator", "MSFragger-full-isolation")]
 
-fwrite(data_upset, file.path(dirname(deconPath), "upset.csv"))
+fwrite(data_upset, file.path(dataPath, "data/figure-1/upset.csv"))

@@ -1,6 +1,6 @@
 # Figure 1
 MSAID
-2024-11-27
+2024-11-29
 
 - [Setup](#setup)
 - [Data](#data)
@@ -30,7 +30,7 @@ suppressMessages(source(here::here("scripts/load-dependencies.R")))
 msaid_organism <- c("Human" = msaid_blue, "Yeast" = msaid_orange, "E. coli" = msaid_darkgray)
 
 path <- file.path(here::here(), "figure-1")
-figurePath <- file.path(dataPath, "figure-1")
+figurePath <- file.path(dataPath, "data/figure-1")
 ```
 
 </details>
@@ -75,12 +75,12 @@ p_entrapment <- ggplot(mean_efdr, aes(x = Q_VALUE, y = ENTRAPMENT_Q_VALUE, color
 `decon-mirror.csv`](figure-1CE-decon-mirror-upset.R)
 
 CAVE: Re-running peptide predictions requires a local instance of
-INFERYS.
+INFERYS and the external LFQ benchmark raw file.
 
 ``` r
 data_sub <- fread(file.path(figurePath, "decon-mirror.csv"))
 rawScans <- 115649L
-rawPath <- "/mnt/paper/01_paper/figures/main/1_figure_hela/LFQ_Orbitrap_DDA_Human_01.raw"
+rawPath <- file.path(dataPath, "_external-raw-files/LFQ_Orbitrap_DDA_Human_01.raw")
 
 dt_spectra <-
   plotMirror(dataTable = data_sub,

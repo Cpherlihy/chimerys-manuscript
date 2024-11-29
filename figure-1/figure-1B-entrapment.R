@@ -1,21 +1,20 @@
 #setup
 source(here::here("scripts/load-dependencies.R"))
 path <- file.path(here::here(), "figure-1")
-entrapmentPath <- file.path(dataPath, "figure-1/entrapment")
 
 # ---- pathsToData ----
 ## chimerys
-pathToPdResult_IW1 <- file.path(entrapmentPath, '210129_wwDDA_10ug_60min_IW1-(1).pdResult')
-pathToPdResult_IW3 <- file.path(entrapmentPath, '210129_wwDDA_10ug_60min_IW3-(1).pdResult')
-pathToPdResult_IW6 <- file.path(entrapmentPath, '210129_wwDDA_10ug_60min_IW6-(1).pdResult')
-pathToPdResult_IW8 <- file.path(entrapmentPath, '210129_wwDDA_10ug_60min_IW8-(1).pdResult')
-pathToPdResult_IW10 <- file.path(entrapmentPath, '210129_wwDDA_10ug_60min_IW10-(1).pdResult')
-pathToPdResult_IW12 <- file.path(entrapmentPath, '210129_wwDDA_10ug_60min_IW12-(1).pdResult')
-pathToPdResult_IW15 <- file.path(entrapmentPath, '210129_wwDDA_10ug_60min_IW15-(1).pdResult')
-pathToPdResult_IW20 <- file.path(entrapmentPath, '210129_wwDDA_10ug_60min_IW20-(1).pdResult')
+pathToPdResult_IW1 <- file.path(dataPath, 'wwDDA/60min-figure2/Chimerys-entrapment/210129_wwDDA_10ug_60min_IW1-(1).pdResult')
+pathToPdResult_IW3 <- file.path(dataPath, 'wwDDA/60min-figure2/Chimerys-entrapment/210129_wwDDA_10ug_60min_IW3-(1).pdResult')
+pathToPdResult_IW6 <- file.path(dataPath, 'wwDDA/60min-figure2/Chimerys-entrapment/210129_wwDDA_10ug_60min_IW6-(1).pdResult')
+pathToPdResult_IW8 <- file.path(dataPath, 'wwDDA/60min-figure2/Chimerys-entrapment/210129_wwDDA_10ug_60min_IW8-(1).pdResult')
+pathToPdResult_IW10 <- file.path(dataPath, 'wwDDA/60min-figure2/Chimerys-entrapment/210129_wwDDA_10ug_60min_IW10-(1).pdResult')
+pathToPdResult_IW12 <- file.path(dataPath, 'wwDDA/60min-figure2/Chimerys-entrapment/210129_wwDDA_10ug_60min_IW12-(1).pdResult')
+pathToPdResult_IW15 <- file.path(dataPath, 'wwDDA/60min-figure2/Chimerys-entrapment/210129_wwDDA_10ug_60min_IW15-(1).pdResult')
+pathToPdResult_IW20 <- file.path(dataPath, 'wwDDA/60min-figure2/Chimerys-entrapment/210129_wwDDA_10ug_60min_IW20-(1).pdResult')
 
 ## fastas
-pathToFasta <- file.path(entrapmentPath, 'JoT_uniprot-proteome_musmusculus_review_canonical_20220623_9mimic_-Ie.fasta')
+pathToFasta <- file.path(dataPath, 'FASTA/JoT_uniprot-proteome_musmusculus_review_canonical_20220623_9mimic_-Ie.fasta')
 
 
 # ---- read data including short sanity checks ----
@@ -152,4 +151,4 @@ mean_efdr <- combined[, .(ENTRAPMENT_Q_VALUE = mean(ENTRAPMENT_Q_VALUE),
                       by=.(SOFTWARE, Q_VALUE_BIN)]
 setnames(mean_efdr, "Q_VALUE_BIN", "Q_VALUE")
 
-write.fst(combined, file.path(entrapmentPath, 'figure-1B-entrapment.fst'), compress = 100)
+write.fst(combined, file.path(dataPath, 'data/figure-1/figure-1B-entrapment.fst'), compress = 100)

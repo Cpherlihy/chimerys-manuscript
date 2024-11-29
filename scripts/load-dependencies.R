@@ -1,4 +1,4 @@
-dataPath <- "/mnt/paper/01_paper/data"
+dataPath <- "/mnt/paper/01_paper/submission"
 
 ## load libraries
 require(data.table)
