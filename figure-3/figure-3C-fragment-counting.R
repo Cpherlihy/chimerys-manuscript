@@ -1,18 +1,19 @@
 # ---- setup ----
 source(here::here("scripts/data-processing-2.R"))
 path <- file.path(here::here(), "figure-3")
-fragmentPath <- file.path(dataPath, "figure-3/fragment-counting")
+figurePath <- file.path(dataPath, "data/figure-3")
+#fragmentPath <- file.path(dataPath, "figure-3/fragment-counting")
 
 # ---- pathsToData ----
 ## chimerys
-pathToPdResult <- file.path(dataPath, "figure-3/entrapment-barplot/20241127_pdresult_height_pepEntr_pcms_localPcmGrouper.fst")
+pathToPdResult <- file.path(figurePath, "fst-backup/20241127_pdresult_height_pepEntr_pcms_localPcmGrouper.fst")
 
 ## dia-nn
-pathToDiann <- file.path(dataPath, 'figure-3/entrapment-barplot/20241127_diann_height_pepEntr_pcms.fst')
+pathToDiann <- file.path(figurePath, 'fst-backup/20241127_diann_height_pepEntr_pcms.fst')
 
 ## spectronaut
-pathToSn19 <- file.path(dataPath, 'figure-3/entrapment-barplot/20241127_sn19_height_noNorm_pepEntr_pcms.fst')
-pathToSn19_flaggedImputation <- file.path(dataPath, 'figure-3/entrapment-barplot/20241127_sn19_height_noNorm_flaggedImputation_pepEntr_pcms.fst')
+pathToSn19 <- file.path(figurePath, 'fst-backup/20241127_sn19_height_noNorm_pepEntr_pcms.fst')
+pathToSn19_flaggedImputation <- file.path(figurePath, 'fst-backup/20241127_sn19_height_noNorm_flaggedImputation_pepEntr_pcms.fst')
 
 
 # ---- read data ----
@@ -22,7 +23,7 @@ sn19 <- read.fst(pathToSn19, as.data.table = T)
 sn19_flaggedImputation <- read.fst(pathToSn19_flaggedImputation, as.data.table = T)
 
 # ---- load diann number of fragments ----
-diann_quanFrags <- read.fst(file.path(dataPath, 'figure-3/20241127_diann_lfq_height_pepEntr_fragCounts.fst'), as.data.table = T)
+diann_quanFrags <- read.fst(file.path(figurePath, 'fst-backup/20241127_diann_lfq_height_pepEntr_fragCounts.fst'), as.data.table = T)
 
 # ---- diann; add number of fragments for quantification ----
 diann <- merge(diann,
@@ -131,10 +132,10 @@ length(common_pcms) # 49837
 combined[,SHARED_PCM_J_ID := ifelse(PCM_J_ID %in% common_pcms, 1, 0)]
 
 # ---- intermediate save ----
-write.fst(combined, file.path(fragmentPath, '20241127_figure3c_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst'), compress = 100)
+write.fst(combined, file.path(figurePath, 'fst-backup/20241127_figure3c_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst'), compress = 100)
 
 # ---- re-read intermediately saved data ----
-# combined <- read.fst(file.path(fragmentPath, '20241127_figure3c_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst'), as.data.table = T)
+# combined <- read.fst(file.path(figurePath, 'fst-backup/20241127_figure3c_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst'), as.data.table = T)
 
 combined[SOFTWARE != 'CHIMERYS', ENTRAPMENT_Q_VALUE:=ENTRAPMENT_Q_VALUE_1]
 
@@ -152,10 +153,10 @@ idFrags_combined_fdr <- unique(idFrags_combined_fdr)
 table(idFrags_combined_fdr$ID_FRAGS)
 
 # ---- intermediate save for AH ----
-write.fst(idFrags_combined_fdr, file.path(fragmentPath, '20241127_figure3c_idFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), compress = 100)
+write.fst(idFrags_combined_fdr, file.path(figurePath, '20241127_figure3c_idFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), compress = 100)
 
 # ---- re-read intermediately saved data ----
-# idFrags_combined_fdr <- read.fst(file.path(fragmentPath, '20241127_figure3c_idFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), as.data.table = T)
+# idFrags_combined_fdr <- read.fst(file.path(figurePath, '20241127_figure3c_idFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), as.data.table = T)
 
 min(idFrags_combined_fdr$ID_FRAGS)
 max(idFrags_combined_fdr$ID_FRAGS)
@@ -201,10 +202,10 @@ quanFrags_combined_fdr <- unique(quanFrags_combined_fdr)
 table(quanFrags_combined_fdr$QUAN_FRAGS)
 
 # ---- intermediate save for AH ----
-write.fst(quanFrags_combined_fdr, file.path(dirname(fragmentPath), '20241127_figure3c_quanFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), compress = 100)
+write.fst(quanFrags_combined_fdr, file.path(figurePath, '20241127_figure3c_quanFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), compress = 100)
 
 # ---- re-read intermediately saved data ----
-# quanFrags_combined_fdr <- read.fst(file.path(dirname(fragmentPath), '20241127_figure3c_quanFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), as.data.table = T)
+# quanFrags_combined_fdr <- read.fst(file.path(figurePath, '20241127_figure3c_quanFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), as.data.table = T)
 
 # ---- preliminary plot ----
 ggplot(quanFrags_combined_fdr,

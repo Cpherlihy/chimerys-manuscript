@@ -1,6 +1,6 @@
 # Figure 3
 MSAID
-2024-11-27
+2024-12-03
 
 - [Setup](#setup)
 - [Data](#data)
@@ -31,7 +31,7 @@ msaid_quantified <- c("TRUE" = msaid_darkgray, "FALSE" = msaid_orange)
 msaid_eFDR <- c("TRUE" = msaid_darkgray, "FALSE" = msaid_red)
 
 path <- file.path(here::here(), "figure-3")
-figurePath <- file.path(dataPath, "figure-3")
+figurePath <- file.path(dataPath, "data/figure-3")
 ```
 
 </details>
@@ -45,8 +45,9 @@ Details on data processing
 
 ## Entrapment IDs
 
-[R code to generate input file
-`20241127_figure3a_bardata_pcmsConditionApexQuan_localPcmEfdr1_pepFasta.fst`](figure-3A-entrapment-barplot.R)
+R code to generate input file
+`20241127_figure3a_bardata_pcmsConditionApexQuan_localPcmEfdr1_pepFasta.fst`[figure-3C-fragment-counting-prep.R](figure-3C-fragment-counting-prep.R)
+and [figure-3A-entrapment-barplot.R](figure-3A-entrapment-barplot.R)
 
 ``` r
 dtFdr <- read_fst(file.path(figurePath, "20241127_figure3a_bardata_pcmsConditionApexQuan_localPcmEfdr1_pepFasta.fst"),

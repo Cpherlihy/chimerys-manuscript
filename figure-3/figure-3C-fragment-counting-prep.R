@@ -1,13 +1,13 @@
 # ---- setup ----
 source(here::here("scripts/data-processing-2.R"))
 path <- file.path(here::here(), "figure-3")
-fragmentPath <- file.path(dataPath, "figure-3/fragment-counting")
+figurePath <- file.path(dataPath, "data/figure-3")
 
 # ---- pathsToData ----
 
 ## dia-nn
-pathToTsv <- file.path(fragmentPath, "20240429_lfq_height_entrapment_peptides_report.tsv")
-pathToLib <- file.path(fragmentPath, "20240429_lfq_height_entrapment_peptides_report-lib.tsv")
+pathToTsv <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/DIA-NN/20240429_lfq_height_entrapment_peptides_report.tsv")
+pathToLib <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/DIA-NN/20240429_lfq_height_entrapment_peptides_report-lib.tsv")
 
 # ---- load the data ----
 diann <- fread(pathToTsv, stringsAsFactors = F, integer64 = 'double')
@@ -199,10 +199,10 @@ length(fragment_for_quant_max$pasted)
 length(fragment_for_quant_max[NotExcludedFromQuan <= 6, pasted])
 
 # ---- save data ----
-write.fst(fragment_quant_raw, file.path(fragmentPath, '20241127_diann_lfq_height_pepEntr_fragment_quant_raw.fst'), compress = 100)
-write.fst(fragment_quant_corrected, file.path(fragmentPath, '20241127_diann_lfq_height_pepEntr_fragment_quant_corrected.fst'), compress = 100)
-write.fst(fragment_for_quant_min, file.path(fragmentPath, '20241127_diann_lfq_height_pepEntr_minQuanFrags.fst'), compress = 100)
-write.fst(fragment_for_quant_max, file.path(fragmentPath, '20241127_diann_lfq_height_pepEntr_maxQuanFrags.fst'), compress = 100)
+write.fst(fragment_quant_raw, file.path(figurePath, 'fst-backup/20241127_diann_lfq_height_pepEntr_fragment_quant_raw.fst'), compress = 100)
+write.fst(fragment_quant_corrected, file.path(figurePath, 'fst-backup/20241127_diann_lfq_height_pepEntr_fragment_quant_corrected.fst'), compress = 100)
+write.fst(fragment_for_quant_min, file.path(figurePath, 'fst-backup/20241127_diann_lfq_height_pepEntr_minQuanFrags.fst'), compress = 100)
+write.fst(fragment_for_quant_max, file.path(figurePath, 'fst-backup/20241127_diann_lfq_height_pepEntr_maxQuanFrags.fst'), compress = 100)
 
 # ---- add to diann ----
 diann[,pasted:=NULL]
@@ -215,7 +215,7 @@ setnames(fragment_for_quant_max, 'NotExcludedFromQuan', 'NotExcludedFromQuanMax'
 diann <- merge(diann, fragment_for_quant_max, by = c('Precursor.Id', 'File.Name'), all.x = T)
 
 # ---- save data ----
-write.fst(diann, file.path(dirname(fragmentPath), '20241127_diann_lfq_height_pepEntr_fragCounts.fst'), compress = 100)
+write.fst(diann, file.path(figurePath, 'fst-backup/20241127_diann_lfq_height_pepEntr_fragCounts.fst'), compress = 100)
 
 ggplot(fragment_for_quant_min, aes(NotExcludedFromQuanMin)) +
   geom_histogram()

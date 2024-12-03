@@ -2,21 +2,21 @@
 source(here::here("scripts/load-dependencies.R"))
 source(here::here("scripts/data-processing-3.R"))
 path <- file.path(here::here(), "figure-3")
-entrapmentPath <- file.path(dataPath, "figure-3/entrapment-barplot")
+figurePath <- file.path(dataPath, "data/figure-3")
 
 # ---- pathsToData ----
 ## chimerys
-pathToPdResult <- file.path(entrapmentPath, "20240503_lfq_dia_entrapment_peptides_z1to4_localPcmFdr_True.pdResult")
-pathToMs8 <- file.path(entrapmentPath, "20240430_lfq_dia_entrapment_peptides_z1to4_Job1207/CHIMER/main_search-3.ms8")
+pathToPdResult <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/Chimerys-entrapment/20240503_lfq_dia_entrapment_peptides_z1to4_localPcmFdr_True.pdResult")
+pathToMs8 <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/Chimerys-entrapment/main_search-3.ms8")
 
 ## dia-nn
-pathToTsv <- file.path(entrapmentPath, "20240429_lfq_height_entrapment_peptides_report.tsv")
+pathToTsv <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/DIA-NN/20240429_lfq_height_entrapment_peptides_report.tsv")
 
 ## spectronaut
-pathToExport <- file.path(entrapmentPath, "20240925_064248_20240925_SN19_lfq_paper_entrapment_paper_Report_height_noNorm.tsv")
+pathToExport <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/Spectronaut/20240925_064248_20240925_SN19_lfq_paper_entrapment_paper_Report_height_noNorm.tsv")
 
 ## fastas
-pathToFasta_peptides <- file.path(dataPath, "CHIMERYS_Benchmark_human-canonical_yeast_ecoli_AND_jpr_2022_contaminants_mimic_peptides.fasta")
+pathToFasta_peptides <- file.path(dataPath, "FASTA/CHIMERYS_Benchmark_human-canonical_yeast_ecoli_AND_jpr_2022_contaminants_mimic_peptides.fasta")
 
 
 # ---- read data including short sanity checks ----
@@ -60,13 +60,13 @@ uniqueN(sn19_flaggedImputation[Q_VALUE <= 0.01, PCM_ID]) # 67740
 uniqueN(sn19_flaggedImputation[Q_VALUE <= 0.01, PCM_J_ID]) # 67704
 
 # # ---- intermediate save ----
-write.fst(pdresult, file.path(entrapmentPath, '20241127_pdresult_height_pepEntr_pcms_localPcmGrouper.fst'), compress = 100)
-write.fst(diann, file.path(entrapmentPath, '20241127_diann_height_pepEntr_pcms.fst'), compress = 100)
-write.fst(sn19, file.path(entrapmentPath, '20241127_sn19_height_noNorm_pepEntr_pcms.fst'), compress = 100)
-write.fst(sn19_flaggedImputation, file.path(entrapmentPath, '20241127_sn19_height_noNorm_flaggedImputation_pepEntr_pcms.fst'), compress = 100)
+write.fst(pdresult, file.path(figurePath, 'fst-backup/20241127_pdresult_height_pepEntr_pcms_localPcmGrouper.fst'), compress = 100)
+write.fst(diann, file.path(figurePath, 'fst-backup/20241127_diann_height_pepEntr_pcms.fst'), compress = 100)
+write.fst(sn19, file.path(figurePath, 'fst-backup/20241127_sn19_height_noNorm_pepEntr_pcms.fst'), compress = 100)
+write.fst(sn19_flaggedImputation, file.path(figurePath, 'fst-backup/20241127_sn19_height_noNorm_flaggedImputation_pepEntr_pcms.fst'), compress = 100)
 
 # ---- load diann number of fragments ----
-diann_quanFrags <- read.fst(file.path(entrapmentPath, '20240516_diann_lfq_height_pepEntr_fragCounts.fst'), as.data.table = T)
+diann_quanFrags <- read.fst(file.path(figurePath, 'fst-backup/20241127_diann_lfq_height_pepEntr_fragCounts.fst'), as.data.table = T)
 
 # ---- diann; add number of fragments for quantification ----
 diann <- merge(diann,
@@ -177,10 +177,10 @@ length(common_pcms) # 49837
 combined[,SHARED_PCM_J_ID := ifelse(PCM_J_ID %in% common_pcms, 1, 0)]
 
 # ---- intermediate save ----
-write.fst(combined, file.path(dataPath, 'figure-3/20241127_figure3a_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst'), compress = 100)
+write.fst(combined, file.path(figurePath, '20241127_figure3a_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst'), compress = 100)
 
 # # ---- re-read intermediately saved data ----
-# combined <- read.fst(file.path(entrapmentPath, '20241127_figure3a_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst'), as.data.table = T)
+# combined <- read.fst(file.path(figurePath, '20241127_figure3a_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst'), as.data.table = T)
 
 # ---- count pcms stratified by min 2 quantified samples per condition at fdr and entrapment fdr ----
 bardata_fdr <- melt(combined[Q_VALUE<=0.01,
@@ -215,10 +215,10 @@ bardata <- rbindlist(list(bardata_fdr, bardata_efdr_chimerys, bardata_efdr))
 bardata <- bardata[!SOFTWARE=='SPECTRONAUT_FILTERED']
 
 # ---- intermediate save ----
-write.fst(bardata, file.path(dataPath, 'figure-3/20241127_figure3a_bardata_pcmsConditionApexQuan_localPcmEfdr1_pepFasta.fst'), compress = 100)
+write.fst(bardata, file.path(figurePath, '20241127_figure3a_bardata_pcmsConditionApexQuan_localPcmEfdr1_pepFasta.fst'), compress = 100)
 
 # ---- re-read intermediately saved data ----
-# bardata <- read.fst(file.path(entrapmentPath, '20241127_figure3a_bardata_pcmsConditionApexQuan_localPcmEfdr1_pepFasta.fst'), as.data.table = T)
+# bardata <- read.fst(file.path(figurePath, '20241127_figure3a_bardata_pcmsConditionApexQuan_localPcmEfdr1_pepFasta.fst'), as.data.table = T)
 
 # ---- preliminary plot ----
 ggplot(bardata,

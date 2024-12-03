@@ -1,11 +1,11 @@
 # ---- setup ----
 source(here::here("scripts/data-processing-2.R"))
 path <- file.path(here::here(), "figure-3")
-entrapmentPath <- file.path(dataPath, "figure-3/entrapment-barplot")
+figurePath <- file.path(dataPath, "data/figure-3")
 
 # ---- pathsToData ----
 ## combined
-pathToCombined <- file.path(entrapmentPath, '20241127_figure3a_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst')
+pathToCombined <- file.path(figurePath, '20241127_figure3a_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst')
 
 # ---- read data ----
 combined <- read.fst(pathToCombined, as.data.table = T)
