@@ -2,10 +2,11 @@
 source(here::here("scripts/load-dependencies.R"))
 source(here::here("scripts/data-processing-3.R"))
 path <- file.path(here::here(), "figure-4")
+figurePath <- file.path(dataPath, "data/figure-4")
 
 # ---- pathsToData ----
 ## combined
-pathToCombined <- file.path(dataPath, 'figure-4/cvs/20241127_figure4c_combined_pcms_localPcmGrouper_apexQuan_pepEntr.fst')
+pathToCombined <- file.path(figurePath, '20241127_figure4c_combined_pcms_localPcmGrouper_apexQuan_pepEntr.fst')
 
 # ---- read data ----
 combined <- read.fst(pathToCombined, as.data.table = T)
@@ -51,10 +52,10 @@ ma_combined_fdr <- ma_combined_fdr[,.(MEAN_INTENSITY=mean(QUAN),
 any(is.na(ma_combined_fdr$LOG2RATIO))
 
 # ---- intermediate save ----
-write.fst(ma_combined_fdr, file.path(dataPath, 'figure-4/20241127_figure4d_ma_noNorm_efdr_localPcmGrouper_pepFasta_min1eFdr.fst'), compress = 100)
+write.fst(ma_combined_fdr, file.path(figurePath, '20241127_figure4d_ma_noNorm_efdr_localPcmGrouper_pepFasta_min1eFdr.fst'), compress = 100)
 
 # ---- re-read intermediately saved data ----
-# ma_combined_fdr <- read.fst( file.path(dataPath, 'figure-4/20241127_figure4d_ma_noNorm_efdr_localPcmGrouper_pepFasta_min1eFdr.fst'), as.data.table = T)
+# ma_combined_fdr <- read.fst( file.path(figurePath, '20241127_figure4d_ma_noNorm_efdr_localPcmGrouper_pepFasta_min1eFdr.fst'), as.data.table = T)
 
 # ---- plot ----
 

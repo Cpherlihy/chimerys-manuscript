@@ -24,7 +24,7 @@ msaid_quantified <- c("TRUE" = msaid_darkgray, "FALSE" = msaid_red)
 msaid_organism <- c("Human" = msaid_blue, "Yeast" = msaid_orange, "E. coli" = msaid_darkgray)
 
 path <- file.path(here::here(), "figure-4")
-figurePath <- file.path(dataPath, "figure-4")
+figurePath <- file.path(dataPath, "data/figure-4")
 ```
 
 </details>
