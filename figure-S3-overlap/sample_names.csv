@@ -1,0 +1,10 @@
+order,study_folder,study_file,raw_file,sample_name
+1,MSFragger,fragpipe-files.fp-manifest,LFQ_Orbitrap_DDA_Human_01,MSFragger_1
+2,MSFragger-DDAplus,fragpipe-files.fp-manifest,LFQ_Orbitrap_DDA_Human_01,MSFragger-DDAplus_1
+3,MS-GFplus,LFQ_Orbitrap_DDA_Human_01.raw.tsv,LFQ_Orbitrap_DDA_Human_01,MSGFplus_1
+4,MaxQuant,summary.txt,LFQ_Orbitrap_DDA_Human_01,MaxQuant_1
+5,Metamorpheus,AllPSMs.psmtsv,LFQ_Orbitrap_DDA_Human_01,Metamorpheus_1
+6,Chimerys,LFQ_01_CHIMERYS_v2x7x9_apex_True.pdResult,LFQ_Orbitrap_DDA_Human_01,CHIMERYS_1
+7,Comet,LFQ_01_Comet.pdResult,LFQ_Orbitrap_DDA_Human_01,Comet_1
+8,Sequest-HT,LFQ_01_Sequest.pdResult,LFQ_Orbitrap_DDA_Human_01,SequestHT_1
+9,MSAmanda,MSAmanda-3.0-Minora_MS1-apex_2024-09-09.pdResult,LFQ_Orbitrap_DDA_Human_01,MSAmanda_1
