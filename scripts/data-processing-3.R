@@ -97,26 +97,6 @@ readDigest <- function(pathToDigest) {
   return(digest_seq_j)
 }
 
-interpolateQvalues <- function(diann, rule = 1) {
-  # Q.Value interpolation for decoys
-  # Remove all Q_VALUEs for Decoys
-  diann[DECOY==1,Q_VALUE:=NA]
-  # Set Q_VALUE for DECOYS which get out-of-distribution SVMSCOREs to 1
-  diann[DECOY==1 & SVMSCORE==(-10000000.000000),Q_VALUE:=1]
-  # Calculate minimum Q_VALUE per unique SAMPLE,SVMSCORE combination
-  qval <- diann[!is.na(Q_VALUE) & SVMSCORE!=(-10000000.000000),list(MIN_Q_VALUE=min(Q_VALUE)),by=list(SAMPLE, SVMSCORE)]
-  # Find entries without Q_VALUE
-  qnas <- diann[is.na(Q_VALUE)]
-  # Sort data.tables by SVMSCORE for subsequent interpolation
-  setkey(qval, SVMSCORE)
-  setkey(qnas, SVMSCORE)
-  # Perform SAMPLE-wise interpolation
-  sapply(qnas[,unique(SAMPLE)], function(i) qnas[SAMPLE==i,Q_VALUE:=approx(x = qval[SAMPLE==i,SVMSCORE], y = qval[SAMPLE==i,MIN_Q_VALUE], xout = SVMSCORE, ties = 'ordered', method = 'linear', rule = rule)$y])
-  # Concatenate results
-  diann_inter <- rbindlist(list(diann[!is.na(Q_VALUE)], qnas))
-  return(diann_inter)
-}
-
 readPdResult_psmGrouper_dda_noConsensusQuan <- function(pathToPdResult_dda, proteinsFromFasta){
   cat('Reading in data from pdresult\n')
   
