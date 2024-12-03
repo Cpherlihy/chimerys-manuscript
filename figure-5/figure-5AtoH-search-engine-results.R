@@ -1,6 +1,7 @@
 #setup
-path <- file.path(here::here(), "figure-5")
 source(here::here("scripts/load-dependencies.R"))
+path <- file.path(here::here(), "figure-5")
+figurePath <- file.path(dataPath, "data/figure-5")
 
 nPtm <- function(sequence, ptm = "+15.9949") {
   nSeq <- nchar(sequence)
@@ -154,7 +155,7 @@ read_zodiaq <- function(data_path, unimods, sample_names_path) {
 }
 
 #Load CHIMERYS search results
-filePath <- file.path(dataPath, "figure-5/CHIMERYS-DISPA-mcf7_MS2_2024-10-14.pdResult")
+filePath <- file.path(dataPath, "Direct_infusion/CHIMERYS-DISPA-mcf7_MS2_2024-10-14.pdResult")
 sampleNamesPath <- suppressMessages(writeSampleNames(filePath, outputPath = path))
 #load PSMs
 diPsms <- suppressMessages(readPsms(filePath, sampleNamesPath, loadBackup = T,
@@ -201,7 +202,7 @@ diPtm[, condition_it := as.integer(gsub("^.*-.*-.*-(.*)ms-.*-.*$", "\\1", condit
 diPtm[, condition_iw := as.integer(gsub("^.*-.*-.*-.*-(.*)th-.*$", "\\1", condition))]
 diPtm[, condition_overlap := factor(gsub("^.*-.*-.*-.*-.*-(.*)$", "\\1", condition),
                                     c("0.5ov", "1ov", "3ov", "4ov", "6ov", "8ov"))]
-write_fst(diPtm, file.path(dataPath, "figure-5/diPtm.fst"))
+write_fst(diPtm, file.path(figurePath, "diPtm.fst"))
 
 #kick out shared peptides, then collapse PSMs to proteins
 #diMap <- diPsms[, .(protein = unlist(strsplit(proteins, ";"))), keyby=.(sample, psm)]
@@ -243,19 +244,19 @@ diProt[, condition_it := as.integer(gsub("^.*-.*-.*-(.*)ms-.*-.*$", "\\1", condi
 diProt[, condition_iw := as.integer(gsub("^.*-.*-.*-.*-(.*)th-.*$", "\\1", condition))]
 diProt[, condition_overlap := factor(gsub("^.*-.*-.*-.*-.*-(.*)$", "\\1", condition),
                                      c("0.5ov", "1ov", "3ov", "4ov", "6ov", "8ov"))]
-write_fst(diProt, file.path(dataPath, "figure-5/diProt.fst"))
+write_fst(diProt, file.path(figurePath, "diProt.fst"))
 
 
 #Load csoDIAq results CHIMERYS digest
 unimods <- c("1" = "[UNIMOD:1]", "4" = "[UNIMOD:4]", "5" = "[UNIMOD:5]", "35" = "[UNIMOD:35]")
 csodiaq_digest <-
-  read_zodiaq(data_path = file.path(dataPath, "figure-5/ZO_2024-10-17_inferys_filtered_noNL_morethan400mz"),
+  read_zodiaq(data_path = file.path(dataPath, "Direct_infusion/ZO_2024-10-17_inferys_filtered_noNL_morethan400mz"),
               unimods = unimods, sample_names_path = file.path(path, "sample_names.csv"))
-write_fst(csodiaq_digest, file.path(dataPath, "figure-5/csodiaq_digest.fst"))
+write_fst(csodiaq_digest, file.path(figurePath, "csodiaq_digest.fst"))
 
 #Load csoDIAq results CHIMERYS digest
 csodiaq_digest_prot <-
-  read_zodiaq_protein(data_path = file.path(dataPath, "figure-5/ZO_2024-10-17_inferys_filtered_noNL_morethan400mz"),
+  read_zodiaq_protein(data_path = file.path(dataPath, "Direct_infusion/ZO_2024-10-17_inferys_filtered_noNL_morethan400mz"),
                       sample_names_path = file.path(path, "sample_names.csv"),
-                      fasta_file_path = file.path(dataPath, "figure-5/fasta_mapping.csv"))
-write_fst(csodiaq_digest_prot, file.path(dataPath, "figure-5/csodiaq_digest_prot.fst"))
+                      fasta_file_path = file.path(figurePath, "fasta_mapping.csv"))
+write_fst(csodiaq_digest_prot, file.path(figurePath, "csodiaq_digest_prot.fst"))

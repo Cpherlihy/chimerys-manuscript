@@ -1,6 +1,6 @@
 # Figure 5
 MSAID
-2024-11-27
+2024-12-03
 
 - [Setup](#setup)
 - [Data](#data)
@@ -31,7 +31,7 @@ suppressMessages(source(here::here("scripts/load-dependencies.R")))
 msaid_organism <- c("Human" = msaid_blue, "Yeast" = msaid_orange, "E. coli" = msaid_darkgray)
 
 path <- file.path(here::here(), "figure-5")
-figurePath <- file.path(dataPath, "figure-5")
+figurePath <- file.path(dataPath, "data/figure-5")
 ```
 
 </details>
