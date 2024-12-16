@@ -1,6 +1,6 @@
 # Figure 2
 MSAID
-2024-11-29
+2024-12-16
 
 - [Setup](#setup)
 - [Data](#data)
@@ -54,7 +54,7 @@ folders).
 ## Gradient
 
 ``` r
-data_gradient <- fread(file.path(path, "Gradient_withMF.csv"))
+data_gradient <- fread(file.path(figurePath, "figure-2C-Gradient.csv"))
 data_gradient[, condition_SE := factor(gsub("^.*_(.)$", "\\1", studies),
                                        levels = c("S", "M", "C"),
                                        labels = c("Sequest HT", "MSFragger", "CHIMERYS"))]
@@ -96,7 +96,7 @@ p_gradient_prot <- ggplot(data_gradient[!is.na(proteinGroups_FDR)],
 ## OTIT CID
 
 ``` r
-data_OTITCID <- fread(file.path(path, "CID_withMF.csv"))
+data_OTITCID <- fread(file.path(figurePath, "figure-2B-CID.csv"))
 data_OTITCID[, condition_SE := factor(studies,
                                       levels = c("S", "M", "C", "C_Top15"),
                                       labels = c("Sequest HT", "MSFragger",
@@ -167,7 +167,7 @@ data_OTITCID[, .(condition_SE, round((proteinGroups_FDR-seq_prot)/seq_prot, 2))]
 ## MS Instruments
 
 ``` r
-data_MS <- fread(file.path(path, "Instruments_withMF.csv"))
+data_MS <- fread(file.path(figurePath, "figure-2A-Instruments.csv"))
 data_MS[, condition_SE := factor(gsub("^.*_(.)$", "\\1", studies),
                                  levels = c("S", "M", "C"),
                                  labels = c("Sequest HT", "MSFragger", "CHIMERYS"))]
@@ -190,9 +190,9 @@ p_instruments_pep <- ggplot(data_MS[!is.na(psms_FDR)],
 ## Isolation Window
 
 ``` r
-data_IW_C <- fread(file.path(path, "wwDDA_60min_C.csv"))
-data_IW_S <- fread(file.path(path, "wwDDA_60min_S.csv"))
-data_IW_M <- fread(file.path(path, "wwDDA_60min_M.csv"))
+data_IW_C <- fread(file.path(figurePath, "figure-2E-wwDDA_60min_C.csv"))
+data_IW_S <- fread(file.path(figurePath, "figure-2E-wwDDA_60min_S.csv"))
+data_IW_M <- fread(file.path(figurePath, "figure-2E-wwDDA_60min_M.csv"))
 
 data_IW <- rbind(cbind(condition_SE = "Sequest HT", data_IW_S),
                  cbind(condition_SE = "MSFragger", data_IW_M),
@@ -232,10 +232,11 @@ p_IW_prot <- ggplot(data_IW[!is.na(proteinGroups_FDR)],
 
 ## spectra per IW
 
-[R code to generate input file `spectra-per-IW.csv`](spectra-per-IW.R)
+[R code to generate input file
+`figure-2D-spectra-per-IW.csv`](spectra-per-IW.R)
 
 ``` r
-count_spectra <- fread(file.path(path, "spectra-per-IW.csv"))
+count_spectra <- fread(file.path(figurePath, "figure-2D-spectra-per-IW.csv"))
 IW_labels <- c("1.4", "3.4", "6.4", "8.4", "10.4", "12.4", "15.4", "20.4")
 count_spectra[, condition_IW := factor(condition_IW, IW_labels)]
 count_psms_labels <- c("≥7", 6:1)
