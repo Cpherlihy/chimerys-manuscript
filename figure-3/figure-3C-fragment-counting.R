@@ -153,10 +153,10 @@ idFrags_combined_fdr <- unique(idFrags_combined_fdr)
 table(idFrags_combined_fdr$ID_FRAGS)
 
 # ---- intermediate save for AH ----
-write.fst(idFrags_combined_fdr, file.path(figurePath, '20241127_figure3c_idFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), compress = 100)
+write.fst(idFrags_combined_fdr, file.path(figurePath, 'fst-backup/20241127_figure3c_idFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), compress = 100)
 
 # ---- re-read intermediately saved data ----
-# idFrags_combined_fdr <- read.fst(file.path(figurePath, '20241127_figure3c_idFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), as.data.table = T)
+# idFrags_combined_fdr <- read.fst(file.path(figurePath, 'fst-backup/20241127_figure3c_idFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), as.data.table = T)
 
 min(idFrags_combined_fdr$ID_FRAGS)
 max(idFrags_combined_fdr$ID_FRAGS)
@@ -202,10 +202,40 @@ quanFrags_combined_fdr <- unique(quanFrags_combined_fdr)
 table(quanFrags_combined_fdr$QUAN_FRAGS)
 
 # ---- intermediate save for AH ----
-write.fst(quanFrags_combined_fdr, file.path(figurePath, '20241127_figure3c_quanFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), compress = 100)
+write.fst(quanFrags_combined_fdr, file.path(figurePath, 'fst-backup/20241127_figure3c_quanFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), compress = 100)
+
+dtFragQuan <- copy(quanFrags_combined_fdr)
+softwareLevels <- c("CHIMERYS", "DIA-NN", "SPECTRONAUT")
+softwareLabels <- c("CHIMERYS", "DIA-NN", "Spectronaut")
+dtFragQuan[, SOFTWARE := factor(SOFTWARE, softwareLevels, softwareLabels)]
+setnames(dtFragQuan, "QUAN_FRAGS", "FRAGS")
+
+dtFragQuan[, isEfdr := factor(ENTRAPMENT_Q_VALUE<=0.01, c(T, F))]
+cutBreaks <- c(-1, 0, 2, 3, 6, 12, 40, Inf)
+dtFragQuan[, FRAGS_LABEL := factor(cut(FRAGS, cutBreaks), cut(cutBreaks[-1], cutBreaks),
+                                   c("0", "1-2", "3", "4-6", "7-12", "12-40", ">40"))]
+dtFragCountCut <- dtFragQuan[, .N, keyby=.(SOFTWARE, isEfdr, FRAGS_LABEL)]
+maxN <- dtFragCountCut[, sum(N), by=.(SOFTWARE, FRAGS_LABEL)][, max(V1)]
+
+dtFragCount <- dtFragQuan[, .N, keyby=.(SOFTWARE, isEfdr, FRAGS)]
+#cross-join to force 0 bars within SOFTWARE
+dtCj <- dtFragCount[, CJ(isEfdr, FRAGS, unique = T), by=SOFTWARE]
+dtFragCount <- dtFragCount[dtCj, on=c("SOFTWARE", "isEfdr", "FRAGS")]
+dtFragCount[is.na(N), N := 0]
+#format labeling
+isEfdrLabelLevels <- c("eFDR ≤1%", "eFDR >1%")
+dtFragCount[, isEfdrLabel := factor(ifelse(isEfdr==T, isEfdrLabelLevels[1], isEfdrLabelLevels[2]), isEfdrLabelLevels)]
+dtFragCountLabel <- dtFragCount[, .(label = paste("n =", format(sum(N), big.mark=",", trim=T))),
+                                keyby=.(SOFTWARE, isEfdr, isEfdrLabel)]
+dtFragCount[, totalCount := sum(N), by=.(SOFTWARE, isEfdr, isEfdrLabel)]
+dtFragCount[, facetLabel := paste0(SOFTWARE, " (n = ", format(totalCount, big.mark=","), ")")]
+facetLabelLevels <- dtFragCount[, unique(facetLabel), keyby=.(isEfdr, SOFTWARE)][, V1]
+dtFragCount[, facetLabel := factor(facetLabel, facetLabelLevels)]
+
+fwrite(dtFragCount, file.path(figurePath, "figure-3C-fragments.csv"))
 
 # ---- re-read intermediately saved data ----
-# quanFrags_combined_fdr <- read.fst(file.path(figurePath, '20241127_figure3c_quanFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), as.data.table = T)
+# quanFrags_combined_fdr <- read.fst(file.path(figurePath, 'fst-backup/20241127_figure3c_quanFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst'), as.data.table = T)
 
 # ---- preliminary plot ----
 ggplot(quanFrags_combined_fdr,

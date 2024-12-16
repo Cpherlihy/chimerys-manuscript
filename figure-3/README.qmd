@@ -34,11 +34,10 @@ figurePath <- file.path(dataPath, "data/figure-3")
 
 ## Entrapment IDs
 
-R code to generate input file `20241127_figure3a_bardata_pcmsConditionApexQuan_localPcmEfdr1_pepFasta.fst`[figure-3C-fragment-counting-prep.R](figure-3C-fragment-counting-prep.R) and [figure-3A-entrapment-barplot.R](figure-3A-entrapment-barplot.R)
+R code to generate input file `figure-3A-entrapment.csv`[figure-3C-fragment-counting-prep.R](figure-3C-fragment-counting-prep.R) and [figure-3A-entrapment-barplot.R](figure-3A-entrapment-barplot.R)
 
 ```{r}
-dtFdr <- read_fst(file.path(figurePath, "20241127_figure3a_bardata_pcmsConditionApexQuan_localPcmEfdr1_pepFasta.fst"),
-                  as.data.table = T)
+dtFdr <- fread(file.path(figurePath, "figure-3A-entrapment.csv"))
 setnames(dtFdr, c("SOFTWARE", "CONDITION_MIN2_QUAN_FDR", "Survive 1%", "# of precursors in dataset"),
          c("software", "condMin2", "fdrType", "N"))
 dtFdr[, fdrType := factor(fdrType, c("FDR", "eFDR"), c("FDR", "FDR + eFDR"))]
@@ -82,13 +81,10 @@ round(dtFdr[software == 'DIA-NN' & fdrType == 'FDR + eFDR' &
 
 ## Precursor quan distribution
 
-[R code to generate input file `20241127_figure3a_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst`](figure-3B-entrapment-histograms.R)
+[R code to generate input file `figure-3B-quan.csv`](figure-3A-entrapment-barplot.R)
 
 ```{r}
-filePath <- file.path(figurePath, "20241127_figure3a_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst")
-colNames <- c("SOFTWARE", "SAMPLE", "ID", "QUAN", "Q_VALUE",
-              "ENTRAPMENT_Q_VALUE", "ENTRAPMENT_Q_VALUE_1")
-dtQuanPrec <- read_fst(filePath, as.data.table = T, columns = colNames)
+dtQuanPrec <- fread(file.path(figurePath, "figure-3B-quan.csv"))
 softwareLevels <- c("CHIMERYS", "DIA-NN", "SPECTRONAUT", "SPECTRONAUT_FILTERED")
 softwareLabels <- c("CHIMERYS", "DIA-NN", "Spectronaut", "Spectronaut\n(curated)")
 dtQuanPrec[, SOFTWARE := factor(SOFTWARE, softwareLevels, softwareLabels)]
@@ -108,37 +104,15 @@ p_quanPrec <- ggplot(dtQuanPrec, aes(x=log10(QUAN), fill=isEfdr001)) +
 
 ## Fragments count
 
-R code to generate input file `20241127_figure3c_quanFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst`[figure-3C-fragment-counting-prep.R](figure-3C-fragment-counting-prep.R) and [figure-3C-fragment-counting.R](figure-3C-fragment-counting.R)
+R code to generate input file `figure-3C-fragments.csv`[figure-3C-fragment-counting-prep.R](figure-3C-fragment-counting-prep.R) and [figure-3C-fragment-counting.R](figure-3C-fragment-counting.R)
 
 ```{r}
-filePathQuan <- file.path(figurePath, "20241127_figure3c_quanFrags_noNorm_pepFasta_localPcmFdr_pepFasta_apexQuan.fst")
-dtFragQuan <- read_fst(filePathQuan, as.data.table = T)
-softwareLevels <- c("CHIMERYS", "DIA-NN", "SPECTRONAUT")
+dtFragCount <- fread(file.path(figurePath, "figure-3C-fragments.csv"))
 softwareLabels <- c("CHIMERYS", "DIA-NN", "Spectronaut")
-dtFragQuan[, SOFTWARE := factor(SOFTWARE, softwareLevels, softwareLabels)]
-setnames(dtFragQuan, "QUAN_FRAGS", "FRAGS")
-
-dtFragQuan[, isEfdr := factor(ENTRAPMENT_Q_VALUE<=0.01, c(T, F))]
-cutBreaks <- c(-1, 0, 2, 3, 6, 12, 40, Inf)
-dtFragQuan[, FRAGS_LABEL := factor(cut(FRAGS, cutBreaks), cut(cutBreaks[-1], cutBreaks),
-                                   c("0", "1-2", "3", "4-6", "7-12", "12-40", ">40"))]
-dtFragCountCut <- dtFragQuan[, .N, keyby=.(SOFTWARE, isEfdr, FRAGS_LABEL)]
-maxN <- dtFragCountCut[, sum(N), by=.(SOFTWARE, FRAGS_LABEL)][, max(V1)]
-
-dtFragCount <- dtFragQuan[, .N, keyby=.(SOFTWARE, isEfdr, FRAGS)]
-#cross-join to force 0 bars within SOFTWARE
-dtCj <- dtFragCount[, CJ(isEfdr, FRAGS, unique = T), by=SOFTWARE]
-dtFragCount <- dtFragCount[dtCj, on=c("SOFTWARE", "isEfdr", "FRAGS")]
-dtFragCount[is.na(N), N := 0]
-#format labeling
-isEfdrLabelLevels <- c("eFDR ≤1%", "eFDR >1%")
-dtFragCount[, isEfdrLabel := factor(ifelse(isEfdr==T, isEfdrLabelLevels[1], isEfdrLabelLevels[2]), isEfdrLabelLevels)]
-dtFragCountLabel <- dtFragCount[, .(label = paste("n =", format(sum(N), big.mark=",", trim=T))),
-                                keyby=.(SOFTWARE, isEfdr, isEfdrLabel)]
-dtFragCount[, totalCount := sum(N), by=.(SOFTWARE, isEfdr, isEfdrLabel)]
-dtFragCount[, facetLabel := paste0(SOFTWARE, " (n = ", format(totalCount, big.mark=","), ")")]
-facetLabelLevels <- dtFragCount[, unique(facetLabel), keyby=.(isEfdr, SOFTWARE)][, V1]
-dtFragCount[, facetLabel := factor(facetLabel, facetLabelLevels)]
+dtFragCount[, SOFTWARE := factor(SOFTWARE, softwareLabels)]
+facetLabels <- dtFragCount[order(-isEfdr), unique(facetLabel)]
+dtFragCount[, facetLabel := factor(facetLabel, facetLabels)]
+dtFragCount[, isEfdr := factor(isEfdr, c(TRUE, FALSE))]
 
 p_fragQuan <- ggplot(dtFragCount, aes(x=FRAGS, y=N, fill=isEfdr)) +
   geom_bar(stat = "identity") +
@@ -152,12 +126,12 @@ p_fragQuan <- ggplot(dtFragCount, aes(x=FRAGS, y=N, fill=isEfdr)) +
 
 ## XICs
 
-[R code to generate input files `20241118_figure3d_example_goodXic_apexQuan_pepEntr.fst` and `20241118_figure3d_example_emptyXic_apexQuan_pepEntr.fst`](figure-3D-xics.R)
+[R code to generate input files `figure-3D-xic-good.csv` and `figure-3D-xic-bad.csv`](figure-3D-xics.R)
 
 ```{r}
-xicGood <- read_fst(file.path(figurePath, "20241127_figure3d_example_goodXic_apexQuan_pepEntr.fst"),
-                    as.data.table = T)
-IonLabelGoodLevels <- xicGood[, unique(IonLabel)]
+xicGood <- fread(file.path(figurePath, "figure-3D-xic-good.csv"))
+
+IonLabelGoodLevels <- xicGood[, unique(IonLabel)][1L:6L]
 IonLabelGoodLevelsLabel <- gsub("^\\[\\[(.*)\\].*\\]$", "\\1", IonLabelGoodLevels)
 xicGood[, IonLabel := factor(IonLabel, IonLabelGoodLevels, IonLabelGoodLevelsLabel)]
 rtGood <- xicGood[, c(unique(EG.StartRT), unique(EG.EndRT))]
@@ -183,9 +157,9 @@ p_xic_good <- ggplot(xicGood, aes(x=RT, y=Intensity, color=IonLabel)) +
   theme(legend.position = "top", plot.background = element_rect("transparent", NA))
 
 
-xicEmpty <- read_fst(file.path(figurePath, "20241127_figure3d_example_emptyXic_apexQuan_pepEntr.fst"),
-                     as.data.table = T)
-IonLabelEmptyLevels <- xicEmpty[, unique(IonLabel)]
+xicEmpty <- fread(file.path(figurePath, "figure-3D-xic-bad.csv"))
+
+IonLabelEmptyLevels <- xicEmpty[, unique(IonLabel)][c(3, 4, 5, 6, 1, 2)]
 IonLabelEmptyLevelsLabel <- gsub("^\\[\\[(.*)\\].*\\]$", "\\1", IonLabelEmptyLevels)
 xicEmpty[, IonLabel := factor(IonLabel, IonLabelEmptyLevels, IonLabelEmptyLevelsLabel)]
 rtEmpty <- xicEmpty[, c(unique(EG.StartRT), unique(EG.EndRT))]

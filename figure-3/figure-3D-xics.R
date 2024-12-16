@@ -9,8 +9,8 @@ figurePath <- file.path(dataPath, "data/figure-3")
 pathToExport <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/Spectronaut/20240925_064248_20240925_SN19_lfq_paper_entrapment_paper_Report_height_noNorm.tsv")
 
 # ---- load xics ----
-pathToElutionCurves_empty <- file.path(dataPath, "data/figure-3/_GLDDESGPTHGNDSGNHR_.4.tsv")
-pathToElutionCurves_good <- file.path(dataPath, "data/figure-3/_TIGGGDDSFNTFFSETGAGK_.2.tsv")
+pathToElutionCurves_empty <- file.path(dataPath, "data/figure-3/intermediate/_GLDDESGPTHGNDSGNHR_.4.tsv")
+pathToElutionCurves_good <- file.path(dataPath, "data/figure-3/intermediate/_TIGGGDDSFNTFFSETGAGK_.2.tsv")
 
 # ---- re-load intermediately saved data; including spectronaut and chimerys ----
 combined <- read.fst(file.path(dataPath, 'data/figure-3/20241127_figure3a_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst'), as.data.table = T)
@@ -177,13 +177,16 @@ good_xic <- merge(good_xic,
                    all.x = T)
 
 # ---- intermediate save for AH and MF ----
-write.fst(empty_xic_info, file.path(dataPath, 'data/figure-3/20241127_figure3d_exampleData_emptyXic_apexQuan_pepEntr.fst'), compress = 100)
-write.fst(empty_xic, file.path(dataPath, 'data/figure-3/20241127_figure3d_example_emptyXic_apexQuan_pepEntr.fst'), compress = 100)
-write.fst(good_xic, file.path(dataPath, 'data/figure-3/20241127_figure3d_example_goodXic_apexQuan_pepEntr.fst'), compress = 100)
+write.fst(empty_xic_info, file.path(dataPath, 'data/figure-3/fst-backup/20241127_figure3d_exampleData_emptyXic_apexQuan_pepEntr.fst'), compress = 100)
+write.fst(empty_xic, file.path(dataPath, 'data/figure-3/fst-backup/20241127_figure3d_example_emptyXic_apexQuan_pepEntr.fst'), compress = 100)
+write.fst(good_xic, file.path(dataPath, 'data/figure-3/fst-backup/20241127_figure3d_example_goodXic_apexQuan_pepEntr.fst'), compress = 100)
+
+fwrite(good_xic, file.path(figurePath, "figure-3D-xic-good.csv"))
+fwrite(empty_xic, file.path(figurePath, "figure-3D-xic-bad.csv"))
 
 # ---- re-read intermediately saved data ----
-# empty_xic <- read.fst(file.path(dataPath, 'data/figure-3/20241127_figure3d_example_emptyXic_apexQuan_pepEntr.fst'), as.data.table = T)
-# good_xic <- read.fst(file.path(dataPath, 'data/figure-3/20241127_figure3d_example_goodXic_apexQuan_pepEntr.fst'), as.data.table = T)
+# empty_xic <- read.fst(file.path(dataPath, 'data/figure-3/fst-backup/20241127_figure3d_example_emptyXic_apexQuan_pepEntr.fst'), as.data.table = T)
+# good_xic <- read.fst(file.path(dataPath, 'data/figure-3/fst-backup/20241127_figure3d_example_goodXic_apexQuan_pepEntr.fst'), as.data.table = T)
 
 # ---- preliminary plots ----
 ggplot(empty_xic, aes(RT, Intensity, group = IonLabel, color = IonLabel)) +

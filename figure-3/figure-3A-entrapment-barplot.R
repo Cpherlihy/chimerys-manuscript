@@ -177,10 +177,12 @@ length(common_pcms) # 49837
 combined[,SHARED_PCM_J_ID := ifelse(PCM_J_ID %in% common_pcms, 1, 0)]
 
 # ---- intermediate save ----
-write.fst(combined, file.path(figurePath, '20241127_figure3a_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst'), compress = 100)
+write.fst(combined, file.path(figurePath, 'fst-backup/20241127_figure3a_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst'), compress = 100)
+colNames <- c("SOFTWARE", "QUAN", "Q_VALUE", "ENTRAPMENT_Q_VALUE", "ENTRAPMENT_Q_VALUE_1")
+fwrite(combined[, .SD, .SDcols = colNames], file.path(figurePath, "figure-3B-quan.csv"))
 
 # # ---- re-read intermediately saved data ----
-# combined <- read.fst(file.path(figurePath, '20241127_figure3a_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst'), as.data.table = T)
+# combined <- read.fst(file.path(figurePath, 'fst-backup/20241127_figure3a_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst'), as.data.table = T)
 
 # ---- count pcms stratified by min 2 quantified samples per condition at fdr and entrapment fdr ----
 bardata_fdr <- melt(combined[Q_VALUE<=0.01,
@@ -215,10 +217,7 @@ bardata <- rbindlist(list(bardata_fdr, bardata_efdr_chimerys, bardata_efdr))
 bardata <- bardata[!SOFTWARE=='SPECTRONAUT_FILTERED']
 
 # ---- intermediate save ----
-write.fst(bardata, file.path(figurePath, '20241127_figure3a_bardata_pcmsConditionApexQuan_localPcmEfdr1_pepFasta.fst'), compress = 100)
-
-# ---- re-read intermediately saved data ----
-# bardata <- read.fst(file.path(figurePath, '20241127_figure3a_bardata_pcmsConditionApexQuan_localPcmEfdr1_pepFasta.fst'), as.data.table = T)
+fwrite(bardata, file.path(figurePath, "figure-3A-entrapment.csv"))
 
 # ---- preliminary plot ----
 ggplot(bardata,
