@@ -151,4 +151,11 @@ mean_efdr <- combined[, .(ENTRAPMENT_Q_VALUE = mean(ENTRAPMENT_Q_VALUE),
                       by=.(SOFTWARE, Q_VALUE_BIN)]
 setnames(mean_efdr, "Q_VALUE_BIN", "Q_VALUE")
 
-write.fst(combined, file.path(dataPath, 'data/figure-1/figure-1B-entrapment.fst'), compress = 100)
+write.fst(combined, file.path(dataPath, 'data/figure-1/intermediate/figure-1B-entrapment.fst'), compress = 100)
+mean_efdr <- read_fst(file.path(dataPath, 'data/figure-1/intermediate/figure-1B-entrapment.fst'), as.data.table = T)
+
+mean_efdr <- rbind(mean_efdr[, .(Q_VALUE = 0, ENTRAPMENT_Q_VALUE = 0, ENTRAPMENT_Q_VALUE_1 = 0),
+                             by=.(SOFTWARE)], mean_efdr, fill=T)
+
+fwrite(mean_efdr[, .(Q_VALUE, ENTRAPMENT_Q_VALUE, SOFTWARE)],
+       file.path(dataPath, 'data/figure-1/figure-1B-entrapment.csv'))

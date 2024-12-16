@@ -14,7 +14,7 @@ rawScans <- 115649L
 data_sub <- data_psm[sample %in% "CHIMERYS_1" & scan_ms2 %in% rawScans, .SD,
                      .SDcols = c("sample", "scan_ms2", "mz_ratio", "ptm", "charge", "nce", "score_coefficient_normalized")]
 #export file for plotting
-fwrite(data_sub, file.path(dataPath, "data/figure-1/decon-mirror.csv"))
+fwrite(data_sub, file.path(dataPath, "data/figure-1/intermediate/scan-115649-decon-mirror.csv"))
 
 
 ##upset plot
@@ -38,4 +38,4 @@ data_upset <- rbind(cbind(data_psm_ptm, level = "PSM-level FDR"),
                              by = c("condition", "sample", "ptm_group_J")])
 data_upset <- data_upset[!condition %in% c("Metamorpheus-Percolator", "MSFragger-full-isolation")]
 
-fwrite(data_upset, file.path(dataPath, "data/figure-1/upset.csv"))
+fwrite(data_upset, file.path(dataPath, "data/figure-1/figure-1E-upset.csv"))

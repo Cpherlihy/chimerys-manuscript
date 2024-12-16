@@ -1,6 +1,6 @@
 # Figure 1
 MSAID
-2024-11-29
+2024-12-16
 
 - [Setup](#setup)
 - [Data](#data)
@@ -45,14 +45,12 @@ Details on data processing
 ## Entrapment
 
 [R code to generate input file
-`figure-1B-entrapment.fst`](figure-1B-entrapment.R)
+`figure-1B-entrapment.csv`](figure-1B-entrapment.R)
 
 ``` r
-mean_efdr <- read_fst(file.path(figurePath, "figure-1B-entrapment.fst"), as.data.table = T)
-
-mean_efdr <-
-  rbind(mean_efdr[, .(Q_VALUE = 0, ENTRAPMENT_Q_VALUE = 0, ENTRAPMENT_Q_VALUE_1 = 0),
-                  by=.(SOFTWARE)], mean_efdr, fill=T)
+mean_efdr <- fread(file.path(figurePath, "figure-1B-entrapment.csv"))
+software_levels <- as.character(c(1, 3, 6, 8, 10, 12, 15, 20))
+mean_efdr[, SOFTWARE := factor(SOFTWARE, software_levels)]
 
 p_entrapment <- ggplot(mean_efdr, aes(x = Q_VALUE, y = ENTRAPMENT_Q_VALUE, color = SOFTWARE)) +
   geom_abline(intercept = 0, slope = 1, color = msaid_darkgray, linetype = "dashed") +
@@ -72,15 +70,15 @@ p_entrapment <- ggplot(mean_efdr, aes(x = Q_VALUE, y = ENTRAPMENT_Q_VALUE, color
 ## DeCon mirror plot
 
 [R code to generate input file
-`decon-mirror.csv`](figure-1CE-decon-mirror-upset.R)
+`scan-115649-decon-mirror.csv`](figure-1CE-decon-mirror-upset.R)
 
 CAVE: Re-running peptide predictions requires a local instance of
 INFERYS and the external LFQ benchmark raw file.
 
 ``` r
-data_sub <- fread(file.path(figurePath, "decon-mirror.csv"))
+data_sub <- fread(file.path(figurePath, "intermediate/scan-115649-decon-mirror.csv"))
 rawScans <- 115649L
-rawPath <- file.path(dataPath, "_external-raw-files/LFQ_Orbitrap_DDA_Human_01.raw")
+rawPath <- file.path(dataPath, "_external-raw-files/LFQ_Bench_human/LFQ_Orbitrap_DDA_Human_01.raw")
 
 dt_spectra <-
   plotMirror(dataTable = data_sub,
@@ -95,6 +93,9 @@ dt_spectra <-
              inferysApi = "localhost:8081",
              inferysModel = "inferys_3.0.0_fragmentation",
              quiet = T)
+
+#generate plotting data object for export
+fwrite(dt_spectra$spectra, file.path(figurePath, "figure-1C-decon-mirror.csv"))
 
 #mirror plot inset
 dt_inset <- dt_spectra$spectra[mz_recal>129 & mz_recal<148]
@@ -143,10 +144,11 @@ data_sub[order(score_coefficient_normalized), .(round(score_coefficient_normaliz
 
 ## Density plot
 
-[R code to generate input file `density.csv`](figure-1D-density.R)
+[R code to generate input file
+`figure-1D-density.csv`](figure-1D-density.R)
 
 ``` r
-dtOrg <- fread(file.path(figurePath, "density.csv"))
+dtOrg <- fread(file.path(figurePath, "figure-1D-density.csv"))
 dtOrg <- dtOrg[hasMethionine=="no Met"]
 organismLabels <- c("E. coli", "Human", "Yeast")
 organismRatios <- setNames(log2(c(0.25, 1, 2)), organismLabels)
@@ -171,11 +173,11 @@ p_org <- ggplot(dtOrg, aes(x=ratio, color=organism)) +
 ## Upset PTM Groups level
 
 [R code to generate input file
-`upset.csv`](figure-1CE-decon-mirror-upset.R)
+`figure-1E-upset.csv`](figure-1CE-decon-mirror-upset.R)
 
 ``` r
 #subset data for upset plot
-data_upset <- fread(file.path(figurePath, "upset.csv"))
+data_upset <- fread(file.path(figurePath, "figure-1E-upset.csv"))
 conditionLevels <- c("CHIMERYS", "Comet", "MSAmanda", "MSGFplus", "MSFragger",
                      "MSFragger-DDAplus", "MaxQuant", "Metamorpheus", "SequestHT")
 conditionLabels <- c("CHIMERYS", "Comet", "MS Amanda", "MS-GF+", "MSFragger",

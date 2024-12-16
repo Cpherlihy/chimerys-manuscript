@@ -34,7 +34,7 @@ dtMaLines <- data.table(YINTERCEPT = organismRatios, organism = factor(organismL
 msaid_organism <- c("Human" = msaid_blue, "Yeast" = msaid_orange, "E. coli" = msaid_darkgray)
 lsRatios[, hasMethionine := ifelse(grepl("M", ptm_group_J), "has Met", "no Met")]
 
-fwrite(lsRatios, file.path(file.path(dataPath, "figure-1"), "density.csv"))
+fwrite(lsRatios, file.path(file.path(dataPath, "figure-1"), "figure-1D-density.csv"))
 
 ggplot(lsRatios, aes(x=ratio, color=organism)) +
   geom_density(linewidth=0.25) +
