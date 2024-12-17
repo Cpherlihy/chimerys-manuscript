@@ -21,10 +21,10 @@ combined[,QUAN_MIN1_EFDR:=QUAN_SAMPLES_ENTRAPMENT_FDR>=1]
 combined[,QUAN_MIN1COND_EFDR:=all(QUAN_CONDITION_ENTRAPMENT_FDR>=1), by=.(SOFTWARE, PCM_ID)]
 
 # ---- intermediate save ----
-write.fst(combined, file.path(figurePath, '20241127_figure4c_combined_pcms_localPcmGrouper_apexQuan_pepEntr.fst'), compress = 100)
+write.fst(combined, file.path(figurePath, 'intermediate/20241127_figure4c_combined_pcms_localPcmGrouper_apexQuan_pepEntr.fst'), compress = 100)
 
 # ---- re-read intermediately saved data ----
-# combined <- read.fst(file.path(figurePath, '20241127_figure4c_combined_pcms_localPcmGrouper_apexQuan_pepEntr.fst'), as.data.table = T)
+# combined <- read.fst(file.path(figurePath, 'intermediate/20241127_figure4c_combined_pcms_localPcmGrouper_apexQuan_pepEntr.fst'), as.data.table = T)
 
 # ---- remove MBR for CHIMERYS ----
 table(combined$IS_IDENTIFIED_BY_MBR)
@@ -61,10 +61,25 @@ cv_combined_fdr[,LABEL:=factor(LABEL,
 cv_combined_fdr[,COUNT:=.N, by = .(SOFTWARE, LABEL)]
 
 # ---- intermediate save ----
-write.fst(cv_combined_fdr, file.path(figurePath, '20241127_figure4c_cvs_noNorm_fdr_localPcmGrouper_pepFasta.fst'), compress = 100)
+write.fst(cv_combined_fdr, file.path(figurePath, 'intermediate/20241127_figure4c_cvs_noNorm_fdr_localPcmGrouper_pepFasta.fst'), compress = 100)
+
+#dtCv[!is.na(CONDITION), .N, keyby=SOFTWARE]
+dtCv <- rbind(cbind(TYPE = "no eFDR filter", cv_combined_fdr),
+              cbind(TYPE = "eFDR min 1 per\ncondition ≤ 1%", cv_combined_fdr[QUAN_MIN1COND_EFDR==T]))
+
+cvEfdrLabel <- c("no eFDR filter", "eFDR min 1 per\ncondition ≤ 1%")
+dtCv[, TYPE := factor(TYPE, cvEfdrLabel)]
+dtCv[, COUNT := NULL]
+dtCv[, CV := CV/100]
+softwareLevels <- c("CHIMERYS", "DIA-NN", "SPECTRONAUT", "SPECTRONAUT_FILTERED")
+softwareLabels <- c("CHIMERYS", "DIA-NN", "Spectronaut", "Spectronaut\n(curated)")
+dtCv[, SOFTWARE := factor(SOFTWARE, softwareLevels, softwareLabels)]
+setkey(dtCv, TYPE, SOFTWARE, LABEL)
+
+fwrite(dtCv, file.path(figurePath, "figure-4C-CVs.csv"))
 
 # ---- re-read intermediately saved data ----
-# cv_combined_fdr <- read.fst(file.path(figurePath, '20241127_figure4c_cvs_noNorm_fdr_localPcmGrouper_pepFasta.fst'), as.data.table = T)
+# cv_combined_fdr <- read.fst(file.path(figurePath, 'intermediate/20241127_figure4c_cvs_noNorm_fdr_localPcmGrouper_pepFasta.fst'), as.data.table = T)
 
 # ---- preliminary plot ----
 ggplot(cv_combined_fdr,
@@ -143,10 +158,10 @@ cv_combined_efdr[,LABEL:=factor(LABEL,
 cv_combined_efdr[,COUNT:=.N, by = .(SOFTWARE, LABEL)]
 
 # ---- intermediate save ----
-write.fst(cv_combined_efdr, file.path(figurePath, '20241127_figure4c_cvs_noNorm_efdr_localPcmGrouper_pepFasta.fst'), compress = 100)
+write.fst(cv_combined_efdr, file.path(figurePath, 'intermediate/20241127_figure4c_cvs_noNorm_efdr_localPcmGrouper_pepFasta.fst'), compress = 100)
 
 # ---- re-read intermediately saved data ----
-# cv_combined_efdr <- read.fst(file.path(figurePath, '20241127_figure4c_cvs_noNorm_efdr_localPcmGrouper_pepFasta.fst'), as.data.table = T)
+# cv_combined_efdr <- read.fst(file.path(figurePath, 'intermediate/20241127_figure4c_cvs_noNorm_efdr_localPcmGrouper_pepFasta.fst'), as.data.table = T)
 
 # ---- plot ----
 ggplot(cv_combined_efdr,

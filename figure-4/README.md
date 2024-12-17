@@ -1,6 +1,6 @@
 # Figure 4
 MSAID
-2024-12-03
+2024-12-17
 
 - [Setup](#setup)
 - [Data](#data)
@@ -50,10 +50,12 @@ Intensities were exported directly from Skyline and matched to CHIMERYS
 intensity values.
 
 ``` r
-data_cor <- fread(file.path(figurePath, "quan_corr_skyline.csv"))
-data_new <- fread(file.path(figurePath, "Skyline_pcm_quan_export_martin_max5fragments_240617_redo.csv"))
+data_cor <- fread(file.path(figurePath, "intermediate/quan_corr_skyline.csv"))[, .(Peptide, CHIMERYS)]
+data_new <- fread(file.path(figurePath, "intermediate/Skyline_pcm_quan_export_martin_max5fragments_240617_redo.csv"))
 data_new <- data_new[, .(Peptide, SkylineNew = `Total Area Fragment`)]
 data_cor <- merge(data_cor, data_new, by="Peptide", all=T)
+
+fwrite(data_cor, file.path(figurePath, "figure-4B-correlation.csv"))
 
 p_cor <- ggplot(data_cor, aes(x=log10(CHIMERYS), y=log10(SkylineNew))) +
   geom_abline(slope = 1, intercept = 0, color = msaid_darkgray, linetype = "dashed") +
@@ -64,24 +66,18 @@ p_cor <- ggplot(data_cor, aes(x=log10(CHIMERYS), y=log10(SkylineNew))) +
 
 ## CV violins
 
-[R code to generate input file
-`20241127_figure4c_cvs_noNorm_fdr_localPcmGrouper_pepFasta.fst`](figure-4C-cvs.R)
+[R code to generate input file `figure-4C-CVs.csv`](figure-4C-cvs.R)
 
 ``` r
-dtCv <- read_fst(file.path(figurePath, "20241127_figure4c_cvs_noNorm_fdr_localPcmGrouper_pepFasta.fst"),
-                 as.data.table = T)
-#dtCv[!is.na(CONDITION), .N, keyby=SOFTWARE]
-dtCv <- rbind(cbind(TYPE = "no eFDR filter", dtCv),
-              cbind(TYPE = "eFDR min 1 per\ncondition ≤ 1%", dtCv[QUAN_MIN1COND_EFDR==T]))
+dtCv <- fread(file.path(figurePath, "figure-4C-CVs.csv"))
 
 cvEfdrLabel <- c("no eFDR filter", "eFDR min 1 per\ncondition ≤ 1%")
 dtCv[, TYPE := factor(TYPE, cvEfdrLabel)]
-dtCv[, COUNT := NULL]
-dtCv[, CV := CV/100]
-softwareLevels <- c("CHIMERYS", "DIA-NN", "SPECTRONAUT", "SPECTRONAUT_FILTERED")
 softwareLabels <- c("CHIMERYS", "DIA-NN", "Spectronaut", "Spectronaut\n(curated)")
-dtCv[, SOFTWARE := factor(SOFTWARE, softwareLevels, softwareLabels)]
-setkey(dtCv, TYPE, SOFTWARE, LABEL)
+dtCv[, SOFTWARE := factor(SOFTWARE, softwareLabels)]
+dtCv[, LABEL := factor(LABEL, c("0", "1", "2", "≥ 3"))]
+
+dtCvMed <- dtCv[!is.na(CV), .(medianCv = median(CV)), keyby=TYPE]
 
 dtCvCount <- dtCv[!is.na(CV), .(.N, maxCv = max(CV)), keyby=.(TYPE, SOFTWARE, LABEL)]
 dtCj <- dtCvCount[, CJ(TYPE, LABEL, SOFTWARE, unique = T)]
@@ -92,22 +88,20 @@ dtCvCount[is.na(N), N := 0]
 dtCvCount[is.na(maxCv) | N<2, maxCv := 0]
 dtCvCount[, labelN := format(N, big.mark=",", trim=T)]
 
-dtCvMed <- dtCv[!is.na(CV), .(medianCv = median(CV)), keyby=TYPE]
-
 p_cv <- ggplot(dtCv[!is.na(CV)], aes(x=CV, y=LABEL, fill=LABEL)) +
   geom_vline(data=dtCvMed, aes(xintercept = medianCv), linetype = "longdash",
              color = msaid_darkgray, linewidth = 0.25) +
   geom_violin(draw_quantiles = c(0.25, 0.5, 0.75), linewidth = 0.25) +
-  geom_text(data=dtCvCount, aes(x=maxCv+max(maxCv)*0.05, label=labelN),
+  geom_text(data=dtCvCount, aes(x=maxCv+max(maxCv)*0.02, label=labelN),
             position = position_dodge(0.9), color=msaid_darkgray,
-            family="Montserrat Light", size=3/.pt, hjust = 0) +
-  scale_x_continuous(labels = label_percent(), limits = c(0, 2.2)) +
+            family="Montserrat Light", size=5/.pt, hjust = 0) +
+  scale_x_continuous(labels = label_percent(), limits = c(0, 2.35)) +
   scale_fill_manual("Quantified fragments", values = colorRampPalette(c(msaid_red, msaid_darkgray))(4L),
                     breaks = c('0', '1', '2', '≥ 3'), drop = F) +
   facet_grid(cols = vars(SOFTWARE), rows = vars(TYPE)) +
   xlab("Precursor CVs") + ylab("Quantified fragments") +
   theme(legend.position = "none", plot.background = element_rect(fill = "transparent", colour = NA),
-        strip.text = element_text(size = 3), axis.text.x = element_text(size = 5))
+        strip.text = element_text(size = 4), axis.text.x = element_text(size = 5))
 
 #list median CVs for the manuscript
 dtCv[TYPE=="eFDR min 1 per\ncondition ≤ 1%" & !is.na(CV),
@@ -123,25 +117,17 @@ dtCv[TYPE=="eFDR min 1 per\ncondition ≤ 1%" & !is.na(CV),
 
 ## Density plot
 
-[R code to generate input file
-`20241127_figure4d_ma_noNorm_efdr_localPcmGrouper_pepFasta_min1eFdr.fst`](figure-4D-ma.R)
+[R code to generate input file `figure-4D-density.csv`](figure-4D-ma.R)
 
 ``` r
-filePathMa <- file.path(figurePath, "20241127_figure4d_ma_noNorm_efdr_localPcmGrouper_pepFasta_min1eFdr.fst")
-
-dtOrg <- read_fst(filePathMa, as.data.table = T)
-#dtOrg <- dtOrg[QUAN_SAMPLES_ENTRAPMENT_FDR==0 | QUAN_SAMPLES_ENTRAPMENT_FDR==6]
-softwareLevels <- c("CHIMERYS", "DIA-NN", "SPECTRONAUT", "SPECTRONAUT_FILTERED")
+dtOrg <- fread(file.path(figurePath, "figure-4D-density.csv"))
 softwareLabels <- c("CHIMERYS", "DIA-NN", "Spectronaut", "Spectronaut\n(curated)")
-dtOrg[, SOFTWARE := factor(SOFTWARE, softwareLevels, softwareLabels)]
-organismLevels <- c("YEAST", "HUMAN", "ECOLI")
+dtOrg[, SOFTWARE := factor(SOFTWARE, softwareLabels)]
 organismLabels <- c("Yeast", "Human", "E. coli")
 organismRatios <- setNames(log2(c(2, 1, 0.25)), organismLabels)
-dtOrg[, ORGANISM := factor(ORGANISM, organismLevels, organismLabels)]
-dtOrg[, eFdrLabelComp := ifelse(QUAN_COMPLETE_EFDR, "eFDR all ≤ 1%", "eFDR min 1 > 1%")]
-dtOrg[, eFdrLabelComp := factor(eFdrLabelComp, c("eFDR all ≤ 1%", "eFDR min 1 > 1%"))]
-dtOrg[, eFdrLabelCond := ifelse(QUAN_MIN1COND_EFDR, "eFDR min 1\nper condition ≤ 1%", "eFDR all in\nany condition > 1%")]
-dtOrg[, eFdrLabelCond := factor(eFdrLabelCond, c("eFDR min 1\nper condition ≤ 1%", "eFDR all in\nany condition > 1%"))]
+dtOrg[, ORGANISM := factor(ORGANISM, organismLabels)]
+efdrLabels <- c("eFDR min 1 per\ncondition ≤ 1%", "eFDR all in any\ncondition > 1%")
+dtOrg[, eFdrLabelCond := factor(eFdrLabelCond, efdrLabels)]
 dtMaLines <- data.table(YINTERCEPT = organismRatios, ORGANISM = factor(organismLabels))
 
 p_density <- ggplot(dtOrg, aes(x=LOG2RATIO, color=ORGANISM)) +
@@ -153,7 +139,7 @@ p_density <- ggplot(dtOrg, aes(x=LOG2RATIO, color=ORGANISM)) +
   guides(fill = guide_legend(override.aes = list(color = NA, size = 2))) +
   facet_grid(rows = vars(eFdrLabelCond), cols = vars(SOFTWARE)) +
   xlab("Log2 fold change (zoom-in)") + ylab("Density") +
-  theme(legend.position = "top", strip.text = element_text(size = 4))
+  theme(legend.position = "top", strip.text = element_text(size = 5))
 
 #mean and sd of log2 ratios after eFDR filtering (at least 1 per each condition)
 dtOrg[eFdrLabelCond=="eFDR min 1\nper condition ≤ 1%",
@@ -162,17 +148,7 @@ dtOrg[eFdrLabelCond=="eFDR min 1\nper condition ≤ 1%",
 ```
 
     Key: <SOFTWARE, ORGANISM>
-          SOFTWARE ORGANISM  mean    sd
-            <fctr>   <fctr> <num> <num>
-    1:    CHIMERYS    Yeast  1.00  0.29
-    2:    CHIMERYS    Human -0.03  0.25
-    3:    CHIMERYS  E. coli -1.90  0.25
-    4:      DIA-NN    Yeast  0.98  0.23
-    5:      DIA-NN    Human -0.03  0.21
-    6:      DIA-NN  E. coli -1.86  0.26
-    7: Spectronaut    Yeast  1.00  0.35
-    8: Spectronaut    Human -0.05  0.31
-    9: Spectronaut  E. coli -1.86  0.32
+    Empty data.table (0 rows and 4 cols): SOFTWARE,ORGANISM,mean,sd
 
 </details>
 

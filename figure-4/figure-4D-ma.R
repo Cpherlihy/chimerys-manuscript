@@ -6,7 +6,7 @@ figurePath <- file.path(dataPath, "data/figure-4")
 
 # ---- pathsToData ----
 ## combined
-pathToCombined <- file.path(figurePath, '20241127_figure4c_combined_pcms_localPcmGrouper_apexQuan_pepEntr.fst')
+pathToCombined <- file.path(figurePath, 'intermediate/20241127_figure4c_combined_pcms_localPcmGrouper_apexQuan_pepEntr.fst')
 
 # ---- read data ----
 combined <- read.fst(pathToCombined, as.data.table = T)
@@ -52,10 +52,28 @@ ma_combined_fdr <- ma_combined_fdr[,.(MEAN_INTENSITY=mean(QUAN),
 any(is.na(ma_combined_fdr$LOG2RATIO))
 
 # ---- intermediate save ----
-write.fst(ma_combined_fdr, file.path(figurePath, '20241127_figure4d_ma_noNorm_efdr_localPcmGrouper_pepFasta_min1eFdr.fst'), compress = 100)
+write.fst(ma_combined_fdr, file.path(figurePath, 'intermediate/20241127_figure4d_ma_noNorm_efdr_localPcmGrouper_pepFasta_min1eFdr.fst'), compress = 100)
+
+dtOrg <- copy(ma_combined_fdr)
+softwareLevels <- c("CHIMERYS", "DIA-NN", "SPECTRONAUT", "SPECTRONAUT_FILTERED")
+softwareLabels <- c("CHIMERYS", "DIA-NN", "Spectronaut", "Spectronaut\n(curated)")
+dtOrg[, SOFTWARE := factor(SOFTWARE, softwareLevels, softwareLabels)]
+organismLevels <- c("YEAST", "HUMAN", "ECOLI")
+organismLabels <- c("Yeast", "Human", "E. coli")
+organismRatios <- setNames(log2(c(2, 1, 0.25)), organismLabels)
+dtOrg[, ORGANISM := factor(ORGANISM, organismLevels, organismLabels)]
+dtOrg[, eFdrLabelComp := ifelse(QUAN_COMPLETE_EFDR, "eFDR all ≤ 1%", "eFDR min 1 > 1%")]
+dtOrg[, eFdrLabelComp := factor(eFdrLabelComp, c("eFDR all ≤ 1%", "eFDR min 1 > 1%"))]
+dtOrg[, eFdrLabelCond := ifelse(QUAN_MIN1COND_EFDR, "eFDR min 1 per\ncondition ≤ 1%", "eFDR all in any\ncondition > 1%")]
+dtOrg[, eFdrLabelCond := factor(eFdrLabelCond, c("eFDR min 1 per\ncondition ≤ 1%", "eFDR all in any\ncondition > 1%"))]
+dtMaLines <- data.table(YINTERCEPT = organismRatios, ORGANISM = factor(organismLabels))
+
+fwrite(dtOrg[, .(SOFTWARE, LOG2RATIO, ORGANISM, eFdrLabelCond)],
+       file.path(figurePath, "figure-4D-density.csv"))
+
 
 # ---- re-read intermediately saved data ----
-# ma_combined_fdr <- read.fst( file.path(figurePath, '20241127_figure4d_ma_noNorm_efdr_localPcmGrouper_pepFasta_min1eFdr.fst'), as.data.table = T)
+# ma_combined_fdr <- read.fst( file.path(figurePath, 'intermediate/20241127_figure4d_ma_noNorm_efdr_localPcmGrouper_pepFasta_min1eFdr.fst'), as.data.table = T)
 
 # ---- plot ----
 
