@@ -1,7 +1,7 @@
 #setup
 source(here::here("scripts/load-dependencies.R"))
-path <- file.path(here::here(), "figure-S2-shared-ions")
-figurePath <- file.path(dataPath, "data/figure-S2")
+path <- file.path(here::here(), "figure-S1")
+figurePath <- file.path(dataPath, "data/figure-S1")
 
 filePath <- file.path(dataPath, "LFQ_Bench_human/Chimerys/LFQ_01_CHIMERYS_v2x7x9_apex_True.pdResult")
 sampleNamesPath <- writeSampleNames(filePath, outputPath = path, outputName = "sample_names.csv")
@@ -48,8 +48,8 @@ setkey(peptides, id)
 # setkey(predictions, scan_ms2)
 # #renormalize fragment ion intensities to sum 1 per id
 # predictions[, intensity_normalized_ms2 := intensity_ms2/sum(intensity_ms2), by=id]
-# write_fst(predictions, file.path(figurePath, "predictions.fst"), compress = 100)
-predictions <- read_fst(file.path(figurePath, "predictions.fst"), as.data.table = T)
+# write_fst(predictions, file.path(figurePath, "intermediate/predictions.fst"), compress = 100)
+predictions <- read_fst(file.path(figurePath, "intermediate/predictions.fst"), as.data.table = T)
 
 #raw data
 #extract spectra (adjust number of cores to those available on your machine)
@@ -68,8 +68,8 @@ predictions <- read_fst(file.path(figurePath, "predictions.fst"), as.data.table 
 #   return(peaks)
 # }
 # stopCluster(cl)
-# write_fst(peaks, file.path(figurePath, "peaks.fst"), compress = 100)
-peaks <- read_fst(file.path(figurePath, "peaks.fst"), as.data.table = T)
+# write_fst(peaks, file.path(figurePath, "intermediate/peaks.fst"), compress = 100)
+peaks <- read_fst(file.path(figurePath, "intermediate/peaks.fst"), as.data.table = T)
 
 
 #merge
@@ -96,10 +96,10 @@ merged[!is.na(mzMatch), mzMatch_10 := factor(ceiling(mzMatch/10)*10)]
 merged[!is.na(mzMatch), mzMatch_200 := factor(ceiling(mzMatch/200)*200)]
 merged[!is.na(mzMatch), mzMatch_300 := factor(ceiling(mzMatch/300)*300)]
 merged[!is.na(mzMatch), .(mzMatch, mzMatch_10, mzMatch_200, mzMatch_300)]
-# write_fst(merged, file.path(figurePath, "merged.fst"), compress = 100)
+# write_fst(merged, file.path(figurePath, "intermediate/merged.fst"), compress = 100)
 
 # ---- reload data ----
-# merged <- read_fst(file.path(figurePath, "merged.fst"), as.data.table = T)
+# merged <- read_fst(file.path(figurePath, "intermediate/merged.fst"), as.data.table = T)
 
 # ---- predicted fragments ----
 merged[n_ptm_pred>1, .(.N,
@@ -112,7 +112,7 @@ merged[n_ptm_pred>1, .(.N,
 count_pos <- merged[, .N, keyby=.(position, is_ptm_pred_shared)]
 count_pos[, N_rel := N/sum(N), by=position]
 count_pos[, N_rel_label := paste0(round(N_rel*100, 0), "%")]
-fwrite(count_pos, file.path(figurePath, "LFQhuman-pred-pos.csv"))
+fwrite(count_pos, file.path(figurePath, "figure-S1AC-predicted-position.csv"))
 
 
 #plot 200 mz-bins
@@ -121,7 +121,7 @@ mz_lab <- count_200[, paste0(c(0, 0, paste0(">", as.character(mz_ms2_200)[1:(.N-
 count_200[, mzMatch_label := factor(mz_lab, unique(mz_lab))]
 count_200[, N_rel := N/sum(N), by=mz_ms2_200]
 count_200[, N_rel_label := paste0(round(N_rel*100, 2), "%")]
-fwrite(count_200, file.path(figurePath, "LFQhuman-pred-bins.csv"))
+fwrite(count_200, file.path(figurePath, "figure-S1BD-predicted-mz.csv"))
 
 
 # ---- matched fragments ----
@@ -136,7 +136,7 @@ merged[n_ptm_match>1, .(.N,
 count_pos <- merged[mzMatched==T, .N, keyby=.(position, is_ptm_match_shared)]
 count_pos[, N_rel := N/sum(N), by=position]
 count_pos[, N_rel_label := paste0(round(N_rel*100, 0), "%")]
-fwrite(count_pos, file.path(figurePath, "LFQhuman-match-pos.csv"))
+fwrite(count_pos, file.path(figurePath, "figure-S1EG-matched-position.csv"))
 
 
 #plot 200 mz-bins
@@ -145,4 +145,4 @@ mz_lab <- count_200[, paste0(c(0, 0, paste0(">", as.character(mzMatch_200)[1:(.N
 count_200[, mzMatch_label := factor(mz_lab, unique(mz_lab))]
 count_200[, N_rel := N/sum(N), by=mzMatch_200]
 count_200[, N_rel_label := paste0(round(N_rel*100, 2), "%")]
-fwrite(count_200, file.path(figurePath, "LFQhuman-match-bins.csv"))
+fwrite(count_200, file.path(figurePath, "figure-S1FH-matched-mz.csv"))
