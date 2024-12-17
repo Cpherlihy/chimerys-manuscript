@@ -1,6 +1,6 @@
 # Figure 1
 MSAID
-2024-12-16
+2024-12-17
 
 - [Setup](#setup)
 - [Data](#data)
@@ -184,10 +184,10 @@ conditionLabels <- c("CHIMERYS", "Comet", "MS Amanda", "MS-GF+", "MSFragger",
                      "MSFragger DDA+", "MaxQuant", "Metamorpheus", "Sequest HT")
 data_upset[, condition := factor(condition, conditionLevels, conditionLabels)]
 data_upset[, level := factor(level, c("PSM-level FDR", "PCM-level FDR", "PTM group-level FDR"),
-                             c("PSM FDR", "PCM FDR", "Peptide group FDR"))]
+                             c("PSM FDR", "Precursor FDR", "Peptide group FDR"))]
 
 groupFillColors <- c("PSM FDR" = msaid_red,
-                     "PCM FDR" = msaid_orange,
+                     "Precursor FDR" = msaid_orange,
                      "Peptide group FDR" = msaid_darkgray)
 fill_color <- data_upset[, level[1], by = condition]$V1
 names(fill_color) <- data_upset[, level[1], by = condition]$condition
