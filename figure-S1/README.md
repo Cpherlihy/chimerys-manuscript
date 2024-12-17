@@ -50,9 +50,9 @@ count_pos <- fread(file.path(figurePath, "figure-S1AC-predicted-position.csv"))
 p_ion_pred_pos_abs <-
   ggplot(count_pos, aes(x=position, y=N, fill=is_ptm_pred_shared)) +
   geom_bar(stat="identity") +
-  scale_fill_manual("shared in same scan", values = c(msaid_blue, msaid_orange)) +
+  scale_fill_manual("Shared in same scan", values = c(msaid_blue, msaid_orange)) +
   scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
-  xlab("b/y ion position") + ylab("fragment\nion predictions") +
+  xlab("b/y ion position") + ylab("Fragment\nion predictions") +
   theme(legend.position = "top")
 
 p_ion_pred_pos_rel <-
@@ -63,7 +63,7 @@ p_ion_pred_pos_rel <-
             color=msaid_darkgray, family="Montserrat Light") +
   scale_y_continuous(labels = label_percent(),
                      limits = c(0, count_pos[is_ptm_pred_shared==T, max(N_rel)]*1.15)) +
-  xlab("b/y ion position") + ylab("fragment\nion predictions")
+  xlab("b/y ion position") + ylab("Fragment\nion predictions")
 
 
 #plot 200 mz-bins
@@ -74,9 +74,9 @@ count_200[, mzMatch_label := factor(mzMatch_label, unique(mz_lab))]
 p_ion_pred_200_abs <-
   ggplot(count_200, aes(x=mzMatch_label, y=N, fill=is_ptm_pred_shared)) +
   geom_bar(stat="identity") +
-  scale_fill_manual("shared in same scan", values = c(msaid_blue, msaid_orange)) +
+  scale_fill_manual("Shared in same scan", values = c(msaid_blue, msaid_orange)) +
   scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
-  xlab("mz predicted") + ylab("fragment\nion predictions") +
+  xlab("m/z bin predicted") + ylab("Fragment\nion predictions") +
   theme(legend.position = "top")
 
 p_ion_pred_200_rel <-
@@ -87,7 +87,7 @@ p_ion_pred_200_rel <-
             color=msaid_darkgray, family="Montserrat Light") +
   scale_y_continuous(labels = label_percent(),
                      limits = c(0, count_200[is_ptm_pred_shared==T, max(N_rel)]*1.15)) +
-  xlab("mz predicted") + ylab("fragment\nion predictions")
+  xlab("m/z bin predicted") + ylab("Fragment\nion predictions")
 ```
 
 ## Matched ions
@@ -102,9 +102,9 @@ count_pos <- fread(file.path(figurePath, "figure-S1EG-matched-position.csv"))
 p_ion_shared_pos_abs <-
   ggplot(count_pos, aes(x=position, y=N, fill=is_ptm_match_shared)) +
   geom_bar(stat="identity") +
-  scale_fill_manual("shared in same scan", values = c(msaid_blue, msaid_orange)) +
+  scale_fill_manual("Shared in same scan", values = c(msaid_blue, msaid_orange)) +
   scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
-  xlab("b/y ion position") + ylab("matched fragment\nion predictions") +
+  xlab("b/y ion position") + ylab("Matched fragment\nion predictions") +
   theme(legend.position = "top")
 
 p_ion_shared_pos_rel <-
@@ -115,7 +115,7 @@ p_ion_shared_pos_rel <-
             color=msaid_darkgray, family="Montserrat Light") +
   scale_y_continuous(labels = label_percent(),
                      limits = c(0, count_pos[is_ptm_match_shared==T, max(N_rel)]*1.15)) +
-  xlab("b/y ion position") + ylab("matched fragment\nion predictions")
+  xlab("b/y ion position") + ylab("Matched fragment\nion predictions")
 
 
 #plot 200 mz-bins
@@ -126,9 +126,9 @@ count_200[, mzMatch_label := factor(mzMatch_label, unique(mz_lab))]
 p_ion_shared_200_abs <-
   ggplot(count_200, aes(x=mzMatch_label, y=N, fill=is_ptm_match_shared)) +
   geom_bar(stat="identity") +
-  scale_fill_manual("shared in same scan", values = c(msaid_blue, msaid_orange)) +
+  scale_fill_manual("Shared in same scan", values = c(msaid_blue, msaid_orange)) +
   scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
-  xlab("mz matched to raw file") + ylab("matched fragment\nion predictions") +
+  xlab("m/z bin matched to raw file") + ylab("Matched fragment\nion predictions") +
   theme(legend.position = "top")
 
 p_ion_shared_200_rel <-
@@ -139,7 +139,7 @@ p_ion_shared_200_rel <-
             color=msaid_darkgray, family="Montserrat Light") +
   scale_y_continuous(labels = label_percent(),
                      limits = c(0, count_200[is_ptm_match_shared==T, max(N_rel)]*1.15)) +
-  xlab("mz matched to raw file") + ylab("matched fragment\nion predictions")
+  xlab("m/z bin matched to raw file") + ylab("Matched fragment\nion predictions")
 ```
 
 </details>
