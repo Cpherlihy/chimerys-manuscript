@@ -149,7 +149,7 @@ pRankPaperProtein <- ggplot(proteins_sub, aes(x=rank, y=score_coefficient_lasso,
 ## Protein plot
 
 ```{r}
-proteins_sub2_count <- fread(file.path(figurePath, "figure-E-protein.csv"))
+proteins_sub2_count <- fread(file.path(figurePath, "figure-5E-protein.csv"))
 proteins_sub2_count[, type := factor(type, c("CHIMERYS", "CsoDIAq"),
                                      c("CHIMERYS", "\nCsoDIAq"))]
 

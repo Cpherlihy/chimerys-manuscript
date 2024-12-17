@@ -320,7 +320,7 @@ fwrite(proteins_sub, file.path(figurePath, "figure-5G-rank.csv"))
 proteins_sub2 <- proteins_local[sample=="faims-it-60k-20ms-1th-0.5ov_1"]
 #proteins_sub2[, nTypeLabel := factor(nTypeLabel, c("CHIMERYS", "CsoDIAq", "Shared"))]
 proteins_sub2_count <- proteins_sub2[, .N, keyby=.(type, nTypeLabel)]
-fwrite(proteins_sub2_count, file.path(figurePath, "figure-E-protein.csv"))
+fwrite(proteins_sub2_count, file.path(figurePath, "figure-5E-protein.csv"))
 
 colShared <- c("CHIMERYS" = msaid_blue, "CsoDIAq" = msaid_green, "Shared" = msaid_orange)
 colPathway <- c("CHIMERYS" = msaid_blue, "CsoDIAq" = msaid_green,
