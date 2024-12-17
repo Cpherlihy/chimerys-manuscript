@@ -1,10 +1,11 @@
 # Figure 5
 MSAID
-2024-12-03
+2024-12-17
 
 - [Setup](#setup)
 - [Data](#data)
   - [Count plots](#count-plots)
+  - [Relative performance](#relative-performance)
   - [Sensitivity](#sensitivity)
   - [Rank plot](#rank-plot)
   - [Protein plot](#protein-plot)
@@ -40,68 +41,26 @@ figurePath <- file.path(dataPath, "data/figure-5")
 
 <details>
 <summary>
-Details on data processing
-</summary>
-
-[R code to generate all input `.fst`
-files](figure-5AtoH-search-engine-results.R)
-
-``` r
-#peptide groups
-diPtm <- read_fst(file.path(figurePath, "diPtm.fst"), as.data.table = T)
-csodiaq_digest <- read_fst(file.path(figurePath, "csodiaq_digest.fst"), as.data.table = T)
-
-namesBoth <- intersect(names(diPtm), names(csodiaq_digest))
-namesChim <- c(namesBoth, "score_coefficient_lasso")
-results <- rbind(cbind(type = "CHIMERYS", diPtm[, .SD, .SDcols = namesChim]),
-                 cbind(type = "CsoDIAq", csodiaq_digest[, .SD, .SDcols = namesBoth]),
-                 fill = TRUE)
-shapeBoth <- c("no FAIMS" = "dotted", "FAIMS" = "solid")
-colBoth <- c("CHIMERYS" = msaid_blue, "CsoDIAq" = msaid_green)
-results[, type := factor(type, names(colBoth))]
-results_local <- results[is_decoy==FALSE & q_value<=0.01]
-results_local[, nType := .N, by=.(sample, ptm_group)]
-results_local[, nTypeLabel := factor(nType, 1L:2L, c("CHIMERYS", "Shared"))]
-
-#proteins
-diProt <- read_fst(file.path(figurePath, "diProt.fst"), as.data.table = T)
-csodiaq_digest_prot <- read_fst(file.path(figurePath, "csodiaq_digest_prot.fst"), as.data.table = T)
-
-namesBoth <- intersect(names(diProt), names(csodiaq_digest_prot))
-namesChim <- c(namesBoth, "score_coefficient_lasso")
-proteins <- rbind(cbind(type = "CHIMERYS", diProt[, .SD, .SDcols = namesChim]),
-                  cbind(type = "CsoDIAq", csodiaq_digest_prot[, .SD, .SDcols = namesBoth]),
-                  fill = TRUE)
-proteins[, proteins := gsub("Cont_", "", proteins, fixed = T)]
-proteins[, type := factor(type, names(colBoth))]
-proteins_local <- proteins[is_decoy==FALSE & q_value<=0.01]
-proteins_local[, nType := .N, by=.(sample, proteins)]
-proteins_local[nType==2, nTypeLabel := "Shared"]
-proteins_local[nType==1 & type=="CHIMERYS", nTypeLabel := "CHIMERYS"]
-proteins_local[nType==1 & type=="CsoDIAq", nTypeLabel := "CsoDIAq"]
-proteins_local[, nTypeLabel := factor(nTypeLabel, c("CHIMERYS", "CsoDIAq", "Shared"))]
-
-#proteins sub
-proteins_sub2 <- proteins_local[sample=="faims-it-60k-20ms-1th-0.5ov_1"]
-#proteins_sub2[, nTypeLabel := factor(nTypeLabel, c("CHIMERYS", "CsoDIAq", "Shared"))]
-
-colShared <- c("CHIMERYS" = msaid_blue, "CsoDIAq" = msaid_green, "Shared" = msaid_orange)
-colPathway <- c("CHIMERYS" = msaid_blue, "CsoDIAq" = msaid_green,
-                "Shared" = msaid_orange, "Pathway" = msaid_gray)
-```
-
-</details>
-<details>
-<summary>
 Details on plot generation
 </summary>
+
+[R code to generate all input `.csv`
+files](figure-5AtoH-search-engine-results.R)
 
 ## Count plots
 
 ``` r
 byCol <- c("type", "condition", "replicate", "sample", "condition_faims", "condition_iw",
            "condition_study", "condition_it", "condition_resolution")
-counts_local <- results_local[, .N, keyby=byCol]
+shapeBoth <- c("no FAIMS" = "dotted", "FAIMS" = "solid")
+colBoth <- c("CHIMERYS" = msaid_blue, "CsoDIAq" = msaid_green)
+colShared <- c("CHIMERYS" = msaid_blue, "CsoDIAq" = msaid_green, "Shared" = msaid_orange)
+colPathway <- c("CHIMERYS" = msaid_blue, "CsoDIAq" = msaid_green,
+                "Shared" = msaid_orange, "Pathway" = msaid_gray)
+
+counts_local <- fread(file.path(figurePath, "figure-5ABC-counts.csv"))
+counts_local[, type := factor(type, c("CHIMERYS", "CsoDIAq"))]
+counts_local[, condition_faims := factor(condition_faims, c("FAIMS", "no FAIMS"))]
 
 #isolation width
 counts_IW <- counts_local[like(condition, "60k-118ms-(2|3|6|12)th-1ov"),
@@ -151,10 +110,14 @@ pResBoth <-
   scale_y_continuous(limits = c(0, maxY),
                      labels = label_number(scale_cut = append(cut_short_scale(), 1, 1))) +
   theme(legend.position = "none")
+```
 
+## Relative performance
+
+``` r
 #relative counts
-rel_local <- counts_local[, .(`CHIMERYS\nvs CsoDIAq` = N[type=="CHIMERYS"]/N[type=="CsoDIAq"]), by=sample]
-rel_local <- melt(rel_local, id.vars = "sample", variable.name = "type", value.name = "rel")
+rel_local <- fread(file.path(figurePath, "figure-5D-relative.csv"), sep=",")
+rel_local[, type := factor(type, "CHIMERYS vs CsoDIAq", "CHIMERYS\nvs CsoDIAq")]
 max_y <- rel_local[, max(rel)]
 
 pRelLocalPaper <- ggplot(rel_local, aes(x=type, y=rel)) +
@@ -172,7 +135,7 @@ pRelLocalPaper <- ggplot(rel_local, aes(x=type, y=rel)) +
 ## Sensitivity
 
 ``` r
-results_sub <- results_local[type=="CHIMERYS" & sample=="faims-it-60k-20ms-1th-0.5ov_1" & !is.na(score_coefficient_lasso)]
+results_sub <- fread(file.path(figurePath, "figure-5F-sensitivity.csv"))
 
 pIntensityPaper <- ggplot(results_sub, aes(x=score_coefficient_lasso, fill=nTypeLabel)) +
   geom_histogram(binwidth = 0.5, position = "identity", alpha = 0.5) +
@@ -186,21 +149,7 @@ pIntensityPaper <- ggplot(results_sub, aes(x=score_coefficient_lasso, fill=nType
 ## Rank plot
 
 ``` r
-setorder(results_sub, -score_coefficient_lasso)
-results_sub[, rank := 1L:.N]
-# diPsms[sample=="faims-ov-60k-118ms-12th-6ov_1" &
-#          ptm_group=="SLALDIVDEDVK_0x1_0x5_0x21_0x35_0x765_0x766"]
-
-pRankPaper <- ggplot(results_sub, aes(x=rank, y=score_coefficient_lasso, color=nTypeLabel)) +
-  geom_point(shape = 1L) +
-  scale_color_manual(NULL, values = c("CHIMERYS" = msaid_blue, "Shared" = msaid_orange)) +
-  scale_x_continuous(labels = label_number(scale_cut = append(cut_short_scale(), 1, 1))) +
-  xlab("Intensity rank") + ylab("Log2 apex intensity") +
-  theme(legend.position = "top")
-
-proteins_sub <- proteins_local[type=="CHIMERYS" & sample=="faims-it-60k-20ms-1th-0.5ov_1" & !is.na(score_coefficient_lasso)]
-setorder(proteins_sub, -score_coefficient_lasso)
-proteins_sub[, rank := 1L:.N]
+proteins_sub <- fread(file.path(figurePath, "figure-5G-rank.csv"))
 
 pRankPaperProtein <- ggplot(proteins_sub, aes(x=rank, y=score_coefficient_lasso, color=nTypeLabel)) +
   geom_point(shape = 16L, alpha = 0.5) +
@@ -213,7 +162,7 @@ pRankPaperProtein <- ggplot(proteins_sub, aes(x=rank, y=score_coefficient_lasso,
 ## Protein plot
 
 ``` r
-proteins_sub2_count <- proteins_sub2[, .N, keyby=.(type, nTypeLabel)]
+proteins_sub2_count <- fread(file.path(figurePath, "figure-E-protein.csv"))
 proteins_sub2_count[, type := factor(type, c("CHIMERYS", "CsoDIAq"),
                                      c("CHIMERYS", "\nCsoDIAq"))]
 
@@ -227,62 +176,10 @@ p_prot_bar <- ggplot(proteins_sub2_count, aes(x=type, y=N, fill=nTypeLabel)) +
 ## Cytoscape proteins
 
 ``` r
-#export protein list
-protein_export <- proteins_sub2[, .(protein = sort(unique(proteins))), keyby = nTypeLabel]
-#fwrite(protein_export, file.path(figurePath, "cytoscape/cytoscape_proteins.csv"))
-
-
-#import into Cytoscape and perform functional enrichment, then reimport
-
-
-#map gene names onto protein list
-gene_map <- fread(file.path(figurePath, "cytoscape/nodes-all.csv"),
-                  select = c("display name", "query term"))
-#fwrite(gene_map, file.path(figurePath, "cytoscape/nodes-all.csv"))
-setnames(gene_map, c("display name", "query term"), c("gene", "protein"))
-setkey(gene_map, protein)
-setkey(protein_export, protein)
-protein_export <- gene_map[protein_export]
-#protein_export[is.na(gene)] #6 proteins were not mapped by STRING
-protein_export[, protein := NULL]
-protein_export <- protein_export[!is.na(gene)]
-setkey(protein_export, gene)
-
-#read back enrichment of all proteins
-cytoscape_chimerys_path <- file.path(figurePath, "cytoscape/enrichment-chimerys.csv")
-enrich_chimerys <- cbind(type="CHIMERYS", fread(cytoscape_chimerys_path))
-cytoscape_csodiaq_path <- file.path(figurePath, "cytoscape/enrichment-csodiaq.csv")
-enrich_csodiaq <- cbind(type="CsoDIAq", fread(cytoscape_csodiaq_path))
-enrich <- rbind(enrich_chimerys, enrich_csodiaq)[category=="KEGG Pathways"]
-names(enrich) <- make.names(names(enrich))
-setkey(enrich, type, category, FDR.value)
-enrich[, FDR.value.neg.log10 := -log10(FDR.value)]
-
-#map gene counts
-enrich <- enrich[, .(X..background.genes = X..background.genes[1],
-                     genes = unique(unlist(strsplit(genes, "|", fixed = T))),
-                     FDR.value.neg.log10=max(0, FDR.value.neg.log10[type=="CHIMERYS"])),
-                 by=description]
-setkey(enrich, genes)
-enrich <- protein_export[enrich]
-pie <- enrich[, .(variable = c("Shared", "CHIMERYS", "CsoDIAq", "Pathway"),
-                  value = c(sum(nTypeLabel=="Shared"),
-                            sum(nTypeLabel=="CHIMERYS"),
-                            sum(nTypeLabel=="CsoDIAq"),
-                            X..background.genes[1]-.N),
-                  FDR.value.neg.log10 = round(FDR.value.neg.log10[1], 2)),
-              by=description]
-pie <- pie[value!=0]
-pie[, variable := factor(variable, c("Pathway", "Shared", "CsoDIAq", "CHIMERYS"))]
-setorder(pie, -FDR.value.neg.log10, variable)
-pie[, description := paste0(description, "\n(-log10 q-value ", FDR.value.neg.log10, ")")]
-pie[, description := factor(description, unique(pie$description))]
-setkey(pie, description, variable)
-
+pie <- fread(file.path(figurePath, "figure-5H-cytoscape.csv"))
 term <- unique(pie$description)[c(1, 2, 3, 6)]
-pie[, csum := rev(cumsum(rev(value))), by = description]
-pie[, pos := value/2 + data.table::shift(csum, type = "lead"), by = description]
-pie[, pos := ifelse(is.na(pos), value/2, pos), by = description]
+pie[, variable := factor(variable, c("Pathway", "Shared", "CsoDIAq", "CHIMERYS"))]
+pie[, description := factor(description, unique(description))]
 
 p_pie <- ggplot(pie[description %in% term], aes(x="", y=value, fill=variable)) +
   geom_bar(stat = "identity") +

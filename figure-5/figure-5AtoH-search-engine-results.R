@@ -202,7 +202,7 @@ diPtm[, condition_it := as.integer(gsub("^.*-.*-.*-(.*)ms-.*-.*$", "\\1", condit
 diPtm[, condition_iw := as.integer(gsub("^.*-.*-.*-.*-(.*)th-.*$", "\\1", condition))]
 diPtm[, condition_overlap := factor(gsub("^.*-.*-.*-.*-.*-(.*)$", "\\1", condition),
                                     c("0.5ov", "1ov", "3ov", "4ov", "6ov", "8ov"))]
-write_fst(diPtm, file.path(figurePath, "diPtm.fst"))
+write_fst(diPtm, file.path(figurePath, "intermediate/diPtm.fst"))
 
 #kick out shared peptides, then collapse PSMs to proteins
 #diMap <- diPsms[, .(protein = unlist(strsplit(proteins, ";"))), keyby=.(sample, psm)]
@@ -244,7 +244,7 @@ diProt[, condition_it := as.integer(gsub("^.*-.*-.*-(.*)ms-.*-.*$", "\\1", condi
 diProt[, condition_iw := as.integer(gsub("^.*-.*-.*-.*-(.*)th-.*$", "\\1", condition))]
 diProt[, condition_overlap := factor(gsub("^.*-.*-.*-.*-.*-(.*)$", "\\1", condition),
                                      c("0.5ov", "1ov", "3ov", "4ov", "6ov", "8ov"))]
-write_fst(diProt, file.path(figurePath, "diProt.fst"))
+write_fst(diProt, file.path(figurePath, "intermediate/diProt.fst"))
 
 
 #Load csoDIAq results CHIMERYS digest
@@ -252,11 +252,137 @@ unimods <- c("1" = "[UNIMOD:1]", "4" = "[UNIMOD:4]", "5" = "[UNIMOD:5]", "35" = 
 csodiaq_digest <-
   read_zodiaq(data_path = file.path(dataPath, "Direct_infusion/ZO_2024-10-17_inferys_filtered_noNL_morethan400mz"),
               unimods = unimods, sample_names_path = file.path(path, "sample_names.csv"))
-write_fst(csodiaq_digest, file.path(figurePath, "csodiaq_digest.fst"))
+write_fst(csodiaq_digest, file.path(figurePath, "intermediate/csodiaq_digest.fst"))
 
 #Load csoDIAq results CHIMERYS digest
 csodiaq_digest_prot <-
   read_zodiaq_protein(data_path = file.path(dataPath, "Direct_infusion/ZO_2024-10-17_inferys_filtered_noNL_morethan400mz"),
                       sample_names_path = file.path(path, "sample_names.csv"),
-                      fasta_file_path = file.path(figurePath, "fasta_mapping.csv"))
-write_fst(csodiaq_digest_prot, file.path(figurePath, "csodiaq_digest_prot.fst"))
+                      fasta_file_path = file.path(figurePath, "intermediate/fasta_mapping.csv"))
+write_fst(csodiaq_digest_prot, file.path(figurePath, "intermediate/csodiaq_digest_prot.fst"))
+
+
+## Data processing ====
+#peptide groups
+diPtm <- read_fst(file.path(figurePath, "intermediate/diPtm.fst"), as.data.table = T)
+csodiaq_digest <- read_fst(file.path(figurePath, "intermediate/csodiaq_digest.fst"), as.data.table = T)
+
+namesBoth <- intersect(names(diPtm), names(csodiaq_digest))
+namesChim <- c(namesBoth, "score_coefficient_lasso")
+results <- rbind(cbind(type = "CHIMERYS", diPtm[, .SD, .SDcols = namesChim]),
+                 cbind(type = "CsoDIAq", csodiaq_digest[, .SD, .SDcols = namesBoth]),
+                 fill = TRUE)
+shapeBoth <- c("no FAIMS" = "dotted", "FAIMS" = "solid")
+colBoth <- c("CHIMERYS" = msaid_blue, "CsoDIAq" = msaid_green)
+results[, type := factor(type, names(colBoth))]
+results_local <- results[is_decoy==FALSE & q_value<=0.01]
+results_local[, nType := .N, by=.(sample, ptm_group)]
+results_local[, nTypeLabel := factor(nType, 1L:2L, c("CHIMERYS", "Shared"))]
+
+byCol <- c("type", "condition", "replicate", "sample", "condition_faims", "condition_iw",
+           "condition_study", "condition_it", "condition_resolution")
+counts_local <- results_local[, .N, keyby = byCol]
+fwrite(counts_local, file.path(figurePath, "figure-5ABC-counts.csv"))
+
+rel_local <- counts_local[, .("CHIMERYS vs CsoDIAq" = N[type=="CHIMERYS"]/N[type=="CsoDIAq"]), by=sample]
+rel_local <- melt(rel_local, id.vars = "sample", variable.name = "type", value.name = "rel")
+fwrite(rel_local, file.path(figurePath, "figure-5D-relative.csv"))
+
+results_sub <- results_local[type=="CHIMERYS" & sample=="faims-it-60k-20ms-1th-0.5ov_1" &
+                               !is.na(score_coefficient_lasso)]
+fwrite(results_sub, file.path(figurePath, "figure-5F-sensitivity.csv"))
+
+#proteins
+diProt <- read_fst(file.path(figurePath, "intermediate/diProt.fst"), as.data.table = T)
+csodiaq_digest_prot <- read_fst(file.path(figurePath, "intermediate/csodiaq_digest_prot.fst"), as.data.table = T)
+
+namesBoth <- intersect(names(diProt), names(csodiaq_digest_prot))
+namesChim <- c(namesBoth, "score_coefficient_lasso")
+proteins <- rbind(cbind(type = "CHIMERYS", diProt[, .SD, .SDcols = namesChim]),
+                  cbind(type = "CsoDIAq", csodiaq_digest_prot[, .SD, .SDcols = namesBoth]),
+                  fill = TRUE)
+proteins[, proteins := gsub("Cont_", "", proteins, fixed = T)]
+proteins[, type := factor(type, names(colBoth))]
+proteins_local <- proteins[is_decoy==FALSE & q_value<=0.01]
+proteins_local[, nType := .N, by=.(sample, proteins)]
+proteins_local[nType==2, nTypeLabel := "Shared"]
+proteins_local[nType==1 & type=="CHIMERYS", nTypeLabel := "CHIMERYS"]
+proteins_local[nType==1 & type=="CsoDIAq", nTypeLabel := "CsoDIAq"]
+proteins_local[, nTypeLabel := factor(nTypeLabel, c("CHIMERYS", "CsoDIAq", "Shared"))]
+
+#rank
+proteins_sub <- proteins_local[type=="CHIMERYS" & sample=="faims-it-60k-20ms-1th-0.5ov_1" & !is.na(score_coefficient_lasso)]
+setorder(proteins_sub, -score_coefficient_lasso)
+proteins_sub[, rank := 1L:.N]
+fwrite(proteins_sub, file.path(figurePath, "figure-5G-rank.csv"))
+
+#proteins sub
+proteins_sub2 <- proteins_local[sample=="faims-it-60k-20ms-1th-0.5ov_1"]
+#proteins_sub2[, nTypeLabel := factor(nTypeLabel, c("CHIMERYS", "CsoDIAq", "Shared"))]
+proteins_sub2_count <- proteins_sub2[, .N, keyby=.(type, nTypeLabel)]
+fwrite(proteins_sub2_count, file.path(figurePath, "figure-E-protein.csv"))
+
+colShared <- c("CHIMERYS" = msaid_blue, "CsoDIAq" = msaid_green, "Shared" = msaid_orange)
+colPathway <- c("CHIMERYS" = msaid_blue, "CsoDIAq" = msaid_green,
+                "Shared" = msaid_orange, "Pathway" = msaid_gray)
+
+
+## Cytoscape ====
+#export protein list
+protein_export <- proteins_sub2[, .(protein = sort(unique(proteins))), keyby = nTypeLabel]
+#fwrite(protein_export, file.path(figurePath, "cytoscape/cytoscape_proteins.csv"))
+
+
+## import into Cytoscape and perform functional enrichment, then reimport ==
+
+
+#map gene names onto protein list
+gene_map <- fread(file.path(figurePath, "cytoscape/nodes-all.csv"),
+                  select = c("display name", "query term"))
+#fwrite(gene_map, file.path(figurePath, "cytoscape/nodes-all.csv"))
+setnames(gene_map, c("display name", "query term"), c("gene", "protein"))
+setkey(gene_map, protein)
+setkey(protein_export, protein)
+protein_export <- gene_map[protein_export]
+#protein_export[is.na(gene)] #6 proteins were not mapped by STRING
+protein_export[, protein := NULL]
+protein_export <- protein_export[!is.na(gene)]
+setkey(protein_export, gene)
+
+#read back enrichment of all proteins
+cytoscape_chimerys_path <- file.path(figurePath, "cytoscape/enrichment-chimerys.csv")
+enrich_chimerys <- cbind(type="CHIMERYS", fread(cytoscape_chimerys_path))
+cytoscape_csodiaq_path <- file.path(figurePath, "cytoscape/enrichment-csodiaq.csv")
+enrich_csodiaq <- cbind(type="CsoDIAq", fread(cytoscape_csodiaq_path))
+enrich <- rbind(enrich_chimerys, enrich_csodiaq)[category=="KEGG Pathways"]
+names(enrich) <- make.names(names(enrich))
+setkey(enrich, type, category, FDR.value)
+enrich[, FDR.value.neg.log10 := -log10(FDR.value)]
+
+#map gene counts
+enrich <- enrich[, .(X..background.genes = X..background.genes[1],
+                     genes = unique(unlist(strsplit(genes, "|", fixed = T))),
+                     FDR.value.neg.log10=max(0, FDR.value.neg.log10[type=="CHIMERYS"])),
+                 by=description]
+setkey(enrich, genes)
+enrich <- protein_export[enrich]
+pie <- enrich[, .(variable = c("Shared", "CHIMERYS", "CsoDIAq", "Pathway"),
+                  value = c(sum(nTypeLabel=="Shared"),
+                            sum(nTypeLabel=="CHIMERYS"),
+                            sum(nTypeLabel=="CsoDIAq"),
+                            X..background.genes[1]-.N),
+                  FDR.value.neg.log10 = round(FDR.value.neg.log10[1], 2)),
+              by=description]
+pie <- pie[value!=0]
+pie[, variable := factor(variable, c("Pathway", "Shared", "CsoDIAq", "CHIMERYS"))]
+setorder(pie, -FDR.value.neg.log10, variable)
+pie[, description := paste0(description, "\n(-log10 q-value ", FDR.value.neg.log10, ")")]
+pie[, description := factor(description, unique(pie$description))]
+setkey(pie, description, variable)
+
+term <- unique(pie$description)[c(1, 2, 3, 6)]
+pie[, csum := rev(cumsum(rev(value))), by = description]
+pie[, pos := value/2 + data.table::shift(csum, type = "lead"), by = description]
+pie[, pos := ifelse(is.na(pos), value/2, pos), by = description]
+
+fwrite(pie, file.path(figurePath, "figure-5H-cytoscape.csv"))
