@@ -35,28 +35,14 @@ figurePath <- file.path(dataPath, "data/figure-6")
 <details>
 <summary>Details on data processing</summary>
 
+[R code to generate all `.csv` input files](id-counts.R)
+
 ## Peptide Group IDs
 
-[R code to generate input file `LFQ3_IDs_CD.csv`](figure-6A-LFQ3_IDs_CD.R)
-
 ```{r}
-dtLfqIds <- fread(file.path(figurePath, "LFQ3_IDs_CD.csv"))
-dtLfqIds[, type := "LFQ Benchmark"]
-dtLfqIds[, condition_MS := factor(contrastLabel, c("DDA (Minora MS1 Quan)", "DIA (CHIMERYS MS2 Quan)"),
-                                  c("DDA", "DIA"))]
-
-dtAstralIds <- fread(file.path(figurePath, "Astral_14min_IDs_CD.csv"))
-dtAstralIds[, type := "Astral 14 min"]
-dtAstralIds[, condition_MS := factor(condition_MS, c("DDA", "DIA"))]
-
-dtAstral30Ids <- fread(file.path(figurePath, "Astral_30min_IDs_CD.csv"))
-dtAstral30Ids[, type := "Astral 30 min"]
-dtAstral30Ids[, condition_MS := factor(condition_MS, c("DDA", "DIA"))]
-
-#one plot for all
-dtIds <- rbind(dtLfqIds[, .(type, condition_MS, isQuanMin2 = isQuanMin2Each, N)],
-               dtAstralIds, dtAstral30Ids)
+dtIds <- fread(file.path(figurePath, "figure-6A-counts.csv"))
 dtIds[, type := factor(type, c("LFQ Benchmark", "Astral 14 min", "Astral 30 min"))]
+dtIds[, condition_MS := factor(condition_MS, c("DDA", "DIA"))]
 
 p_pepGrId <- ggplot(dtIds, aes(x=condition_MS, y=N, fill=isQuanMin2)) +
   geom_bar(stat = "identity") +
@@ -69,26 +55,10 @@ p_pepGrId <- ggplot(dtIds, aes(x=condition_MS, y=N, fill=isQuanMin2)) +
 
 ## CVs
 
-[R code to generate input file `LFQ3_CVs.csv`](figure-6B-LFQ3_CVs.R)
-
 ```{r}
-dtLfqCvs <- fread(file.path(figurePath, "LFQ3_CVs.csv"))
-contrastLevels <- c("DDA (Minora MS1 Quan)", "DIA (CHIMERYS MS2 Quan)")
-dtLfqCvs[, condition_MS := factor(contrastLabel, contrastLevels, c("DDA", "DIA"))]
-dtLfqCvs[, type := "LFQ Benchmark"]
-
-dtAstralCvs <- fread(file.path(figurePath, "Astral_14min_CVs.csv"))
-dtAstralCvs[, condition_MS := factor(condition_MS, c("DDA", "DIA"))]
-dtAstralCvs[, type := "Astral 14 min"]
-
-dtAstral30Cvs <- fread(file.path(figurePath, "Astral_30min_CVs.csv"))
-dtAstral30Cvs[, condition_MS := factor(condition_MS, c("DDA", "DIA"))]
-dtAstral30Cvs[, type := "Astral 30 min"]
-
-#one plot for all
-dtCvs <- rbind(dtLfqCvs[, .(type, condition_MS, ptm_group_J, N, cv)],
-               dtAstralCvs, dtAstral30Cvs)
+dtCvs <- fread(file.path(figurePath, "figure-6B-CVs.csv"))
 dtCvs[, type := factor(type, c("LFQ Benchmark", "Astral 14 min", "Astral 30 min"))]
+dtCvs[, condition_MS := factor(condition_MS, c("DDA", "DIA"))]
 
 p_Cvs <- ggplot(dtCvs, aes(x=cv, y=condition_MS)) +
   geom_violin(draw_quantiles = c(0.25, 0.5, 0.75), linewidth = 0.25) +
@@ -101,12 +71,10 @@ p_Cvs <- ggplot(dtCvs, aes(x=cv, y=condition_MS)) +
 
 ## Density plot
 
-[R code to generate input file `LFQ3_MA.csv`](figure-6C-LFQ3_MA.R)
-
 ```{r}
-dtLfqOrg <- fread(file.path(figurePath, "LFQ3_MA.csv"))
-dtLfqOrg[, contrastLabel := factor(contrastLabel, c("DDA (Minora MS1 Quan)", "DIA (CHIMERYS MS2 Quan)"),
-                                   c("DDA", "DIA"))]
+dtLfqOrg <- fread(file.path(figurePath, "figure-6C-density.csv"))
+contrastLabels <- c("DDA (Minora MS1 Quan)", "DIA (CHIMERYS MS2 Quan)")
+dtLfqOrg[, contrastLabel := factor(contrastLabel, contrastLabels, c("DDA", "DIA"))]
 organismLabels <- c("E. coli", "Human", "Yeast")
 organismRatios <- setNames(log2(c(0.25, 1, 2)), organismLabels)
 dtLfqOrg[, organism := factor(organism, organismLabels)]
@@ -127,10 +95,10 @@ p_lfq_org <- ggplot(dtLfqOrg, aes(x=ratio, color=organism)) +
 
 ## Quan correlation
 
-[R code to generate input file `LFQ3_cor_DIA.csv`](figure-6D-LFQ3_cor_DIA.R)
+[R code to generate input file `LFQ3_cor_DIA.csv`](id-counts.R)
 
 ```{r}
-dtLfqCor <- fread(file.path(figurePath, "LFQ3_cor_DIA.csv"))
+dtLfqCor <- fread(file.path(figurePath, "figure-6D-correlation.csv"))
 corLfq <- dtLfqCor[, round(cor(log10(2^CHIMERYS), log10(2^Minora), method = "pearson"), 2)]
 corLfq <- paste("Pearson", corLfq)
 

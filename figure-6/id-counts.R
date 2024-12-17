@@ -24,7 +24,7 @@ dtObsMin3_lfq3 <- testContrasts(data_lfq3, "ptm_group_J", contrasts, minQuanRepl
 dtIdPtmGroup_lfq3 <- dtRatiosMin0_lfq3[, .N, keyby = .(contrast, isQuanMin2Each)]
 dtIdPtmGroup_lfq3[, contrastLabel := factor(contrast, contrasts, contrastLabels)]
 
-fwrite(dtIdPtmGroup_lfq3, file.path(figurePath, "LFQ3_IDs_CD.csv"))
+fwrite(dtIdPtmGroup_lfq3, file.path(figurePath, "intermediate/LFQ3_IDs_CD.csv"))
 
 
 ##Astral_14min_IDs_CD.csv ====
@@ -53,7 +53,7 @@ dtCvsMin0Unique_Ast14 <- unique(dtCvsMin0_Ast14[, .SD, .SDcols=c("condition_MS",
 dtCvsMin0Unique_Ast14[, isQuanMin2 := nQuan>=2]
 dtIdPtmGroup_Ast14 <- dtCvsMin0Unique_Ast14[, .N, keyby = .(condition_MS, isQuanMin2)]
 
-fwrite(dtIdPtmGroup_Ast14, file.path(figurePath, "Astral_14min_IDs_CD.csv"))
+fwrite(dtIdPtmGroup_Ast14, file.path(figurePath, "intermediate/Astral_14min_IDs_CD.csv"))
 
 
 ##Astral_30min_IDs_CD.csv ====
@@ -83,7 +83,7 @@ dtCvsMin0Unique_Ast30 <- unique(dtCvsMin0_Ast30[, .SD, .SDcols=c("condition_MS",
 dtCvsMin0Unique_Ast30[, isQuanMin2 := nQuan>=2]
 dtIdPtmGroup_Ast30 <- dtCvsMin0Unique_Ast30[, .N, keyby = .(condition_MS, isQuanMin2)]
 
-fwrite(dtIdPtmGroup_Ast30, file.path(figurePath, "Astral_30min_IDs_CD.csv"))
+fwrite(dtIdPtmGroup_Ast30, file.path(figurePath, "intermediate/Astral_30min_IDs_CD.csv"))
 
 
 ##LFQ3_CVs.csv ====
@@ -98,7 +98,7 @@ setkey(dtCv_lfq3, contrast, ptm_group_J)
 dtCvShared_lfq3 <- dtCv_lfq3[dtCv_lfq3[, .N, by=ptm_group_J], on="ptm_group_J"][N==4 & !grepl("M", ptm_group_J)]
 dtCvShared_lfq3[, .(mean_CV = mean(cv), median_CV = median(cv), .N), keyby = .(contrastLabel)]
 
-fwrite(dtCvShared_lfq3, file.path(figurePath, "LFQ3_CVs.csv"))
+fwrite(dtCvShared_lfq3, file.path(figurePath, "intermediate/LFQ3_CVs.csv"))
 
 
 ##Astral_14min_CVs.csv ====
@@ -108,7 +108,7 @@ dtCv_Ast14 <- unique(dtCvsMin2_Ast14[, .SD, .SDcols=c("condition_MS", "ptm_group
 setkey(dtCv_Ast14, condition_MS, ptm_group_J)
 dtCvShared_Ast14 <- dtCv_Ast14[dtCv_Ast14[, .N, by=ptm_group_J], on="ptm_group_J"][N==2 & !grepl("M", ptm_group_J)]
 
-fwrite(dtCvShared_Ast14, file.path(figurePath, "Astral_14min_CVs.csv"))
+fwrite(dtCvShared_Ast14, file.path(figurePath, "intermediate/Astral_14min_CVs.csv"))
 
 
 ##Astral_30min_CVs.csv ====
@@ -119,11 +119,11 @@ setkey(dtCv_Ast30, condition_MS, ptm_group_J)
 
 dtCvShared_Ast30 <- dtCv_Ast30[dtCv_Ast30[, .N, by=ptm_group_J], on="ptm_group_J"][N==2 & !grepl("M", ptm_group_J)]
 
-fwrite(dtCvShared_Ast30, file.path(figurePath, "Astral_30min_CVs.csv"))
+fwrite(dtCvShared_Ast30, file.path(figurePath, "intermediate/Astral_30min_CVs.csv"))
 
 
 
-##LFQ3_MA.csv ====
+##figure-6C-density.csv ====
 #filter on same peptides
 dtMaShared_lfq3 <- dtRatiosMin2_lfq3[dtRatiosMin2_lfq3[, .N, by=ptm_group_J],
                                      on="ptm_group_J"][N==2 & !grepl("M", ptm_group_J)]
@@ -144,10 +144,10 @@ dtMa_lfq3 <- dtMa_lfq3[!is.na(organism)]
 dtMa_lfq3[, contrastLabel := factor(contrast, contrasts, contrastLabels)]
 dtMa_lfq3[, .(.N, mean(ratio)), keyby=.(contrastLabel, organism)]
 
-fwrite(dtMa_lfq3, file.path(figurePath, "LFQ3_MA.csv"))
+fwrite(dtMa_lfq3, file.path(figurePath, "figure-6C-density.csv"))
 
 
-##LFQ3_cor_DIA.csv ====
+##figure-6D-correlation.csv ====
 #GOAL: global peptide group IDs at FDR, filled by "Quantified in >=2 replicates" (same as 3A)
 filePath <- file.path(dataPath, c("LFQ_Bench_multispecies/DIA/Chimerys/20240522_LFQ3-DIA-Minora_noNorm.pdResult",
                                   "LFQ_Bench_multispecies/DIA/Chimerys/20240517_lfq_dia_z1to4_v2x7x9_apex_True.pdResult"))
@@ -168,4 +168,44 @@ dtObsMin3Mean_lfq3[, nConditionMS := .N, by=id_cond]
 dtObsMin3Mean_lfq3 <- dtObsMin3Mean_lfq3[nConditionMS==2 & !grepl("M", ptm_group_J)]
 dtObsMin3Mean_lfq3 <- dcast(dtObsMin3Mean_lfq3, id_cond~condition_MS, value.var = "intensityMean")
 
-fwrite(dtObsMin3Mean_lfq3, file.path(figurePath, "LFQ3_cor_DIA.csv"))
+fwrite(dtObsMin3Mean_lfq3, file.path(figurePath, "figure-6D-correlation.csv"))
+
+
+## Plotting objects ====
+# Figure A
+dtLfqIds <- fread(file.path(figurePath, "intermediate/LFQ3_IDs_CD.csv"))
+dtLfqIds[, type := "LFQ Benchmark"]
+dtLfqIds[, condition_MS := factor(contrastLabel, c("DDA (Minora MS1 Quan)", "DIA (CHIMERYS MS2 Quan)"),
+                                  c("DDA", "DIA"))]
+
+dtAstralIds <- fread(file.path(figurePath, "intermediate/Astral_14min_IDs_CD.csv"))
+dtAstralIds[, type := "Astral 14 min"]
+dtAstralIds[, condition_MS := factor(condition_MS, c("DDA", "DIA"))]
+
+dtAstral30Ids <- fread(file.path(figurePath, "intermediate/Astral_30min_IDs_CD.csv"))
+dtAstral30Ids[, type := "Astral 30 min"]
+dtAstral30Ids[, condition_MS := factor(condition_MS, c("DDA", "DIA"))]
+
+#one plot for all
+dtIds <- rbind(dtLfqIds[, .(type, condition_MS, isQuanMin2 = isQuanMin2Each, N)],
+               dtAstralIds, dtAstral30Ids)
+fwrite(dtIds, file.path(figurePath, "figure-6A-counts.csv"))
+
+# Figure B
+dtLfqCvs <- fread(file.path(figurePath, "intermediate/LFQ3_CVs.csv"))
+contrastLevels <- c("DDA (Minora MS1 Quan)", "DIA (CHIMERYS MS2 Quan)")
+dtLfqCvs[, condition_MS := factor(contrastLabel, contrastLevels, c("DDA", "DIA"))]
+dtLfqCvs[, type := "LFQ Benchmark"]
+
+dtAstralCvs <- fread(file.path(figurePath, "intermediate/Astral_14min_CVs.csv"))
+dtAstralCvs[, condition_MS := factor(condition_MS, c("DDA", "DIA"))]
+dtAstralCvs[, type := "Astral 14 min"]
+
+dtAstral30Cvs <- fread(file.path(figurePath, "intermediate/Astral_30min_CVs.csv"))
+dtAstral30Cvs[, condition_MS := factor(condition_MS, c("DDA", "DIA"))]
+dtAstral30Cvs[, type := "Astral 30 min"]
+
+#one plot for all
+dtCvs <- rbind(dtLfqCvs[, .(type, condition_MS, ptm_group_J, N, cv)],
+               dtAstralCvs, dtAstral30Cvs)
+fwrite(dtCvs, file.path(figurePath, "figure-6B-CVs.csv"))
