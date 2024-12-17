@@ -1,6 +1,6 @@
 # Figure 3
 MSAID
-2024-12-16
+2024-12-17
 
 - [Setup](#setup)
 - [Data](#data)
@@ -180,7 +180,7 @@ p_fragQuan <- ggplot(dtFragCount, aes(x=FRAGS, y=N, fill=isEfdr)) +
   scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
   scale_x_continuous(breaks = pretty_breaks(n = 6)) +
   xlab("Quantified fragments") + ylab("Run-specific precursors") +
-  theme(legend.position = "top", strip.text = element_text(size=4))
+  theme(legend.position = "top", strip.text = element_text(size=5))
 ```
 
 ## XICs
