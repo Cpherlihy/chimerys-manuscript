@@ -1,0 +1,248 @@
+# Figure E3
+MSAID
+2024-12-18
+
+- [Setup](#setup)
+- [Data](#data)
+  - [Intensity](#intensity)
+  - [Number of matched peaks](#number-of-matched-peaks)
+  - [Spectrum similarity](#spectrum-similarity)
+  - [SVM score](#svm-score)
+  - [SE protein results](#se-protein-results)
+  - [Wrong FDR levels LFQ Bench
+    human](#wrong-fdr-levels-lfq-bench-human)
+  - [Wrong FDR levels LFQ Bench
+    multispecies](#wrong-fdr-levels-lfq-bench-multispecies)
+- [Figure](#figure)
+
+# Setup
+
+This document describes how the data analysis and plots for figure XXX
+were generated. To recreate the figures, make sure to download all input
+files (available on
+[PRIDE](https://www.ebi.ac.uk/pride/archive?keyword=PXD053241)), place
+them under `dataPath` (adjust in `load-dependencies.R` to your own
+folder structure) and generate intermediate results in the linked `.R`
+scripts.
+
+<details>
+<summary>
+Details on setup
+</summary>
+
+``` r
+suppressMessages(source(here::here("scripts/load-dependencies.R")))
+path <- file.path(here::here(), "figure-E3")
+figurePath <- file.path(dataPath, "data/figure-E3")
+# dataPath <- "/mnt/paper/01_paper/figures/plotting/figure-S4-IDs-FDR/"
+# dataPathS3 <- file.path(here::here(), "figure-S3-overlap/")
+msaid_eFDR <- c("TRUE" = msaid_darkgray, "FALSE" = msaid_red)
+msaid_unique <- c("TRUE" = msaid_blue, "FALSE" = msaid_darkgray)
+categories <- c('FDR >1% target' = msaid_blue,
+                'Decoy'=msaid_darkgray,
+                'CHIMERYS unique target'=msaid_green,
+                'Shared target'=msaid_orange)
+```
+
+</details>
+
+# Data
+
+<details>
+<summary>
+Details on data processing
+</summary>
+
+## Intensity
+
+[R code to generate `figure-E3A-intensity.csv` input
+file\`](figure-E3AtoD-pdresult.R)
+
+``` r
+dt_intensity <- fread(file.path(figurePath, "figure-E3A-intensity.csv"))
+dt_intensity[, Category := factor(Category, c("Shared target", "CHIMERYS unique target"))]
+
+p_int <- ggplot(dt_intensity, aes(x = log10(QUAN), fill=Category)) +
+  geom_histogram(bins = 100) +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale2())) +
+  scale_fill_manual("Category", values = categories) +
+  xlab("Log10 intensity") + ylab("Peptide groups") +
+  theme(legend.position = "none")
+```
+
+## Number of matched peaks
+
+[R code to generate `figure-E3B-fragments.csv` input
+file\`](figure-E3AtoD-pdresult.R)
+
+``` r
+dt_fragments <- fread(file.path(figurePath, "figure-E3B-fragments.csv"))
+dt_fragments[, Category := factor(Category, c("Shared target", "CHIMERYS unique target"))]
+
+p_peaks <- ggplot(dt_fragments, aes(x = FRAGMENTS_USED, fill=Category)) +
+  geom_bar() +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale2())) +
+  scale_fill_manual("Category", values = categories) +
+  xlab("Fragments used") + ylab("Peptide groups") +
+  theme(legend.position = "none")
+dt_fragments[, median(FRAGMENTS_USED), by=list(Category)]
+```
+
+                     Category    V1
+                       <fctr> <num>
+    1: CHIMERYS unique target    11
+    2:          Shared target    19
+
+## Spectrum similarity
+
+[R code to generate `figure-E3C-spectral-similarity.csv` input
+file\`](figure-E3AtoD-pdresult.R)
+
+``` r
+dt_spectral <- fread(file.path(figurePath, "figure-E3C-spectral-similarity.csv"))
+dt_spectral[, Category := factor(Category, c("Shared target", "CHIMERYS unique target"))]
+
+p_sim <- ggplot(dt_spectral, aes(x = SPECTRUM_SIMILARITY, fill=Category)) +
+  geom_histogram(bins = 100) +
+  scale_x_continuous(labels = label_percent()) +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale2())) +
+  scale_fill_manual("Category", values = categories) +
+  xlab("Spectral similarity") + ylab("Peptide groups") +
+  theme(legend.position = "none")
+dt_spectral[, median(SPECTRUM_SIMILARITY), by=list(Category)]
+```
+
+                     Category        V1
+                       <fctr>     <num>
+    1: CHIMERYS unique target 0.7317175
+    2:          Shared target 0.8654990
+
+## SVM score
+
+``` r
+dt_svm <- fread(file.path(figurePath, "figure-E3D-svm.csv"))
+svmLevels <- c('CHIMERYS unique target', 'Shared target', 'FDR >1% target', 'Decoy')
+dt_svm[, Category := factor(Category, levels = svmLevels, ordered = T)]
+
+p_svm <- ggplot(dt_svm, aes(x = SVMSCORE, fill=Category)) +
+  geom_histogram(data=subset(dt_svm[!is.na(SVMSCORE)],Category != 'Decoy'), bins = 194, alpha = 1) +
+  geom_histogram(data=subset(dt_svm[!is.na(SVMSCORE)],Category == 'Decoy'), bins = 194, alpha = 0.4) +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale2())) +
+  scale_fill_manual(NULL, values = categories) +
+  xlab("SVM Score") + ylab("Peptide groups") +
+  theme(legend.position = "none")
+```
+
+## SE protein results
+
+[R code to generate input file
+`figure-E3E-proteins.csv`](figure-E3E-peptides-per-protein.R)
+
+``` r
+prot_peptides_count <- fread(file.path(figurePath, "figure-E3E-proteins.csv"))
+
+p_pep_prot <- ggplot(prot_peptides_count,
+                     aes(x=`Sequest-HT`, y=CHIMERYS, color=N)) +
+  geom_point(na.rm = T, size = 0.5) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = msaid_darkgray) +
+  scale_x_log10() + scale_y_log10() +
+  scale_color_gradient("Count", low = msaid_blue, high = msaid_orange) +
+  xlab("Sequest HT unique peptides\nper protein group") +
+  ylab("CHIMERYS\nunique peptides\nper protein group") +
+  theme(legend.position = "top")
+
+sum(prot_peptides_count[, CHIMERYS*N]) / sum(prot_peptides_count[, N])
+```
+
+    [1] 12.52351
+
+``` r
+sum(prot_peptides_count[, `Sequest-HT`*N]) / sum(prot_peptides_count[, N])
+```
+
+    [1] 7.486266
+
+## Wrong FDR levels LFQ Bench human
+
+[R code to generate input file
+`figure-E3F-fdr.csv`](figure-E3F-bar_LFQhuman.R)
+
+``` r
+dtFdrLFQhuman <- fread(file.path(figurePath, "figure-E3F-fdr.csv"))
+setnames(dtFdrLFQhuman, c("Level estimated", "By FDR level", "# in dataset"),
+         c("levelEstimate", "levelFdr", "N"))
+dtFdrLFQhuman[, levelEstimate := factor(levelEstimate, c("PCMs", "Modified peptides"),
+                                        c("Precursors", "Peptide groups"))]
+dtFdrLFQhuman[, levelFdr := factor(levelFdr, c("PSMs", "PCMs", "Modified peptides"),
+                                   c("PSM", "Precursor", "Peptide\ngroup"))]
+dtFdrLFQhuman[, isFdrCorrect := F]
+dtFdrLFQhuman[levelEstimate=="Peptide groups" & levelFdr=="Peptide\ngroup", isFdrCorrect := T]
+dtFdrLFQhuman[levelEstimate=="Precursors" & levelFdr=="Precursor", isFdrCorrect := T]
+
+p_fdrLfqHuman <- ggplot(dtFdrLFQhuman, aes(x=levelFdr, y=N, fill=isFdrCorrect, label=RELATIVE_INCREASE)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(y=N+max(N)*0.1), family="Montserrat Light", color=msaid_darkgray, size=6/.pt) +
+  scale_fill_manual("Correct FDR level", values = msaid_eFDR) +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale2()),
+                     limits = c(0, max(dtFdrLFQhuman$N)*1.15)) +
+  facet_grid(cols = vars(levelEstimate)) +
+  xlab("FDR level") + ylab("Counts") +
+  theme(legend.position = "top", axis.text.x = element_text(angle = 60, hjust = 1))
+```
+
+## Wrong FDR levels LFQ Bench multispecies
+
+[R code to generate input file
+`figure-E3G-fdr.csv`](figure-E3G-bar_LFQ3.R)
+
+``` r
+dtFdrLfq3 <- fread(file.path(figurePath, "figure-E3G-fdr.csv"))
+setnames(dtFdrLfq3, c("Level estimated", "By FDR level", "# in dataset"),
+         c("levelEstimate", "levelFdr", "N"))
+dtFdrLfq3[, levelEstimate := factor(levelEstimate, c("PCMs", "Modified peptides"),
+                                    c("Precursors", "Peptide groups"))]
+dtFdrLfq3[, levelFdr := factor(levelFdr, c("PSMs", "PCMs", "Modified peptides"),
+                               c("PSM", "Precursor", "Peptide\ngroup"))]
+dtFdrLfq3[, isFdrCorrect := F]
+dtFdrLfq3[levelEstimate=="Peptide groups" & levelFdr=="Peptide\ngroup", isFdrCorrect := T]
+dtFdrLfq3[levelEstimate=="Precursors" & levelFdr=="Precursor", isFdrCorrect := T]
+
+p_fdrLfq3 <- ggplot(dtFdrLfq3, aes(x=levelFdr, y=N, fill=isFdrCorrect, label=RELATIVE_INCREASE)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(y=N+max(N)*0.1), family="Montserrat Light", color=msaid_darkgray, size=6/.pt) +
+  scale_fill_manual("Correct FDR level", values = msaid_eFDR) +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale2()),
+                     limits = c(0, max(dtFdrLfq3$N)*1.15)) +
+  facet_grid(cols = vars(levelEstimate)) +
+  xlab("FDR level") + ylab("Counts") +
+  theme(legend.position = "top", axis.text.x = element_text(angle = 60, hjust = 1))
+```
+
+</details>
+
+# Figure
+
+<details>
+<summary>
+Details on figure generation
+</summary>
+
+``` r
+p_legend <- ggdraw2(get_plot_component(p_svm + theme(legend.position = "top") +
+                                         guides(fill = guide_legend(nrow = 1)),
+                                       'guide-box-top', return_all = TRUE))
+p_design <- "11111111111\nAABBCCDDDDD\nEEFFFFGGGGG"
+
+p_supp_IDs_FDR <- p_legend + p_int + p_peaks + p_sim + p_svm + p_pep_prot + p_fdrLfqHuman + p_fdrLfq3 +
+  plot_layout(heights = c(0.2, 1, 1), design = p_design) +
+  plot_annotation(tag_levels = list(c("", LETTERS[1:7])))
+
+ggsave2(file.path(path, "figure-E3.pdf"), plot = p_supp_IDs_FDR,
+        width = 180, height = 100, units = "mm", device = cairo_pdf)
+ggsave2(file.path(path, "figure-E3.png"), plot = p_supp_IDs_FDR,
+        width = 180, height = 100, units = "mm")
+```
+
+</details>
+
+![figure-E3](figure-E3.png)
