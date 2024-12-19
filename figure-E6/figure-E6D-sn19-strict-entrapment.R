@@ -7,9 +7,9 @@ efdrLabels <- c("Classic eFDR", "Peptide eFDR", "Concatenated eFDR")
 
 # ---- pathsToData ----
 ## spectronaut
-pathToExport <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/Spectronaut-entrapment_timsTof/20240903_000201_20240903_SN19_lfq_paper_timsTOFPro_entrapment_Report_height_noNorm.tsv")
-pathToExport_pepEntr <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/Spectronaut-entrapment_timsTof/20240902_115754_20240902_SN19_lfq_paper_timsTOFPro_entrapment_peptides_Report_height_noNorm.tsv")
-pathToExport_concatEntr <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/Spectronaut-entrapment_timsTof/20240902_221429_20240903_SN19_lfq_paper_timsTOFPro_entrapment_concatenated_Report_height_noNorm.tsv")
+pathToExport <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/Spectronaut-entrapment_strict/20240902_022555_20240902_SN19_lfq_paper_entrapment_strict_Report_height_noNorm.tsv")
+pathToExport_pepEntr <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/Spectronaut-entrapment_strict/20240830_045915_20240830_SN19_lfq_paper_entrapment_peptides_strict_Report_height_noNorm.tsv")
+pathToExport_concatEntr <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/Spectronaut-entrapment_strict/20240903_091816_20240903_SN19_lfq_paper_entrapment_concatenated_strict_Report_height_noNorm.tsv")
 
 ## fastas
 pathToFasta <- file.path(dataPath, "FASTA/CHIMERYS_Benchmark_human-canonical_yeast_ecoli_AND_jpr_2022_contaminants_mimic.fasta")
@@ -30,23 +30,23 @@ any(is.na(sn19_entr$ORGANISM)) # FALSE
 table(sn19_entr$ENTRAPMENT)
 table(sn19_entr$ENTRAPMENT_FASTA_J)
 table(sn19_entr$ORGANISM) # ENTRAPMENT EXISTS
-uniqueN(sn19_entr[Q_VALUE <= 0.01, PCM_J_ID]) # 76359
+uniqueN(sn19_entr[Q_VALUE <= 0.01, PCM_J_ID]) # 76437
 
 sn19_pepEntr <- readSpectronaut_flagImputation(pathToExport_pepEntr, proteinsPeptideFasta)
 any(is.na(sn19_pepEntr$ORGANISM)) # FALSE
 table(sn19_pepEntr$ENTRAPMENT)
 table(sn19_pepEntr$ENTRAPMENT_FASTA_J)
 table(sn19_pepEntr$ORGANISM) # ENTRAPMENT EXISTS
-uniqueN(sn19_pepEntr[Q_VALUE <= 0.01, PCM_J_ID]) # 72822
+uniqueN(sn19_pepEntr[Q_VALUE <= 0.01, PCM_J_ID]) # 67704
 
 sn19_concatEntr <- readSpectronaut_flagImputation(pathToExport_concatEntr,
-                                                  proteinsConcatFasta,
-                                                  digestConcatFasta)
+                                                                  proteinsConcatFasta,
+                                                                  digestConcatFasta)
 any(is.na(sn19_concatEntr$ORGANISM)) # FALSE
 table(sn19_concatEntr$ENTRAPMENT)
 table(sn19_concatEntr$ENTRAPMENT_FASTA_J)
 table(sn19_concatEntr$ORGANISM) # ENTRAPMENT EXISTS
-uniqueN(sn19_concatEntr[Q_VALUE <= 0.01, PCM_J_ID]) # 76897
+uniqueN(sn19_concatEntr[Q_VALUE <= 0.01, PCM_J_ID]) # 77056
 
 # ---- check entrapment decoys ----
 any(is.na(sn19_concatEntr$DECOY))
@@ -96,21 +96,26 @@ combined[,CONDITION:=ifelse(grepl("Condition_A", SAMPLE),
                             "B")]
 
 # ---- intermediate save ----
-write.fst(combined, file.path(dataPath, 'data/figure-S8/fst-backup/20241111_figureS8f_sn19_bruker_combined_pcms_localPcmEfdr_apexQuan_entr.fst'), compress = 100)
+write.fst(combined, file.path(dataPath, 'data/figure-S8/fst-backup/20241111_figureS8d_sn19_strict_combined_pcms_localPcmEfdr_apexQuan_entr.fst'), compress = 100)
 
 data_efdr <- combined[Q_VALUE<=0.055]
 data_efdr[, SOFTWARE := factor(SOFTWARE, efdrLevels, efdrLabels)]
 data_efdr[, Q_VALUE_BIN := ceiling(Q_VALUE*10000)/10000]
-mean_efdrSpecBruk <- data_efdr[, .(ENTRAPMENT_Q_VALUE = mean(ENTRAPMENT_Q_VALUE),
-                                   ENTRAPMENT_Q_VALUE_1 = mean(ENTRAPMENT_Q_VALUE_1)),
-                               by=.(SOFTWARE, CONDITION, SAMPLE, Q_VALUE_BIN)]
-setnames(mean_efdrSpecBruk, "Q_VALUE_BIN", "Q_VALUE")
-write_fst(mean_efdrSpecBruk, file.path(dataPath, "data/figure-S8/entrapment_spectronaut_bruker.fst"))
+mean_efdrSpecStrict <- data_efdr[, .(ENTRAPMENT_Q_VALUE = mean(ENTRAPMENT_Q_VALUE),
+                                     ENTRAPMENT_Q_VALUE_1 = mean(ENTRAPMENT_Q_VALUE_1)),
+                                 by=.(SOFTWARE, CONDITION, SAMPLE, Q_VALUE_BIN)]
+setnames(mean_efdrSpecStrict, "Q_VALUE_BIN", "Q_VALUE")
+mean_efdrSpecStrict[, SAMPLE := gsub("^LFQ_Orbitrap_AIF_(Condition_._Sample_Alpha_0.)$", "\\1", SAMPLE)]
+
+mean_efdrSpecStrict <-
+  rbind(mean_efdrSpecStrict[, .(Q_VALUE = 0, ENTRAPMENT_Q_VALUE = 0, ENTRAPMENT_Q_VALUE_1 = 0),
+                            by=.(SOFTWARE, CONDITION, SAMPLE)], mean_efdrSpecStrict)
+fwrite(mean_efdrSpecStrict, file.path(figurePath, "figure-E6D-spectronaut-strict.csv"))
 
 # # ---- re-read intermediately saved data ----
-# combined <- read.fst(file.path(dataPath, 'data/figure-S8/fst-backup/20241111_figureS8f_sn19_bruker_combined_pcms_localPcmEfdr_apexQuan_entr.fst'), as.data.table = T)
+# combined <- read.fst(file.path(dataPath, 'data/figure-S8/fst-backup/20241111_figureS8d_sn19_strict_combined_pcms_localPcmEfdr_apexQuan_entr.fst'), as.data.table = T)
 #
-# # ---- plot fdr vs efdr ----
+# # ---- plot fdr vs efdr; preliminary plot for testing ----
 # ggplot(data = combined,
 #        mapping = aes(x = Q_VALUE, y = ENTRAPMENT_Q_VALUE_1,
 #                      color = CONDITION,

@@ -1,6 +1,6 @@
-# Figure S8
+# Figure E6
 MSAID
-2024-12-05
+2024-12-19
 
 - [Setup](#setup)
 - [Data](#data)
@@ -11,12 +11,11 @@ MSAID
   - [DIA-NN Bruker](#dia-nn-bruker)
   - [Spectronaut Bruker](#spectronaut-bruker)
 - [Figure](#figure)
-  - [ENTRAPMENT_Q_VALUE_1](#entrapment_q_value_1)
 
 # Setup
 
 This document describes how the data analysis and plots for extended
-figure 8 were generated. To recreate the figures, make sure to download
+figure 6 were generated. To recreate the figures, make sure to download
 all input files (available on
 [PRIDE](https://www.ebi.ac.uk/pride/archive?keyword=PXD053241)), place
 them under `dataPath` (adjust in `load-dependencies.R` to your own
@@ -36,8 +35,8 @@ msaid_unique <- c("TRUE" = msaid_blue, "FALSE" = msaid_darkgray)
 efdrLevels <- c("REGULAR", "PEPTIDE", "CONCATENATED")
 efdrLabels <- c("Classic eFDR", "Peptide eFDR", "Concatenated eFDR")
 
-path <- file.path(here::here(), "figure-S8-entrapment")
-figurePath <- file.path(dataPath, "data/figure-S8")
+path <- file.path(here::here(), "figure-E6")
+figurePath <- file.path(dataPath, "data/figure-E6")
 
 msaid_thermo <-
   setNames(
@@ -59,16 +58,12 @@ Details on data processing
 
 ## CHIMERYS
 
+[R code to generate input file
+`figure-E6A-chimerys.csv`](figure-E6A-chimerys-entrapment.R)
+
 ``` r
-mean_efdrChimerys <- read_fst(file.path(figurePath, "entrapment_chimerys.fst"), as.data.table = T)
-mean_efdrChimerys[, SAMPLE := gsub("^LFQ_Orbitrap_AIF_(Condition_._Sample_Alpha_0.)$", "\\1", SAMPLE)]
-
-mean_efdrChimerys <-
-  rbind(mean_efdrChimerys[, .(Q_VALUE = 0, ENTRAPMENT_Q_VALUE = 0, ENTRAPMENT_Q_VALUE_1 = 0),
-                          by=.(SOFTWARE, CONDITION, SAMPLE)], mean_efdrChimerys)
-
-mean_efdrChimerys[, ENTRAPMENT_Q_VALUE_MIXED := ifelse(SOFTWARE=="Concatenated eFDR",
-                                                       ENTRAPMENT_Q_VALUE_1, ENTRAPMENT_Q_VALUE)]
+mean_efdrChimerys <- fread(file.path(figurePath, "figure-E6A-chimerys.csv"))
+mean_efdrChimerys[, SOFTWARE := factor(SOFTWARE, efdrLabels)]
 
 p_efdrMixedChimerys <-
   ggplot(mean_efdrChimerys, aes(x = Q_VALUE, y = ENTRAPMENT_Q_VALUE_MIXED, color = SAMPLE)) +
@@ -92,13 +87,12 @@ p_efdrMixedChimerys <-
 
 ## DIA-NN
 
-``` r
-mean_efdrDiann <- read_fst(file.path(figurePath, "entrapment_diann.fst"), as.data.table = T)
-mean_efdrDiann[, SAMPLE := gsub("^LFQ_Orbitrap_AIF_(Condition_._Sample_Alpha_0.)$", "\\1", SAMPLE)]
+[R code to generate input file
+`figure-E6B-diann.csv`](figure-E6B-diann-entrapment.R)
 
-mean_efdrDiann <-
-  rbind(mean_efdrDiann[, .(Q_VALUE = 0, ENTRAPMENT_Q_VALUE = 0, ENTRAPMENT_Q_VALUE_1 = 0),
-                                       by=.(SOFTWARE, CONDITION, SAMPLE)], mean_efdrDiann)
+``` r
+mean_efdrDiann <- fread(file.path(figurePath, "figure-E6B-diann.csv"))
+mean_efdrDiann[, SOFTWARE := factor(SOFTWARE, efdrLabels)]
 
 p_efdr1Diann <-
   ggplot(mean_efdrDiann, aes(x = Q_VALUE, y = ENTRAPMENT_Q_VALUE_1, color = SAMPLE)) +
@@ -121,14 +115,12 @@ p_efdr1Diann <-
 
 ## Spectronaut
 
-``` r
-mean_efdrSpectronaut <-
-  read_fst(file.path(figurePath, "entrapment_spectronaut.fst"), as.data.table = T)
-mean_efdrSpectronaut[, SAMPLE := gsub("^LFQ_Orbitrap_AIF_(Condition_._Sample_Alpha_0.)$", "\\1", SAMPLE)]
+[R code to generate input file
+`figure-E6C-spectronaut.csv`](figure-E6C-sn19-entrapment.R)
 
-mean_efdrSpectronaut <-
-  rbind(mean_efdrSpectronaut[, .(Q_VALUE = 0, ENTRAPMENT_Q_VALUE = 0, ENTRAPMENT_Q_VALUE_1 = 0),
-                             by=.(SOFTWARE, CONDITION, SAMPLE)], mean_efdrSpectronaut)
+``` r
+mean_efdrSpectronaut <- fread(file.path(figurePath, "figure-E6C-spectronaut.csv"))
+mean_efdrSpectronaut[, SOFTWARE := factor(SOFTWARE, efdrLabels)]
 
 p_efdr1Spectronaut <-
   ggplot(mean_efdrSpectronaut, aes(x = Q_VALUE, y = ENTRAPMENT_Q_VALUE_1, color = SAMPLE)) +
@@ -150,14 +142,12 @@ p_efdr1Spectronaut <-
 
 ## Spectronaut strict
 
-``` r
-mean_efdrSpecStrict <-
-  read_fst(file.path(figurePath, "entrapment_spectronaut_strict.fst"), as.data.table = T)
-mean_efdrSpecStrict[, SAMPLE := gsub("^LFQ_Orbitrap_AIF_(Condition_._Sample_Alpha_0.)$", "\\1", SAMPLE)]
+[R code to generate input file
+`figure-E6D-spectronaut-strict.csv`](figure-E6D-sn19-strict-entrapment.R)
 
-mean_efdrSpecStrict <-
-  rbind(mean_efdrSpecStrict[, .(Q_VALUE = 0, ENTRAPMENT_Q_VALUE = 0, ENTRAPMENT_Q_VALUE_1 = 0),
-                            by=.(SOFTWARE, CONDITION, SAMPLE)], mean_efdrSpecStrict)
+``` r
+mean_efdrSpecStrict <- fread(file.path(figurePath, "figure-E6D-spectronaut-strict.csv"))
+mean_efdrSpecStrict[, SOFTWARE := factor(SOFTWARE, efdrLabels)]
 
 p_efdr1SpecStrict <-
   ggplot(mean_efdrSpecStrict, aes(x = Q_VALUE, y = ENTRAPMENT_Q_VALUE_1, color = SAMPLE)) +
@@ -180,14 +170,12 @@ p_efdr1SpecStrict <-
 
 ## DIA-NN Bruker
 
-``` r
-mean_efdrDiannBruk <-
-  read_fst(file.path(figurePath, "entrapment_diann_bruker.fst"), as.data.table = T)
-mean_efdrDiannBruk[, SAMPLE := gsub("^LFQ_timsTOFPro_diaPASEF_(Condition_._Sample_Alpha_0.)$", "\\1", SAMPLE)]
+[R code to generate input file
+`figure-E6E-diann-bruker.csv`](figure-E6E-diann-bruker-entrapment.R)
 
-mean_efdrDiannBruk <-
-  rbind(mean_efdrDiannBruk[, .(Q_VALUE = 0, ENTRAPMENT_Q_VALUE = 0, ENTRAPMENT_Q_VALUE_1 = 0),
-                          by=.(SOFTWARE, CONDITION, SAMPLE)], mean_efdrDiannBruk)
+``` r
+mean_efdrDiannBruk <- fread(file.path(figurePath, "figure-E6E-diann-bruker.csv"))
+mean_efdrDiannBruk[, SOFTWARE := factor(SOFTWARE, efdrLabels)]
 
 p_efdr1DiannBruk <-
   ggplot(mean_efdrDiannBruk, aes(x = Q_VALUE, y = ENTRAPMENT_Q_VALUE_1, color = SAMPLE)) +
@@ -212,14 +200,12 @@ p_efdr1DiannBruk <-
 
 ## Spectronaut Bruker
 
-``` r
-mean_efdrSpecBruk <-
-  read_fst(file.path(figurePath, "entrapment_spectronaut_bruker.fst"), as.data.table = T)
-mean_efdrSpecBruk[, SAMPLE := gsub("^LFQ_timsTOFPro_diaPASEF_(Condition_._Sample_Alpha_0.)$", "\\1", SAMPLE)]
+[R code to generate input file
+`figure-E6F-spectronaut-bruker.csv`](figure-E6F-sn19-bruker-entrapment.R)
 
-mean_efdrSpecBruk <-
-  rbind(mean_efdrSpecBruk[, .(Q_VALUE = 0, ENTRAPMENT_Q_VALUE = 0, ENTRAPMENT_Q_VALUE_1 = 0),
-                          by=.(SOFTWARE, CONDITION, SAMPLE)], mean_efdrSpecBruk)
+``` r
+mean_efdrSpecBruk <- fread(file.path(figurePath, "figure-E6F-spectronaut-bruker.csv"))
+mean_efdrSpecBruk[, SOFTWARE := factor(SOFTWARE, efdrLabels)]
 
 p_efdr1SpecBruk <-
   ggplot(mean_efdrSpecBruk, aes(x = Q_VALUE, y = ENTRAPMENT_Q_VALUE_1, color = SAMPLE)) +
@@ -251,8 +237,6 @@ p_efdr1SpecBruk <-
 Details on figure generation
 </summary>
 
-## ENTRAPMENT_Q_VALUE_1
-
 ``` r
 p_legendRaw <- ggdraw2(get_plot_component(p_efdrMixedChimerys + theme(legend.position = "top"),
                                           'guide-box-top', return_all = TRUE))
@@ -267,12 +251,12 @@ p_efdr <- free(p_legendRaw) + p_efdrMixedChimerys + p_efdr1Diann + p_efdr1Spectr
   plot_layout(heights = c(0.2, 1, 1, 0.2, 1, 1), design = p_design) +
   plot_annotation(tag_levels = p_annotation)
 
-ggsave2(file.path(path, "figure-S8-entrapment.pdf"), plot = p_efdr,
+ggsave2(file.path(path, "figure-E6.pdf"), plot = p_efdr,
         width = 180, height = 120, units = "mm", device = cairo_pdf)
-ggsave2(file.path(path, "figure-S8-entrapment.png"), plot = p_efdr,
+ggsave2(file.path(path, "figure-E6.png"), plot = p_efdr,
         width = 180, height = 120, units = "mm")
 ```
 
 </details>
 
-![figure-S8](figure-S8-entrapment.png)
+![figure-E6](figure-E6.png)

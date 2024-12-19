@@ -1,7 +1,9 @@
 # ---- setup ----
 source(here::here("scripts/load-dependencies.R"))
 source(here::here("scripts/data-processing-3.R"))
-path <- file.path(here::here(), "figure-S8-entrapment")
+path <- file.path(here::here(), "figure-E6")
+figurePath <- file.path(dataPath, "data/figure-E6")
+
 efdrLevels <- c("REGULAR", "PEPTIDE", "CONCATENATED")
 efdrLabels <- c("Classic eFDR", "Peptide eFDR", "Concatenated eFDR")
 
@@ -98,7 +100,15 @@ mean_efdrChimerys <- data_efdr[, .(ENTRAPMENT_Q_VALUE = mean(ENTRAPMENT_Q_VALUE)
                                    ENTRAPMENT_Q_VALUE_1 = mean(ENTRAPMENT_Q_VALUE_1)),
                                by=.(SOFTWARE, CONDITION, SAMPLE, Q_VALUE_BIN)]
 setnames(mean_efdrChimerys, "Q_VALUE_BIN", "Q_VALUE")
-write_fst(mean_efdrChimerys, file.path(dataPath, "data/figure-S8/entrapment_chimerys.fst"))
+mean_efdrChimerys[, SAMPLE := gsub("^LFQ_Orbitrap_AIF_(Condition_._Sample_Alpha_0.)$", "\\1", SAMPLE)]
+
+mean_efdrChimerys <-
+  rbind(mean_efdrChimerys[, .(Q_VALUE = 0, ENTRAPMENT_Q_VALUE = 0, ENTRAPMENT_Q_VALUE_1 = 0),
+                          by=.(SOFTWARE, CONDITION, SAMPLE)], mean_efdrChimerys)
+
+mean_efdrChimerys[, ENTRAPMENT_Q_VALUE_MIXED := ifelse(SOFTWARE=="Concatenated eFDR",
+                                                       ENTRAPMENT_Q_VALUE_1, ENTRAPMENT_Q_VALUE)]
+fwrite(mean_efdrChimerys, file.path(figurePath, "figure-E6A-chimerys.csv"))
 
 # # ---- re-read intermediately saved data ----
 # combined <- read.fst(file.path(dataPath, 'data/figure-S8/fst-backup/20241111_figureS8a_pdresult_combined_pcms_localPcmEfdr_apexQuan_entr.fst'), as.data.table = T)
