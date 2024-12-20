@@ -3,7 +3,6 @@ source(here::here("scripts/load-dependencies.R"))
 source(here::here("scripts/data-processing-3.R"))
 path <- file.path(here::here(), "figure-3")
 figurePath <- file.path(dataPath, "data/figure-3")
-#xicPath <- file.path(dataPath, "figure-3/xic")
 
 # ---- pathsToData ----
 pathToExport <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/Spectronaut/20240925_064248_20240925_SN19_lfq_paper_entrapment_paper_Report_height_noNorm.tsv")

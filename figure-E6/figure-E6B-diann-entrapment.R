@@ -8,25 +8,16 @@ efdrLabels <- c("Classic eFDR", "Peptide eFDR", "Concatenated eFDR")
 # ---- pathsToData ----
 ## diann
 pathToTsv <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/DIA-NN/20240502_lfq_height_entrapment_report.tsv")
-#pathToTsv <- '/mnt/paper/01_paper/figures/main/5_figure_DIA/16_LFQ_Bench_Entrapment_DIA-NN/20240502_lfq_height_entrapment_report.tsv'
-
 pathToTsv_pepEntr <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/DIA-NN/20240429_lfq_height_entrapment_peptides_report.tsv")
-#pathToTsv_pepEntr <- '/mnt/paper/01_paper/figures/main/5_figure_DIA/14_LFQ_Bench_Entrapment_Peptides_DIA-NN/20240429_lfq_height_entrapment_peptides_report.tsv'
-
 pathToTsv_concatEntr <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/DIA-NN/20240429_lfq_height_entrapment_concat_report.tsv")
-#pathToTsv_concatEntr <- '/mnt/paper/01_paper/figures/main/5_figure_DIA/15_LFQ_Bench_Entrapment_Concat_DIA-NN/20240429_lfq_height_entrapment_concat_report.tsv'
 
 ## fastas
 pathToFasta <- file.path(dataPath, "FASTA/CHIMERYS_Benchmark_human-canonical_yeast_ecoli_AND_jpr_2022_contaminants_mimic.fasta")
 pathToFasta_peptides <- file.path(dataPath, "FASTA/CHIMERYS_Benchmark_human-canonical_yeast_ecoli_AND_jpr_2022_contaminants_mimic_peptides.fasta")
 pathToFasta_concat <- file.path(dataPath, "FASTA/CHIMERYS_Benchmark_human-canonical_yeast_ecoli_AND_jpr_2022_contaminants_mimic_concat_limit1e5.fasta")
-#pathToFasta <- "/mnt/paper/01_paper/fasta/CHIMERYS_Benchmark_human-canonical_yeast_ecoli_AND_jpr_2022_contaminants_mimic.fasta"
-#pathToFasta_peptides <- "/mnt/paper/01_paper/fasta/CHIMERYS_Benchmark_human-canonical_yeast_ecoli_AND_jpr_2022_contaminants_mimic_peptides.fasta"
-#pathToFasta_concat <- "/mnt/paper/01_paper/fasta/CHIMERYS_Benchmark_human-canonical_yeast_ecoli_AND_jpr_2022_contaminants_mimic_concat_limit1e5.fasta"
 
 ## digest
 pathToDigest <- file.path(dataPath, "FASTA/CHIMERYS_Benchmark_human-canonical_yeast_ecoli_AND_jpr_2022_contaminants_mimic_digested_Mass0to10000.txt")
-#pathToDigest <- "/mnt/paper/01_paper/fasta/CHIMERYS_Benchmark_human-canonical_yeast_ecoli_AND_jpr_2022_contaminants_mimic_digested_Mass0to10000.txt"
 
 # ---- read data including short sanity checks ----
 proteinsFasta <- readProteinsFromFastas(pathToFasta)

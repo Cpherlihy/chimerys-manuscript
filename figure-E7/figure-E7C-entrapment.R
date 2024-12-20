@@ -8,12 +8,9 @@ figurePath <- file.path(dataPath, "data/figure-E7")
 ## dia-nn
 pathToTsv <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/DIA-NN/20240429_lfq_height_entrapment_peptides_report.tsv")
 pathToLib <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/DIA-NN/20240429_lfq_height_entrapment_peptides_report-lib.tsv")
-#pathToTsv <- '/mnt/paper/01_paper/figures/main/5_figure_DIA/14_LFQ_Bench_Entrapment_Peptides_DIA-NN/20240429_lfq_height_entrapment_peptides_report.tsv'
-#pathToLib <- '/mnt/paper/01_paper/figures/main/5_figure_DIA/14_LFQ_Bench_Entrapment_Peptides_DIA-NN/20240429_lfq_height_entrapment_peptides_report-lib.tsv'
 
 ## spectronaut
 pathToExport <- file.path(dataPath, "LFQ_Bench_multispecies/DIA/Spectronaut-entrapment/20240829_075057_20240829_SN19_lfq_paper_entrapment_peptides_Report_height_noNorm.tsv")
-#pathToExport <- '/mnt/paper/01_paper/figures/main/5_figure_DIA/31_LFQ_Bench_Entrapment_Peptides_SN19/20240829_075057_20240829_SN19_lfq_paper_entrapment_peptides_Report_height_noNorm.tsv'
 
 ## combined generated in figure-3/figure-3A-entrapment-barplot.R
 pathToCombined <- file.path(dataPath, 'data/figure-3/fst-backup/20241127_figure3a_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst')

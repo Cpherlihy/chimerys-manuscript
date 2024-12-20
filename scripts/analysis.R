@@ -25,12 +25,12 @@ plotUpset <- function(dataTable, groupColumn = "condition",
   if(!is.null(groupFillColumn)) stopifnot(is.character(groupFillColumn), length(groupFillColumn)==1L)
   if(!is.null(groupFillColors)) stopifnot(is.character(groupFillColors))
   stopifnot(is.logical(returnList), length(returnList)==1L)
-  
+
   theme_color <- function(color) {
     theme(plot.background = element_rect(color  = color, linetype = 'dotted', fill = color))
   }
-  
-  
+
+
   #prepare data.table
   column_names <- c(groupColumn, observationColumn, groupFillColumn)
   dataTable <- dataTable[, .SD, .SDcols = column_names]
@@ -42,7 +42,7 @@ plotUpset <- function(dataTable, groupColumn = "condition",
   if(is.null(groupFillColors)) {
     groupFillColors <- msaid_col
   }
-  
+
   #total IDs bar plot
   if(is.null(groupFillColumn)) {
     count_total <- dataTable[, .N, by = group]
@@ -53,7 +53,7 @@ plotUpset <- function(dataTable, groupColumn = "condition",
   order_variable <- count_total[order(-N, group), group]
   count_total[, group := factor(group, levels = order_variable)]
   setkey(count_total, group)
-  
+
   p_total_bar <- ggplot(count_total, aes(y=group, label=format(N, big.mark=",", trim=T))) +
     scale_y_discrete(position = "right", limits = rev) +
     scale_x_reverse(labels = label_number(scale_cut = cut_short_scale())) +
@@ -82,12 +82,12 @@ plotUpset <- function(dataTable, groupColumn = "condition",
                 color=msaid_darkgray, family="Montserrat Light",
                 size = labelSize[1]/.pt, hjust = 1)
   }
-  
-  
+
+
   #upset top bar plot
   dataTable[, is_identified := 1L]
   dataTable <- dcast(dataTable, observation~group, value.var = "is_identified", fill = 0)
-  
+
   count_wide <- dataTable[, .N, keyby = c(names(dataTable)[-1])]
   count_wide[, upset := apply(.SD, 1, function(x) paste(as.integer(x), collapse="_") ),
              .SDcols = names(count_wide)[!names(count_wide) %in% "N"]]
@@ -111,7 +111,7 @@ plotUpset <- function(dataTable, groupColumn = "condition",
   if(!is.null(maxIntersections) && count_wide[, .N]>maxIntersections) {
     count_wide[!1:maxIntersections, display := F]
   }
-  
+
   #adjust y axis label margin for better plot alignment
   p_upset_bar <- ggplot(count_wide[display==T],
                         aes(x=upset, label=format(N, big.mark=",", trim=T))) +
@@ -127,8 +127,8 @@ plotUpset <- function(dataTable, groupColumn = "condition",
                 color=msaid_darkgray, family="Montserrat Light",
                 size = labelSize[2]/.pt)
   }
-  
-  
+
+
   #upset bottom legend
   count_long <- melt(count_wide[display==T], measure.vars = names(count_wide)[
     !names(count_wide) %in% c("N", "upset", "display")])
@@ -137,7 +137,7 @@ plotUpset <- function(dataTable, groupColumn = "condition",
   count_long[, upset := factor(upset, levels = order_upset)]
   upset_line <- count_long[value==1, .(y_min = min(as.integer(variable)),
                                        y_max = max(as.integer(variable))), by = upset]
-  
+
   p_upset_legend <-
     ggplot(count_long, aes(x=upset, xend=upset)) +
     geom_point(aes(y=variable, color=as.character(value), alpha=as.character(value))) +
@@ -156,8 +156,8 @@ plotUpset <- function(dataTable, groupColumn = "condition",
           panel.background = element_rect(fill = "transparent")
           ) +
     xlab(NULL) + ylab(NULL)
-  
-  
+
+
   #patchwork plotting instead of cowplot (has spacing issues)
   if(count_wide[display==T, .N] < n_intersections) {
     label_summary <-
@@ -173,13 +173,13 @@ plotUpset <- function(dataTable, groupColumn = "condition",
             "ordered by", orderUpset, "\n\n",
             format(n_observations, big.mark=",", trim=T), "observations")
   }
-  
+
   p_description <- ggplot_placeholder(label_summary, 5L)
   p_upset <- wrap_elements(p_description) + plot_spacer() + p_upset_bar +
     plot_spacer() + plot_spacer() + plot_spacer() +
     p_total_bar + plot_spacer() + p_upset_legend +
     plot_layout(widths = plotRelativeWidths, heights = plotRelativeHeights)
-  
+
   if(returnList==T) {
     return(list("plot" = p_upset,
                 "count_total" = count_total,
@@ -220,8 +220,8 @@ plotMirror <- function(dataTable, rawSample, rawPath, rawScans, outputPath, outp
   stopifnot(is.logical(trimPredicted), length(trimPredicted)==1L)
   stopifnot(is.character(inferysApi), length(inferysApi)==1L)
   stopifnot(is.character(inferysModel), length(inferysModel)==1L)
-  
-  
+
+
   #format identified peptides
   if(!quiet) print("get predictions")
   rawScans <- unique(rawScans)
@@ -241,7 +241,7 @@ plotMirror <- function(dataTable, rawSample, rawPath, rawScans, outputPath, outp
   setkey(peptides, scan_ms2, ptm)
   peptides[, id := 1L:.N]
   setkey(peptides, id)
-  
+
   if(loadPredictions==TRUE) {
     predictions <- fread(file.path(path, "predictions.csv"))
   } else {
@@ -261,7 +261,7 @@ plotMirror <- function(dataTable, rawSample, rawPath, rawScans, outputPath, outp
     predictions[, fraction := intensity*score_coefficient_normalized_scaled]
     fwrite(predictions, file.path(path, "predictions.csv"))
   }
-  
+
   #extract peaks from raw file
   if(!quiet) print("get spectra")
   spectra <- readSpectrum(rawPath, scan = rawScans)
@@ -273,12 +273,12 @@ plotMirror <- function(dataTable, rawSample, rawPath, rawScans, outputPath, outp
   peaks[, scan := factor(scan, levels = rawScans)]
   setnames(peaks, c("scan", "mz", "intensity"))
   peaks[, fraction := numeric()]
-  
-  
+
+
   #merge predictions and peaks
   merged <- rbind(predictions[, .(scan = scan_ms2, origin = "predicted", label = ptm, mz, intensity, fraction, annotation)],
                   peaks[, .(scan, origin = "measured", label = "measured", mz, intensity, fraction, annotation = NA)])
-  
+
   if(!quiet) print("plot spectra")
   if(!quiet) progress_bar <- txtProgressBar(min = 0, max = nrow(metas), style = 3)
   cairo_pdf(file.path(outputPath, outputName), width = 15, height = 10, onefile = T)
@@ -291,7 +291,7 @@ plotMirror <- function(dataTable, rawSample, rawPath, rawScans, outputPath, outp
         spectrum <- spectrum[origin %in% "measured" | (origin %in% "predicted" & mz >= meta[1, mz_start] & mz <= meta[1, mz_stop])]
         spectrum <- spectrum[origin %in% "measured" | (origin %in% "predicted" & intensity >= 0.01)]
       }
-      
+
       #factor peptide sequences and labeling
       ptm_orderd <- peptide[order(-score_coefficient_normalized_scaled), ptm]
       ptm_label <- paste0(ptm_orderd, " (", peptide[order(-score_coefficient_normalized_scaled), charge], "+)")
@@ -302,7 +302,7 @@ plotMirror <- function(dataTable, rawSample, rawPath, rawScans, outputPath, outp
       spectrum[, mz_lower := mz_recal - (mz*ppmTolerance/1e6)]
       spectrum[, mz_upper := mz_recal + (mz*ppmTolerance/1e6)]
       #print(spectrum[, .(mz, mz_recal, mz_lower, mz_lower_diff = mz-mz_lower, mz_upper, mz_upper_diff = mz_upper-mz)])
-      
+
       #identify raw peaks (include precursors)
       mz_predicted <- spectrum[origin=="predicted", mz]
       spectrum[origin=="measured", is_identified := any(mz_lower <= mz_predicted & mz_upper >= mz_predicted), by=mz]
@@ -315,7 +315,7 @@ plotMirror <- function(dataTable, rawSample, rawPath, rawScans, outputPath, outp
       #identify predictions
       mz_raw <- spectrum[origin=="measured", mz]
       spectrum[origin=="predicted", is_identified := any(mz_lower <= mz_raw & mz_upper >= mz_raw), by=.(label, mz, annotation)]
-      
+
       #re-scale measured segments to set top identified peak to 100% of top identified predicted peak
       spectrum[, is_truncated := F]
       rel_predicted <- spectrum[origin=="predicted" & is_identified==T][order(-fraction)][1, fraction]
@@ -327,13 +327,13 @@ plotMirror <- function(dataTable, rawSample, rawPath, rawScans, outputPath, outp
       } else {
         spectrum[origin=="measured", fraction := -intensity/max(intensity)]
       }
-      
+
       #stack identical mz on top of each other
       setkey(spectrum, origin, mz, fraction)
       spectrum[, fraction_start := c(0, cumsum(fraction)[-.N]), by=.(mz, origin)]
       spectrum[, fraction_end := cumsum(fraction), by=.(mz, origin)]
       spectrum[!is.na(annotation), annotationMax := ifelse(fraction_end==max(fraction_end), annotation, NA), by=mz]
-      
+
       #define color scale
       if(nrow(peptide)<=5) {
         spec_color <- c(msaid_gray, msaid_red, msaid_col[1:nrow(peptide)])
@@ -347,13 +347,13 @@ plotMirror <- function(dataTable, rawSample, rawPath, rawScans, outputPath, outp
       plot_raw <- meta[, paste0("scan ", format(scan, big.mark = ","),
                                 " at ", round(rtinseconds/60, 2),
                                 " min (", gsub("^(.*) \\+.*(Full .*) \\[.*\\]$", "\\1 \\2", scanType), ")")]
-      
+
       #mirror plot
       p <- ggplot(spectrum, aes(x=mz, xend=mz, color=label, label=annotationMax)) +
         geom_segment(data = spectrum[is_truncated==F], aes(alpha=is_identified, y=fraction_start, yend=fraction_end)) +
         geom_segment(data = spectrum[is_truncated==T], aes(alpha=is_identified, y=fraction_start, yend=fraction_end),
                      arrow = arrow(length = unit(0.1, "inches")), show.legend = F) +
-        geom_text_repel(aes(y=fraction_end), family = "Montserrat Light", size = 4/.pt, show.legend = F,
+        geom_text_repel(aes(y=fraction_end), family = "Montserrat Light", size = 5/.pt, show.legend = F,
                         na.rm = T, nudge_y = 0.01, box.padding = 0.05, max.overlaps = 10,
                         segment.size = 0.2, segment.alpha = 0.5,
                         segment.linetype = "dashed", ylim = c(0, 1)) +
@@ -371,7 +371,7 @@ plotMirror <- function(dataTable, rawSample, rawPath, rawScans, outputPath, outp
       return(list(list(spectrum, p)))
     }
   dev.off()
-  
+
   #format and return output
   data_spectra <- rbindlist(lapply(temp, function(x) x[[1]] ))
   setkey(data_spectra, scan, origin, label, mz)
@@ -388,7 +388,7 @@ plotMirror <- function(dataTable, rawSample, rawPath, rawScans, outputPath, outp
 stringCombine <- function(stringList, link = "_", stringPriority=c("first", "last")) {
   if(!is.list(stringList)) stop("'stringList' must be a list of vectors")
   stringPriority <- match.arg(stringPriority)
-  
+
   if(stringPriority=="first") {
     apply(expand.grid(rev(stringList))[, length(stringList):1], 1, paste, collapse=link)
   } else {

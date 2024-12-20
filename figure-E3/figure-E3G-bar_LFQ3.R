@@ -8,9 +8,7 @@ source(here::here("scripts/data-processing-3.R"))
 # ---- pathsToData ----
 # pdresult
 pathToPdResult <- file.path(dataPath, "LFQ_Bench_multispecies/DDA/Chimerys/20240517_lfq_dda_z1to4_True_noNormalization.pdResult")
-#pathToPdResult <- '/mnt/paper/01_paper/figures/main/6_figure_DDA_vs_DIA/1_LFQ_Bench_DDA/20231107_lfq_dda_z1to4_True.pdResult'
 pathToPdResult_pcms <- file.path(dataPath, "LFQ_Bench_multispecies/DDA/Chimerys/20240524_lfq_dda_z1to4_localPcmFdr_True.pdResult")
-#pathToPdResult_pcms <- '/mnt/paper/01_paper/figures/main/6_figure_DDA_vs_DIA/1_LFQ_Bench_DDA/20240524_lfq_dda_z1to4_localPcmFdr_True.pdResult'
 
 # read psms
 pd <- dbConnect(RSQLite::SQLite(), pathToPdResult)
