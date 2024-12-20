@@ -1,6 +1,6 @@
-# Figure E10
+# Figure E9
 MSAID
-2024-12-19
+2024-12-20
 
 - [Overview](#overview)
 - [Data](#data)
@@ -25,8 +25,8 @@ Details on data processing
 
 ``` r
 suppressMessages(source(here::here("scripts/load-dependencies.R")))
-path <- file.path(here::here(), "figure-E10")
-figurePath <- file.path(dataPath, "data/figure-E10")
+path <- file.path(here::here(), "figure-E9")
+figurePath <- file.path(dataPath, "data/figure-E9")
 msaid_td <- c("Target" = msaid_blue, "Decoy" = msaid_orange)
 ```
 
@@ -40,12 +40,12 @@ Details on data loading
 </summary>
 
 [R code to generate `.csv` input
-files](figure-E10-library-and-csodiaq-results.R)
+files](figure-E9-library-and-csodiaq-results.R)
 
 ## Peptide length distributions
 
 ``` r
-pep_zodiaq <- fread(file.path(figurePath, "figure-E10A-csodiaq.csv"))
+pep_zodiaq <- fread(file.path(figurePath, "figure-E9A-csodiaq.csv"))
 pep_zodiaq[, isDecoyLabel := factor(isDecoyLabel, c("Target", "Decoy"))]
 
 p_pep_zodiaq <- ggplot(pep_zodiaq, aes(x=n_aa, fill=isDecoyLabel)) +
@@ -55,7 +55,7 @@ p_pep_zodiaq <- ggplot(pep_zodiaq, aes(x=n_aa, fill=isDecoyLabel)) +
   xlab("Peptide length") + ylab("csoDIAq original precursors") +
   theme(legend.position = "top")
 
-pep_inferys <- fread(file.path(figurePath, "figure-E10B-chimerys.csv"))
+pep_inferys <- fread(file.path(figurePath, "figure-E9B-chimerys.csv"))
 pep_inferys[, isDecoyLabel := factor(isDecoyLabel, c("Target", "Decoy"))]
 
 p_pep_inferys <- ggplot(pep_inferys, aes(x=n_aa, fill=isDecoyLabel)) +
@@ -69,7 +69,7 @@ p_pep_inferys <- ggplot(pep_inferys, aes(x=n_aa, fill=isDecoyLabel)) +
 ## Counts
 
 ``` r
-dt <- fread(file.path(figurePath, "figure-E10C-counts.csv"))
+dt <- fread(file.path(figurePath, "figure-E9C-counts.csv"))
 types <- c("CsoDIAq original",
            "CsoDIAq overlap",
            "CsoDIAq overlap\nTargets INFERYS",
@@ -102,12 +102,12 @@ p_library <- guide_area() + p_pep_zodiaq + p_pep_inferys + p_counts +
   plot_layout(heights = c(0.1, 1, 1), design = p_design, guides = "collect") +
   plot_annotation(tag_levels = list(c("A", "B", "C")))
 
-suppressWarnings(ggsave2(file.path(path, "figure-E10.pdf"), plot = p_library,
+suppressWarnings(ggsave2(file.path(path, "figure-E9.pdf"), plot = p_library,
                          width = 180, height = 90, units = "mm", device = cairo_pdf))
-suppressWarnings(ggsave2(file.path(path, "figure-E10.png"), plot = p_library,
+suppressWarnings(ggsave2(file.path(path, "figure-E9.png"), plot = p_library,
                          width = 180, height = 90, units = "mm"))
 ```
 
 </details>
 
-![figure-E10](figure-E10.png)
+![figure-E9](figure-E9.png)

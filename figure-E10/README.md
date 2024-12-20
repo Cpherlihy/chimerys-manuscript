@@ -1,6 +1,6 @@
-# Figure E9
+# Figure E10
 MSAID
-2024-12-19
+2024-12-20
 
 - [Setup](#setup)
 - [Data](#data)
@@ -26,8 +26,8 @@ Details on setup
 
 ``` r
 suppressMessages(source(here::here("scripts/load-dependencies.R")))
-path <- file.path(here::here(), "figure-E9")
-figurePath <- file.path(dataPath, "data/figure-E9")
+path <- file.path(here::here(), "figure-E10")
+figurePath <- file.path(dataPath, "data/figure-E10")
 msaid_quantified <- c("TRUE" = msaid_darkgray, "FALSE" = msaid_orange)
 msaid_eFDR <- c("TRUE" = msaid_darkgray, "FALSE" = msaid_red)
 msaid_organism <- c("Human" = msaid_blue, "Yeast" = msaid_orange, "E. coli" = msaid_darkgray)
@@ -44,13 +44,13 @@ Details on data processing
 
 ## PSMs
 
-[R code to generate input files `figure-E9A-LFQ3.csv`,
-`figure-E9A-Astral14.csv` and
-`figure-E9A-Astral30.csv`](figure-E9AB-counts.R)
+[R code to generate input files `figure-E10A-LFQ3.csv`,
+`figure-E10A-Astral14.csv` and
+`figure-E10A-Astral30.csv`](figure-E10AB-counts.R)
 
 ``` r
 #LFQ3
-countPsmLfq <- fread(file.path(figurePath, "figure-E9A-LFQ3.csv"))
+countPsmLfq <- fread(file.path(figurePath, "figure-E10A-LFQ3.csv"))
 countPsmLfq[, condition := factor(condition, c("DDA-CondA", "DDA-CondB", "DIA-CondA", "DIA-CondB"))]
 countPsmLfq[, condition_MS := factor(gsub("^(.*)-.*$", "\\1", condition), c("DDA", "DIA"))]
 countPsmLfq[, condition_org := factor(gsub("^.*-(.*)$", "\\1", condition), c("CondA", "CondB"),
@@ -58,11 +58,11 @@ countPsmLfq[, condition_org := factor(gsub("^.*-(.*)$", "\\1", condition), c("Co
 countPsmLfq[, type := factor("LFQ Benchmark")]
 
 #Astral
-countPsmAst14 <- fread(file.path(figurePath, "figure-E9A-Astral14.csv"))
+countPsmAst14 <- fread(file.path(figurePath, "figure-E10A-Astral14.csv"))
 countPsmAst14[, condition_MS := factor(condition, c("DDA", "DIA"))]
 countPsmAst14[, type := factor("Astral 14 min")]
 
-countPsmAst30 <- fread(file.path(figurePath, "figure-E9A-Astral30.csv"))
+countPsmAst30 <- fread(file.path(figurePath, "figure-E10A-Astral30.csv"))
 countPsmAst30[, condition_MS := factor(condition, c("DDA", "DIA"))]
 countPsmAst30[, type := factor("Astral 30 min")]
 
@@ -92,13 +92,13 @@ p_psmAst <- ggplot(countPsmAst, aes(x=condition_MS, y=N)) +
 
 ## Protein groups
 
-[R code to generate input files `figure-E9B-LFQ3.csv`,
-`figure-E9B-Astral14.csv` and
-`figure-E9B-Astral30.csv`](figure-E9AB-counts.R)
+[R code to generate input files `figure-E10B-LFQ3.csv`,
+`figure-E10B-Astral14.csv` and
+`figure-E10B-Astral30.csv`](figure-E10AB-counts.R)
 
 ``` r
 #LFQ3
-countProtGrpLfq <- fread(file.path(figurePath, "figure-E9B-LFQ3.csv"))
+countProtGrpLfq <- fread(file.path(figurePath, "figure-E10B-LFQ3.csv"))
 contrasts <- c("DDA-CondA_vs_DDA-CondB", "DIA-CondA_vs_DIA-CondB")
 contrastLabels <- c("DDA (Minora MS1 Quan)", "DIA (CHIMERYS MS2 Quan)")
 countProtGrpLfq[, contrastLabel := factor(contrast, contrasts, contrastLabels)]
@@ -106,11 +106,11 @@ countProtGrpLfq[, condition_MS := factor(contrast, contrasts, c("DDA", "DIA"))]
 countProtGrpLfq[, type := factor("LFQ Benchmark")]
 
 #Astral
-countProtGrpAst14 <- fread(file.path(figurePath, "figure-E9B-Astral14.csv"))
+countProtGrpAst14 <- fread(file.path(figurePath, "figure-E10B-Astral14.csv"))
 countProtGrpAst14[, condition := factor(condition, c("DDA", "DIA"))]
 countProtGrpAst14[, type := factor("Astral 14 min")]
 
-countProtGrpAst30 <- fread(file.path(figurePath, "figure-E9B-Astral30.csv"))
+countProtGrpAst30 <- fread(file.path(figurePath, "figure-E10B-Astral30.csv"))
 countProtGrpAst30[, condition := factor(condition, c("DDA", "DIA"))]
 countProtGrpAst30[, type := factor("Astral 30 min")]
 
@@ -144,14 +144,14 @@ p_prtAst <- ggplot(countProtGrpAst, aes(x=condition, y=N, fill=isQuanMin2)) +
 ## Ratio densities
 
 [R code to generate input file
-`figure-E9C-density.csv`](figure-E9C-density.R)
+`figure-E10C-density.csv`](figure-E10C-density.R)
 
 ``` r
 organismLabels <- c("E. coli", "Human", "Yeast")
 organismRatios <- setNames(log2(c(0.25, 1, 2)), organismLabels)
 dtLines <- data.table(YINTERCEPT = organismRatios, organism = factor(organismLabels))
 
-dtRatios <- fread(file.path(figurePath, "figure-E9C-density.csv"))
+dtRatios <- fread(file.path(figurePath, "figure-E10C-density.csv"))
 dtRatios[, organism := factor(organism, organismLabels)]
 contrastLabels <- c("DDA (Minora MS1 Quan)",
                     "DIA (Minora MS1 Quan)",
@@ -189,7 +189,7 @@ p <- p_psmLfq + p_psmAst + p_prtLfq + p_prtAst + p_ratio +
   plot_layout(design = p_design, heights = c(1, 1)) +
   plot_annotation(tag_levels = p_annotation)
 
-ggsave2(file.path(path, "figure-E9.pdf"), plot = p,
+ggsave2(file.path(path, "figure-E10.pdf"), plot = p,
         width = 180, height = 100, units = "mm", device = cairo_pdf)
 ```
 
@@ -197,7 +197,7 @@ ggsave2(file.path(path, "figure-E9.pdf"), plot = p,
     (`stat_density()`).
 
 ``` r
-ggsave2(file.path(path, "figure-E9.png"), plot = p,
+ggsave2(file.path(path, "figure-E10.png"), plot = p,
         width = 180, height = 100, units = "mm")
 ```
 
@@ -206,4 +206,4 @@ ggsave2(file.path(path, "figure-E9.png"), plot = p,
 
 </details>
 
-![figure-E9](figure-E9.png)
+![figure-E10](figure-E10.png)

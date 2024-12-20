@@ -1,7 +1,7 @@
 #setup
 source(here::here("scripts/load-dependencies.R"))
-path <- file.path(here::here(), "figure-E9")
-figurePath <- file.path(dataPath, "data/figure-E9")
+path <- file.path(here::here(), "figure-E10")
+figurePath <- file.path(dataPath, "data/figure-E10")
 
 filePaths <- file.path(dataPath, c("LFQ_Bench_multispecies/DDA/Chimerys/20240517_lfq_dda_z1to4_True_noNormalization.pdResult",
                                    "LFQ_Bench_multispecies/DIA/Chimerys/20240517_lfq_dia_z1to4_v2x7x9_apex_True.pdResult",
@@ -35,4 +35,4 @@ dtMaLines <- data.table(YINTERCEPT = organismRatios, organism = factor(organismL
 msaid_organism <- c("Human" = msaidTheme$blue, "Yeast" = msaidTheme$orange, "E. coli" = msaidTheme$grayDark)
 lsRatios[, hasMethionine := ifelse(grepl("M", ptm_group_J), "has Met", "no Met")]
 
-fwrite(lsRatios, file.path(figurePath, "figure-E9C-density.csv"))
+fwrite(lsRatios, file.path(figurePath, "figure-E10C-density.csv"))

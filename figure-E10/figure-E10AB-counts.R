@@ -1,7 +1,7 @@
 #setup
 source(here::here("scripts/load-dependencies.R"))
-path <- file.path(here::here(), "figure-E9")
-figurePath <- file.path(dataPath, "data/figure-E9")
+path <- file.path(here::here(), "figure-E10")
+figurePath <- file.path(dataPath, "data/figure-E10")
 
 
 # LFQ3 ====
@@ -21,10 +21,10 @@ contrastLabels <- c("DDA (Minora MS1 Quan)", "DIA (CHIMERYS MS2 Quan)")
 ratioProtGrpLfq <- testContrasts(dtProtGrpLfq, "protein", contrasts, minQuanReplicates = 0L)
 ratioProtGrpLfq[, isQuanMin2Each := nQuan1st>=2 & nQuan2nd>=2]
 countProtGrpLfq <- ratioProtGrpLfq[, .N, keyby = .(contrast, isQuanMin2Each)]
-fwrite(countProtGrpLfq, file.path(figurePath, "figure-E9B-LFQ3.csv"))
+fwrite(countProtGrpLfq, file.path(figurePath, "figure-E10B-LFQ3.csv"))
 
 countPsmLfq <- dtPsmLfq[, .N, keyby=.(condition, sample)]
-fwrite(countPsmLfq, file.path(figurePath, "figure-E9A-LFQ3.csv"))
+fwrite(countPsmLfq, file.path(figurePath, "figure-E10A-LFQ3.csv"))
 
 
 # Astral 14min ====
@@ -41,10 +41,10 @@ condProtGrpAst14 <- testConditions(dtProtGrpAst14, "protein", "condition", minQu
 condProtGrpAst14 <- condProtGrpAst14[, .N, keyby=.(condition, protein, nQuan)]
 condProtGrpAst14[, isQuanMin2 := nQuan>=2]
 countProtGrpAst14 <- condProtGrpAst14[, .N, keyby = .(condition, isQuanMin2)]
-fwrite(countProtGrpAst14, file.path(figurePath, "figure-E9B-Astral14.csv"))
+fwrite(countProtGrpAst14, file.path(figurePath, "figure-E10B-Astral14.csv"))
 
 countPsmAst14 <- dtPsmAst14[, .N, keyby=.(condition, sample)]
-fwrite(countPsmAst14, file.path(figurePath, "figure-E9A-Astral14.csv"))
+fwrite(countPsmAst14, file.path(figurePath, "figure-E10A-Astral14.csv"))
 
 
 # Astral 30min ====
@@ -61,9 +61,9 @@ condProtGrpAst30 <- testConditions(dtProtGrpAst30, "protein", "condition", minQu
 condProtGrpAst30 <- condProtGrpAst30[, .N, keyby=.(condition, protein, nQuan)]
 condProtGrpAst30[, isQuanMin2 := nQuan>=2]
 countProtGrpAst30 <- condProtGrpAst30[, .N, keyby = .(condition, isQuanMin2)]
-fwrite(countProtGrpAst30, file.path(figurePath, "figure-E9B-Astral30.csv"))
+fwrite(countProtGrpAst30, file.path(figurePath, "figure-E10B-Astral30.csv"))
 
 countPsmAst30 <- dtPsmAst30[, .N, keyby=.(condition, sample)]
-fwrite(countPsmAst30, file.path(figurePath, "figure-E9A-Astral30.csv"))
+fwrite(countPsmAst30, file.path(figurePath, "figure-E10A-Astral30.csv"))
 
 
