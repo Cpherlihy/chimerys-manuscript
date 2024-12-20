@@ -30,7 +30,7 @@ setkey(peptides, id)
 
 #INFERYS predictions (requires local INFERYS API and internal package)
 # rawActivation <- c("HCD", "CID")[1]
-# inferysApi <- "http://ops.cluster.internal.msaid.io:32080/chimerys/chimerys-4-0-4" #"localhost:8081"
+# inferysApi <- "localhost:8081"
 # inferysModel <- "inferys_3.0.0_fragmentation"
 # predictions <- predictSpectrum(sequences = peptides$ptm,
 #                                charges = peptides$charge,
