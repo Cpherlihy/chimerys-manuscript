@@ -1,6 +1,6 @@
 # Figure 4
 MSAID
-2024-12-17
+2024-12-20
 
 - [Setup](#setup)
 - [Data](#data)
@@ -101,7 +101,7 @@ p_cv <- ggplot(dtCv[!is.na(CV)], aes(x=CV, y=LABEL, fill=LABEL)) +
   facet_grid(cols = vars(SOFTWARE), rows = vars(TYPE)) +
   xlab("Precursor CVs") + ylab("Quantified fragments") +
   theme(legend.position = "none", plot.background = element_rect(fill = "transparent", colour = NA),
-        strip.text = element_text(size = 4), axis.text.x = element_text(size = 5))
+        strip.text = element_text(size = 5), axis.text.x = element_text(size = 5))
 
 #list median CVs for the manuscript
 dtCv[TYPE=="eFDR min 1 per\ncondition ≤ 1%" & !is.na(CV),
@@ -160,18 +160,18 @@ Details on figure generation
 </summary>
 
 ``` r
-p_schema <- image_ggplot2(image_read(file.path(path, "new_schema/figure_4_schema.pdf"),
+p_schema <- image_ggplot2(image_read(file.path(path, "workflow-schema-4.pdf"),
                                        density = 600))
 
 layout_annotation <- list(c("A", "B", "C", "D"))
 layout_design <- "AAAABB\nCCCCCC\nDDDDDD"
 
 p_ms2Quan <- free(p_schema) + p_cor + p_cv + p_density +
-  plot_layout(heights = c(1, 1.5, 2), design = layout_design) +
+  plot_layout(heights = c(1, 2, 2), design = layout_design) +
   plot_annotation(tag_levels = layout_annotation)
 
 ggsave2(file.path(path, "figure-4.pdf"), plot = p_ms2Quan,
-        width = 90, height = 120, units = "mm", device = cairo_pdf)
+        width = 90, height = 130, units = "mm", device = cairo_pdf)
 ```
 
     Warning: Removed 289 rows containing non-finite outside the scale range
@@ -179,7 +179,7 @@ ggsave2(file.path(path, "figure-4.pdf"), plot = p_ms2Quan,
 
 ``` r
 ggsave2(file.path(path, "figure-4.png"), plot = p_ms2Quan,
-        width = 90, height = 120, units = "mm")
+        width = 90, height = 130, units = "mm")
 ```
 
     Warning: Removed 289 rows containing non-finite outside the scale range
