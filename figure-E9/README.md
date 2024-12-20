@@ -1,18 +1,17 @@
-# Figure E9
+# Figure E10
 MSAID
 2024-12-19
 
-- [Setup](#setup)
+- [Overview](#overview)
 - [Data](#data)
-  - [PSMs](#psms)
-  - [Protein groups](#protein-groups)
-  - [Ratio densities](#ratio-densities)
+  - [Peptide length distributions](#peptide-length-distributions)
+  - [Counts](#counts)
 - [Figure](#figure)
 
-# Setup
+# Overview
 
 This document describes how the data analysis and plots for extended
-figure 9 were generated. To recreate the figures, make sure to download
+figure 10 were generated. To recreate the figures, make sure to download
 all input files (available on
 [PRIDE](https://www.ebi.ac.uk/pride/archive?keyword=PXD053241)), place
 them under `dataPath` (adjust in `load-dependencies.R` to your own
@@ -21,16 +20,14 @@ scripts.
 
 <details>
 <summary>
-Details on setup
+Details on data processing
 </summary>
 
 ``` r
 suppressMessages(source(here::here("scripts/load-dependencies.R")))
-path <- file.path(here::here(), "figure-E9")
-figurePath <- file.path(dataPath, "data/figure-E9")
-msaid_quantified <- c("TRUE" = msaid_darkgray, "FALSE" = msaid_orange)
-msaid_eFDR <- c("TRUE" = msaid_darkgray, "FALSE" = msaid_red)
-msaid_organism <- c("Human" = msaid_blue, "Yeast" = msaid_orange, "E. coli" = msaid_darkgray)
+path <- file.path(here::here(), "figure-E10")
+figurePath <- file.path(dataPath, "data/figure-E10")
+msaid_td <- c("Target" = msaid_blue, "Decoy" = msaid_orange)
 ```
 
 </details>
@@ -39,137 +36,54 @@ msaid_organism <- c("Human" = msaid_blue, "Yeast" = msaid_orange, "E. coli" = ms
 
 <details>
 <summary>
-Details on data processing
+Details on data loading
 </summary>
 
-## PSMs
+[R code to generate `.csv` input
+files](figure-E10-library-and-csodiaq-results.R)
 
-[R code to generate input files `figure-E9A-LFQ3.csv`,
-`figure-E9A-Astral14.csv` and
-`figure-E9A-Astral30.csv`](figure-E9AB-counts.R)
-
-``` r
-#LFQ3
-countPsmLfq <- fread(file.path(figurePath, "figure-E9A-LFQ3.csv"))
-countPsmLfq[, condition := factor(condition, c("DDA-CondA", "DDA-CondB", "DIA-CondA", "DIA-CondB"))]
-countPsmLfq[, condition_MS := factor(gsub("^(.*)-.*$", "\\1", condition), c("DDA", "DIA"))]
-countPsmLfq[, condition_org := factor(gsub("^.*-(.*)$", "\\1", condition), c("CondA", "CondB"),
-                                      c("Condition A", "Condition B"))]
-countPsmLfq[, type := factor("LFQ Benchmark")]
-
-#Astral
-countPsmAst14 <- fread(file.path(figurePath, "figure-E9A-Astral14.csv"))
-countPsmAst14[, condition_MS := factor(condition, c("DDA", "DIA"))]
-countPsmAst14[, type := factor("Astral 14 min")]
-
-countPsmAst30 <- fread(file.path(figurePath, "figure-E9A-Astral30.csv"))
-countPsmAst30[, condition_MS := factor(condition, c("DDA", "DIA"))]
-countPsmAst30[, type := factor("Astral 30 min")]
-
-countPsmAst <- rbind(countPsmAst14, countPsmAst30)
-
-#plots
-maxPsmN <- max(c(countPsmLfq$N, countPsmAst$N))
-
-p_psmLfq <- ggplot(countPsmLfq, aes(x=condition_MS, y=N)) +
-  geom_bar(stat = "summary", fun = mean) +
-  geom_jitter(aes(color=condition_org), shape = 1L, width = 0.1, height = 0) +
-  scale_color_manual(NULL, values = c("Condition A" = msaid_blue, "Condition B" = msaid_orange)) +
-  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale2()),
-                     limits = c(0, maxPsmN)) +
-  guides(color = guide_legend(nrow = 2)) +
-  facet_grid(cols = vars(type)) +
-  xlab(NULL) + ylab("Average PSMs") + theme(legend.position = "top", legend.title = element_text(hjust = 0.5))
-
-p_psmAst <- ggplot(countPsmAst, aes(x=condition_MS, y=N)) +
-  geom_bar(stat = "summary", fun = mean) +
-  geom_jitter(shape = 1L, width = 0.1, height = 0) +
-  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale2()),
-                     limits = c(0, maxPsmN)) +
-  facet_grid(cols = vars(type)) +
-  xlab(NULL) + ylab("Average PSMs")
-```
-
-## Protein groups
-
-[R code to generate input files `figure-E9B-LFQ3.csv`,
-`figure-E9B-Astral14.csv` and
-`figure-E9B-Astral30.csv`](figure-E9AB-counts.R)
+## Peptide length distributions
 
 ``` r
-#LFQ3
-countProtGrpLfq <- fread(file.path(figurePath, "figure-E9B-LFQ3.csv"))
-contrasts <- c("DDA-CondA_vs_DDA-CondB", "DIA-CondA_vs_DIA-CondB")
-contrastLabels <- c("DDA (Minora MS1 Quan)", "DIA (CHIMERYS MS2 Quan)")
-countProtGrpLfq[, contrastLabel := factor(contrast, contrasts, contrastLabels)]
-countProtGrpLfq[, condition_MS := factor(contrast, contrasts, c("DDA", "DIA"))]
-countProtGrpLfq[, type := factor("LFQ Benchmark")]
+pep_zodiaq <- fread(file.path(figurePath, "figure-E10A-csodiaq.csv"))
+pep_zodiaq[, isDecoyLabel := factor(isDecoyLabel, c("Target", "Decoy"))]
 
-#Astral
-countProtGrpAst14 <- fread(file.path(figurePath, "figure-E9B-Astral14.csv"))
-countProtGrpAst14[, condition := factor(condition, c("DDA", "DIA"))]
-countProtGrpAst14[, type := factor("Astral 14 min")]
-
-countProtGrpAst30 <- fread(file.path(figurePath, "figure-E9B-Astral30.csv"))
-countProtGrpAst30[, condition := factor(condition, c("DDA", "DIA"))]
-countProtGrpAst30[, type := factor("Astral 30 min")]
-
-countProtGrpAst <- rbind(countProtGrpAst14, countProtGrpAst30)
-
-#plots
-maxPrtN <- max(c(countProtGrpLfq[, sum(N), by=condition_MS][, V1],
-                 countProtGrpAst[, sum(N), by=.(type, condition)][, V1]))
-
-p_prtLfq <- ggplot(countProtGrpLfq, aes(x=condition_MS, y=N, fill=isQuanMin2Each)) +
-  geom_bar(stat = "identity") +
-  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale2()),
-                     limits = c(0, maxPrtN)) +
-  scale_fill_manual("Quantified in\n≥2 replicates\nper condition", values = msaid_quantified) +
-  theme(legend.position = "top", legend.title = element_text(hjust = 0.5)) +
-  guides(fill = guide_legend(nrow = 2, direction = "vertical")) +
-  facet_grid(cols = vars(type)) +
-  xlab(NULL) + ylab("Dataset global\nprotein groups")
-
-p_prtAst <- ggplot(countProtGrpAst, aes(x=condition, y=N, fill=isQuanMin2)) +
-  geom_bar(stat = "identity") +
-  facet_grid(cols = vars(type)) +
-  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale2()),
-                     limits = c(0, maxPrtN)) +
-  scale_fill_manual("Quantified in\n≥2 replicates", values = msaid_quantified) +
-  guides(fill = guide_legend(nrow = 2, direction = "vertical")) +
-  theme(legend.position = "top", legend.title = element_text(hjust = 0.5)) +
-  xlab(NULL) + ylab("Dataset global\nprotein groups")
-```
-
-## Ratio densities
-
-[R code to generate input file
-`figure-E9C-density.csv`](figure-E9C-density.R)
-
-``` r
-organismLabels <- c("E. coli", "Human", "Yeast")
-organismRatios <- setNames(log2(c(0.25, 1, 2)), organismLabels)
-dtLines <- data.table(YINTERCEPT = organismRatios, organism = factor(organismLabels))
-
-dtRatios <- fread(file.path(figurePath, "figure-E9C-density.csv"))
-dtRatios[, organism := factor(organism, organismLabels)]
-contrastLabels <- c("DDA (Minora MS1 Quan)",
-                    "DIA (Minora MS1 Quan)",
-                    "DIA (CHIMERYS MS2 Quan)")
-dtRatios[, contrastLabel := factor(contrastLabel, contrastLabels)]
-dtRatios[, nRatios := .N, by=contrastLabel]
-dtRatios[, contrasLabelN := paste0(contrastLabel, " n = ", format(nRatios, big.mark=",", trim=T))]
-
-p_ratio <- ggplot(dtRatios, aes(x=ratio, color=organism)) +
-  geom_density(linewidth=0.25) +
-  geom_vline(data=dtLines, aes(xintercept=YINTERCEPT, color=organism),
-             linetype = "dashed", linewidth = 0.25, show.legend = F) +
-  scale_color_manual(NULL, values = msaid_organism) +
-  scale_x_continuous(breaks = pretty_breaks(), limits = c(-4, 3)) +
-  guides(fill = guide_legend(override.aes = list(color = NA, size = 2))) +
-  facet_grid(cols = vars(contrasLabelN)) +
-  xlab("Log2 fold change (zoom-in)") + ylab("Density") +
+p_pep_zodiaq <- ggplot(pep_zodiaq, aes(x=n_aa, fill=isDecoyLabel)) +
+  geom_bar(position = "identity", alpha = 0.5) +
+  scale_y_continuous(labels = label_number(scale_cut = append(cut_short_scale(), 1, 1))) +
+  scale_fill_manual(NULL, values = msaid_td) +
+  xlab("Peptide length") + ylab("csoDIAq original precursors") +
   theme(legend.position = "top")
+
+pep_inferys <- fread(file.path(figurePath, "figure-E10B-chimerys.csv"))
+pep_inferys[, isDecoyLabel := factor(isDecoyLabel, c("Target", "Decoy"))]
+
+p_pep_inferys <- ggplot(pep_inferys, aes(x=n_aa, fill=isDecoyLabel)) +
+  geom_bar(position = "identity", alpha = 0.5) +
+  scale_y_continuous(labels = label_number(scale_cut = append(cut_short_scale(), 1, 1))) +
+  scale_fill_manual(NULL, values = msaid_td) +
+  xlab("Peptide length") + ylab("CHIMERYS digest precursors") +
+  theme(legend.position = "top")
+```
+
+## Counts
+
+``` r
+dt <- fread(file.path(figurePath, "figure-E10C-counts.csv"))
+types <- c("CsoDIAq original",
+           "CsoDIAq overlap",
+           "CsoDIAq overlap\nTargets INFERYS",
+           "CsoDIAq overlap\nDecoys INFERYS",
+           "CsoDIAq overlap\nBoth INFERYS",
+           "CHIMERYS digest\nBoth INFERYS")
+dt[, type := factor(type, types)]
+
+p_counts <- ggplot(dt, aes(x=type, y=N)) +
+  geom_boxplot(outliers = F, color = msaid_darkgray) +
+  geom_point(shape = 1L, alpha = 0.5, color = msaid_darkgray,
+             position = position_jitter(0.1, seed = 123L)) +
+  scale_y_continuous(labels = label_number(scale_cut = append(cut_short_scale(), 1, 1))) +
+  xlab(NULL) + ylab("Peptide groups (run-specific)")
 ```
 
 </details>
@@ -182,28 +96,18 @@ Details on figure generation
 </summary>
 
 ``` r
-p_design <- c("ABBCDD\nEEEEEE")
-p_annotation <- list(c("A", "", "B", "", "C"))
+p_design <- "AAAAAA\nBBBCCC\nDDDDDD"
 
-p <- p_psmLfq + p_psmAst + p_prtLfq + p_prtAst + p_ratio +
-  plot_layout(design = p_design, heights = c(1, 1)) +
-  plot_annotation(tag_levels = p_annotation)
+p_library <- guide_area() + p_pep_zodiaq + p_pep_inferys + p_counts +
+  plot_layout(heights = c(0.1, 1, 1), design = p_design, guides = "collect") +
+  plot_annotation(tag_levels = list(c("A", "B", "C")))
 
-ggsave2(file.path(path, "figure-E9.pdf"), plot = p,
-        width = 180, height = 100, units = "mm", device = cairo_pdf)
+suppressWarnings(ggsave2(file.path(path, "figure-E10.pdf"), plot = p_library,
+                         width = 180, height = 90, units = "mm", device = cairo_pdf))
+suppressWarnings(ggsave2(file.path(path, "figure-E10.png"), plot = p_library,
+                         width = 180, height = 90, units = "mm"))
 ```
-
-    Warning: Removed 1919 rows containing non-finite outside the scale range
-    (`stat_density()`).
-
-``` r
-ggsave2(file.path(path, "figure-E9.png"), plot = p,
-        width = 180, height = 100, units = "mm")
-```
-
-    Warning: Removed 1919 rows containing non-finite outside the scale range
-    (`stat_density()`).
 
 </details>
 
-![figure-E9](figure-E9.png)
+![figure-E10](figure-E10.png)

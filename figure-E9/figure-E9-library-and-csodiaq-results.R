@@ -1,7 +1,7 @@
 #setup
 source(here::here("scripts/load-dependencies.R"))
-path <- file.path(here::here(), "figure-E10")
-figurePath <- file.path(dataPath, "data/figure-E10")
+path <- file.path(here::here(), "figure-E9")
+figurePath <- file.path(dataPath, "data/figure-E9")
 
 nPtm <- function(sequence, ptm = "+15.9949") {
   nSeq <- nchar(sequence)
@@ -84,13 +84,13 @@ lib_zodiaq[, isDecoy := grepl("^\\d{1,2}/DECOY", UniprotID)]
 lib_zodiaq[, isDecoyLabel := factor(ifelse(isDecoy, "Decoy", "Target"), c("Target", "Decoy"))]
 pep_zodiaq <- lib_zodiaq[, .(n_aa = nchar(PeptideSequence[1])),
                          by=.(isDecoyLabel, PeptideGroupLabel)] #273373
-fwrite(pep_zodiaq, file.path(figurePath, "figure-E10A-csodiaq.csv"))
+fwrite(pep_zodiaq, file.path(figurePath, "figure-E9A-csodiaq.csv"))
 
 lib_inferys <- fread(file.path(dataPath, "Direct_infusion/human_lib_inferys_filtered.tsv")) #2599104
 lib_inferys[, isDecoyLabel := factor(ifelse(isDecoy, "Decoy", "Target"), c("Target", "Decoy"))]
 pep_inferys <- lib_inferys[, .(n_aa = nchar(PeptideSequence[1])),
                            by=.(isDecoyLabel, PeptideGroupLabel)] #259916
-fwrite(pep_inferys, file.path(figurePath, "figure-E10B-chimerys.csv"))
+fwrite(pep_inferys, file.path(figurePath, "figure-E9B-chimerys.csv"))
 
 
 #Load search engine counts
@@ -156,4 +156,4 @@ results[, type := factor(type, types)]
 results_local <- results[is_decoy==FALSE & q_value<=0.01]
 count_local <- results_local[, .N, keyby=.(type, sample)]
 
-fwrite(count_local, file.path(figurePath, "figure-E10C-counts.csv"))
+fwrite(count_local, file.path(figurePath, "figure-E9C-counts.csv"))
