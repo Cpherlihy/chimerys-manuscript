@@ -181,6 +181,16 @@ write.fst(combined, file.path(figurePath, 'fst-backup/20241127_figure3a_combined
 colNames <- c("SOFTWARE", "QUAN", "Q_VALUE", "ENTRAPMENT_Q_VALUE", "ENTRAPMENT_Q_VALUE_1")
 fwrite(combined[, .SD, .SDcols = colNames], file.path(figurePath, "figure-3B-quan.csv"))
 
+# precursor readout for E7
+dtPrecFrag <- combined[Q_VALUE <= 0.01]
+dtPrecFrag[, LOG10QUAN := log10(QUAN)]
+softwareLevels <- c("CHIMERYS", "DIA-NN", "SPECTRONAUT", "SPECTRONAUT_FILTERED")
+softwareLabels <- c("CHIMERYS", "DIA-NN", "Spectronaut", "Spectronaut\n(curated)")
+dtPrecFrag[, SOFTWARE := factor(SOFTWARE, softwareLevels, softwareLabels)]
+dtPrecFrag[, MIN1_QUAN_FRAGS := factor(MIN1_QUAN_FRAGS, 0:6)]
+dtPrecFrag <- dtPrecFrag[!is.na(LOG10QUAN) & SOFTWARE %in% softwareLabels[3]]
+fwrite(dtPrecFrag, file.path(dataPath, "data/figure-E7/figure-E7D-precursors.csv"))
+
 # # ---- re-read intermediately saved data ----
 # combined <- read.fst(file.path(figurePath, 'fst-backup/20241127_figure3a_combined_pcms_localPcmGrouper_apexQuan_pepEntr1.fst'), as.data.table = T)
 

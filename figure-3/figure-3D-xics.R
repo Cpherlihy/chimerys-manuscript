@@ -177,7 +177,7 @@ good_xic <- merge(good_xic,
                    all.x = T)
 
 # ---- intermediate save for AH and MF ----
-write.fst(empty_xic_info, file.path(dataPath, 'data/figure-3/fst-backup/20241127_figure3d_exampleData_emptyXic_apexQuan_pepEntr.fst'), compress = 100)
+fwrite(empty_xic_info, file.path(dataPath, "data/figure-E7/figure-E7E-rt.csv"))
 write.fst(empty_xic, file.path(dataPath, 'data/figure-3/fst-backup/20241127_figure3d_example_emptyXic_apexQuan_pepEntr.fst'), compress = 100)
 write.fst(good_xic, file.path(dataPath, 'data/figure-3/fst-backup/20241127_figure3d_example_goodXic_apexQuan_pepEntr.fst'), compress = 100)
 
