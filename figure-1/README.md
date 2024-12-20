@@ -1,6 +1,6 @@
 # Figure 1
 MSAID
-2024-12-17
+2024-12-20
 
 - [Setup](#setup)
 - [Data](#data)
@@ -111,7 +111,7 @@ p_inset <- ggplot(dt_inset, aes(x=mz, xend=mz, color=label, label=annotationMax)
                aes(alpha=is_identified, y=fraction_start, yend=fraction_end),
                arrow = arrow(length = unit(0.1, "inches")), show.legend = F) +
   geom_text_repel(aes(y=fraction_end),
-                  family = "Montserrat Light", size = 3/.pt, show.legend = F,
+                  family = "Montserrat Light", size = 5/.pt, show.legend = F,
                   na.rm = T, nudge_y = 0.01, box.padding = 0.05, max.overlaps = 8,
                   segment.size = 0.2, segment.alpha = 0.5,
                   segment.linetype = "dashed", ylim = c(0, 1)) +
@@ -199,7 +199,7 @@ p_upset <- plotUpset(dataTable = data_upset,
                      groupFillColumn = "level",
                      groupFillColors = groupFillColors,
                      labelDistance = c(0.05, 0.1),
-                     labelSize = c(5L, 3L),
+                     labelSize = c(5L, 5L),
                      plotRelativeWidths = c(0.4, -0.2, 0.6),
                      plotRelativeHeights = c(0.45, -0.2, 0.55),
                      labelType = "total inside",
@@ -229,7 +229,7 @@ Details on figure generation
 </summary>
 
 ``` r
-p_workflow <- image_ggplot2(image_read(file.path(path, "workflow-schema-2024-06-01.pdf"),
+p_workflow <- image_ggplot2(image_read(file.path(path, "workflow-schema.pdf"),
                                        density = 600))
 p_design <- "AAAABB\nCCCCCC\nDDEEEE"
 
