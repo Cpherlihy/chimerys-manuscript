@@ -367,6 +367,12 @@ ggsave2(file.path(path, "figure-E4.pdf"), plot = p,
         width = 180, height = 210, units = "mm", device = cairo_pdf)
 ggsave2(file.path(path, "figure-E4.png"), plot = p,
         width = 180, height = 210, units = "mm")
+ggsave2(file.path(path, "figure-E4.eps"), plot = p,
+        width = 180, height = 210, units = "mm")
+ggsave2(file.path(path, "figure-E4.jpeg"), plot = p,
+        width = 180, height = 210, units = "mm")
+ggsave2(file.path(path, "figure-E4.tiff"), plot = p,
+        width = 180, height = 210, units = "mm")
 ```
 
 </details>

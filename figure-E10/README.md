@@ -1,6 +1,6 @@
 # Figure E10
 MSAID
-2024-12-20
+2025-01-20
 
 - [Setup](#setup)
 - [Data](#data)
@@ -198,6 +198,725 @@ ggsave2(file.path(path, "figure-E10.pdf"), plot = p,
 
 ``` r
 ggsave2(file.path(path, "figure-E10.png"), plot = p,
+        width = 180, height = 100, units = "mm")
+```
+
+    Warning: Removed 1919 rows containing non-finite outside the scale range
+    (`stat_density()`).
+
+``` r
+ggsave2(file.path(path, "figure-E10.eps"), plot = p,
+        width = 180, height = 100, units = "mm")
+```
+
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+    'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+
+    Warning: Removed 1919 rows containing non-finite outside the scale range
+    (`stat_density()`).
+
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+``` r
+ggsave2(file.path(path, "figure-E10.jpeg"), plot = p,
+        width = 180, height = 100, units = "mm")
+```
+
+    Warning: Removed 1919 rows containing non-finite outside the scale range
+    (`stat_density()`).
+
+``` r
+ggsave2(file.path(path, "figure-E10.tiff"), plot = p,
         width = 180, height = 100, units = "mm")
 ```
 

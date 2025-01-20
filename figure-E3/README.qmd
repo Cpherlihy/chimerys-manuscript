@@ -200,6 +200,12 @@ ggsave2(file.path(path, "figure-E3.pdf"), plot = p_supp_IDs_FDR,
         width = 180, height = 100, units = "mm", device = cairo_pdf)
 ggsave2(file.path(path, "figure-E3.png"), plot = p_supp_IDs_FDR,
         width = 180, height = 100, units = "mm")
+ggsave2(file.path(path, "figure-E3.eps"), plot = p_supp_IDs_FDR,
+        width = 180, height = 100, units = "mm")
+ggsave2(file.path(path, "figure-E3.jpeg"), plot = p_supp_IDs_FDR,
+        width = 180, height = 100, units = "mm")
+ggsave2(file.path(path, "figure-E3.tiff"), plot = p_supp_IDs_FDR,
+        width = 180, height = 100, units = "mm")
 ```
 
 </details>

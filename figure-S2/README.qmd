@@ -195,6 +195,12 @@ ggsave2(file.path(path, "figure-S2.pdf"), plot = p_DIA_chim,
         width = 180, height = 160, units = "mm", device = cairo_pdf)
 ggsave2(file.path(path, "figure-S2.png"), plot = p_DIA_chim,
         width = 180, height = 160, units = "mm")
+ggsave2(file.path(path, "figure-S2.eps"), plot = p_DIA_chim,
+        width = 180, height = 160, units = "mm")
+ggsave2(file.path(path, "figure-S2.jpeg"), plot = p_DIA_chim,
+        width = 180, height = 160, units = "mm")
+ggsave2(file.path(path, "figure-S2.tiff"), plot = p_DIA_chim,
+        width = 180, height = 160, units = "mm")
 ```
 
 </details>

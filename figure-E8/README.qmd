@@ -105,6 +105,12 @@ ggsave2(file.path(path, "figure-E8.pdf"), plot = p_quanCor,
         width = 180, height = 40, units = "mm", device = cairo_pdf)
 ggsave2(file.path(path, "figure-E8.png"), plot = p_quanCor,
         width = 180, height = 40, units = "mm")
+ggsave2(file.path(path, "figure-E8.eps"), plot = p_quanCor,
+        width = 180, height = 40, units = "mm")
+ggsave2(file.path(path, "figure-E8.jpeg"), plot = p_quanCor,
+        width = 180, height = 40, units = "mm")
+ggsave2(file.path(path, "figure-E8.tiff"), plot = p_quanCor,
+        width = 180, height = 40, units = "mm")
 ```
 
 </details>

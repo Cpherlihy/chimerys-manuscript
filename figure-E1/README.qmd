@@ -94,7 +94,13 @@ p_supp_DDA <- p_pie_legend + free(p_pie_scans) + p_psms_ms2 +
 suppressWarnings(ggsave2(file.path(path, "figure-E1.pdf"), plot = p_supp_DDA,
                          width = 90, height = 40, units = "mm", device = cairo_pdf))
 suppressWarnings(ggsave2(file.path(path, "figure-E1.png"), plot = p_supp_DDA,
-                         width = 90, height = 40, units = "mm")) #, dpi = 92
+                         width = 90, height = 40, units = "mm"))
+suppressWarnings(ggsave2(file.path(path, "figure-E1.eps"), plot = p_supp_DDA,
+                         width = 90, height = 40, units = "mm"))
+suppressWarnings(ggsave2(file.path(path, "figure-E1.jpeg"), plot = p_supp_DDA,
+                         width = 90, height = 40, units = "mm"))
+suppressWarnings(ggsave2(file.path(path, "figure-E1.tiff"), plot = p_supp_DDA,
+                         width = 90, height = 40, units = "mm"))
 
 ```
 

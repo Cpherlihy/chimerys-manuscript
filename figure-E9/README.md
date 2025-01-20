@@ -1,6 +1,6 @@
 # Figure E9
 MSAID
-2024-12-20
+2025-01-20
 
 - [Overview](#overview)
 - [Data](#data)
@@ -105,6 +105,12 @@ p_library <- guide_area() + p_pep_zodiaq + p_pep_inferys + p_counts +
 suppressWarnings(ggsave2(file.path(path, "figure-E9.pdf"), plot = p_library,
                          width = 180, height = 90, units = "mm", device = cairo_pdf))
 suppressWarnings(ggsave2(file.path(path, "figure-E9.png"), plot = p_library,
+                         width = 180, height = 90, units = "mm"))
+suppressWarnings(ggsave2(file.path(path, "figure-E9.eps"), plot = p_library,
+                         width = 180, height = 90, units = "mm"))
+suppressWarnings(ggsave2(file.path(path, "figure-E9.jpeg"), plot = p_library,
+                         width = 180, height = 90, units = "mm"))
+suppressWarnings(ggsave2(file.path(path, "figure-E9.tiff"), plot = p_library,
                          width = 180, height = 90, units = "mm"))
 ```
 

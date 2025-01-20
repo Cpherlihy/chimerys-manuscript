@@ -1,6 +1,6 @@
 # Figure S1
 MSAID
-2024-12-17
+2025-01-20
 
 - [Setup](#setup)
 - [Data](#data)
@@ -162,6 +162,12 @@ p_ions <- p_ion_pred_pos_abs + p_ion_pred_200_abs +
 suppressWarnings(ggsave2(file.path(path, "figure-S1.pdf"), plot = p_ions,
                          width = 180, height = 140, units = "mm", device = cairo_pdf))
 suppressWarnings(ggsave2(file.path(path, "figure-S1.png"), plot = p_ions,
+                         width = 180, height = 140, units = "mm"))
+suppressWarnings(ggsave2(file.path(path, "figure-S1.eps"), plot = p_ions,
+                         width = 180, height = 140, units = "mm"))
+suppressWarnings(ggsave2(file.path(path, "figure-S1.jpeg"), plot = p_ions,
+                         width = 180, height = 140, units = "mm"))
+suppressWarnings(ggsave2(file.path(path, "figure-S1.tiff"), plot = p_ions,
                          width = 180, height = 140, units = "mm"))
 ```
 

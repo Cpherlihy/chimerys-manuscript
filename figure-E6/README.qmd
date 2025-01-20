@@ -234,6 +234,12 @@ ggsave2(file.path(path, "figure-E6.pdf"), plot = p_efdr,
         width = 180, height = 120, units = "mm", device = cairo_pdf)
 ggsave2(file.path(path, "figure-E6.png"), plot = p_efdr,
         width = 180, height = 120, units = "mm")
+ggsave2(file.path(path, "figure-E6.eps"), plot = p_efdr,
+        width = 180, height = 120, units = "mm")
+ggsave2(file.path(path, "figure-E6.jpeg"), plot = p_efdr,
+        width = 180, height = 120, units = "mm")
+ggsave2(file.path(path, "figure-E6.tiff"), plot = p_efdr,
+        width = 180, height = 120, units = "mm")
 ```
 
 </details>

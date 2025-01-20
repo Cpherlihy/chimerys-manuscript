@@ -217,7 +217,7 @@ p_annotation <- list(c("",
                        "", "",
                        "D", "", ""))
 
-p_s3 <- (p_legend_a) / 
+p <- (p_legend_a) / 
   (p_instruments_psm | p_instruments_pep | p_instruments_prot) /
   (p_title_b | p_legend_b) /
   (p_gradients_psms | p_gradients_pep | p_gradients_prot) /
@@ -228,9 +228,15 @@ p_s3 <- (p_legend_a) /
   plot_layout(heights = c(0.2, 1, 0.2, 1, 0.2, 1, 0.2, 1)) +
   plot_annotation(tag_levels = p_annotation)
 
-ggsave2(file.path(path, "figure-E5.pdf"), plot = p_s3,
+ggsave2(file.path(path, "figure-E5.pdf"), plot = p,
         width = 180, height = 150, units = "mm", device = cairo_pdf)
-ggsave2(file.path(path, "figure-E5.png"), plot = p_s3,
+ggsave2(file.path(path, "figure-E5.png"), plot = p,
+        width = 180, height = 150, units = "mm")
+ggsave2(file.path(path, "figure-E5.eps"), plot = p,
+        width = 180, height = 150, units = "mm")
+ggsave2(file.path(path, "figure-E5.jpeg"), plot = p,
+        width = 180, height = 150, units = "mm")
+ggsave2(file.path(path, "figure-E5.tiff"), plot = p,
         width = 180, height = 150, units = "mm")
 ```
 
