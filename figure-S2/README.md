@@ -1,6 +1,6 @@
 # Figure S2
 MSAID
-2025-01-20
+2025-01-23
 
 - [Setup](#setup)
 - [Data](#data)
@@ -140,12 +140,12 @@ p_ion_pred_200_rel <-
 
 ## Matched ions
 
-[R code to generate input files `figure-S1GI-matched-position.csv` and
-`figure-S1HJ-matched-mz.csv`](figure-S2-predictions.R)
+[R code to generate input files `figure-S2GI-matched-position.csv` and
+`figure-S2HJ-matched-mz.csv`](figure-S2-predictions.R)
 
 ``` r
 #plot positions
-count_pos <- fread(file.path(figurePath, "figure-S1GI-matched-position.csv"))
+count_pos <- fread(file.path(figurePath, "figure-S2GI-matched-position.csv"))
 
 p_ion_shared_pos_abs <-
   ggplot(count_pos, aes(x=position, y=N, fill=is_ptm_match_shared)) +
@@ -167,7 +167,7 @@ p_ion_shared_pos_rel <-
 
 
 #plot 200 mz-bins
-count_200 <- fread(file.path(figurePath, "figure-S1HJ-matched-mz.csv"))
+count_200 <- fread(file.path(figurePath, "figure-S2HJ-matched-mz.csv"))
 mz_lab <- count_200[, paste0(c(0, 0, paste0(">", as.character(mzMatch_200)[1:(.N-2)])), "-\n", mzMatch_200)]
 count_200[, mzMatch_label := factor(mzMatch_label, unique(mz_lab))]
 
@@ -839,9 +839,52 @@ ggsave2(file.path(path, "figure-S2.eps"), plot = p_DIA_chim,
     family 'Source Sans 3' not found in PostScript font database
     Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
     family 'Source Sans 3' not found in PostScript font database
-    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-    family 'Source Sans 3' not found in PostScript font database
 
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Montserrat Light' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Montserrat Light' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Montserrat Light' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Montserrat Light' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Montserrat Light' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Montserrat Light' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Montserrat Light' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Montserrat Light' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Montserrat Light' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Montserrat Light' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Montserrat Light' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Montserrat Light' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Montserrat Light' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Montserrat Light' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Montserrat Light' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Montserrat Light' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Montserrat Light' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
     Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
     font family 'Source Sans 3' not found in PostScript font database
     Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
@@ -852,50 +895,6 @@ ggsave2(file.path(path, "figure-S2.eps"), plot = p_DIA_chim,
 
     Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
     font family 'Source Sans 3' not found in PostScript font database
-
-    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-    font family 'Montserrat Light' not found in PostScript font database
-    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-    font family 'Montserrat Light' not found in PostScript font database
-    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-    font family 'Montserrat Light' not found in PostScript font database
-
-    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-    family 'Montserrat Light' not included in postscript() device
-
-    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-    font family 'Montserrat Light' not found in PostScript font database
-    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-    font family 'Montserrat Light' not found in PostScript font database
-    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-    font family 'Montserrat Light' not found in PostScript font database
-
-    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-    family 'Montserrat Light' not included in postscript() device
-
-    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-    font family 'Montserrat Light' not found in PostScript font database
-    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-    font family 'Montserrat Light' not found in PostScript font database
-    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-    font family 'Montserrat Light' not found in PostScript font database
-
-    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-    family 'Montserrat Light' not included in postscript() device
-
-    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-    font family 'Montserrat Light' not found in PostScript font database
-    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-    font family 'Montserrat Light' not found in PostScript font database
-    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-    font family 'Montserrat Light' not found in PostScript font database
-
-    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-    family 'Montserrat Light' not included in postscript() device
-
-    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-    font family 'Montserrat Light' not found in PostScript font database
-
     Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
     font family 'Source Sans 3' not found in PostScript font database
     Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :

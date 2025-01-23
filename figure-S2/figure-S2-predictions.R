@@ -140,7 +140,7 @@ merged[n_ptm_match>1, .(.N,
 count_pos <- merged[mzMatched==T, .N, keyby=.(position, is_ptm_match_shared)]
 count_pos[, N_rel := N/sum(N), by=position]
 count_pos[, N_rel_label := paste0(round(N_rel*100, 0), "%")]
-fwrite(count_pos, file.path(figurePath, "figure-S1GI-matched-position.csv"))
+fwrite(count_pos, file.path(figurePath, "figure-S2GI-matched-position.csv"))
 
 
 #plot 200 mz-bins
@@ -149,4 +149,4 @@ mz_lab <- count_200[, paste0(c(0, 0, paste0(">", as.character(mzMatch_200)[1:(.N
 count_200[, mzMatch_label := factor(mz_lab, unique(mz_lab))]
 count_200[, N_rel := N/sum(N), by=mzMatch_200]
 count_200[, N_rel_label := paste0(round(N_rel*100, 2), "%")]
-fwrite(count_200, file.path(figurePath, "figure-S1HJ-matched-mz.csv"))
+fwrite(count_200, file.path(figurePath, "figure-S2HJ-matched-mz.csv"))
