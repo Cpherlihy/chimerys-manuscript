@@ -1,6 +1,6 @@
 # Figure 5
 MSAID
-2024-12-17
+2025-01-23
 
 - [Setup](#setup)
 - [Data](#data)
@@ -56,7 +56,7 @@ shapeBoth <- c("no FAIMS" = "dotted", "FAIMS" = "solid")
 colBoth <- c("CHIMERYS" = msaid_blue, "CsoDIAq" = msaid_green)
 colShared <- c("CHIMERYS" = msaid_blue, "CsoDIAq" = msaid_green, "Shared" = msaid_orange)
 colPathway <- c("CHIMERYS" = msaid_blue, "CsoDIAq" = msaid_green,
-                "Shared" = msaid_orange, "Pathway" = msaid_gray)
+                "Shared" = msaid_orange, "Unidentified" = msaid_gray)
 
 counts_local <- fread(file.path(figurePath, "figure-5ABC-counts.csv"))
 counts_local[, type := factor(type, c("CHIMERYS", "CsoDIAq"))]
@@ -178,7 +178,8 @@ p_prot_bar <- ggplot(proteins_sub2_count, aes(x=type, y=N, fill=nTypeLabel)) +
 ``` r
 pie <- fread(file.path(figurePath, "figure-5H-cytoscape.csv"))
 term <- unique(pie$description)[c(1, 2, 3, 6)]
-pie[, variable := factor(variable, c("Pathway", "Shared", "CsoDIAq", "CHIMERYS"))]
+pie[, variable := factor(variable, c("Pathway", "Shared", "CsoDIAq", "CHIMERYS"),
+                         c("Unidentified", "Shared", "CsoDIAq", "CHIMERYS"))]
 pie[, description := factor(description, unique(description))]
 
 p_pie <- ggplot(pie[description %in% term], aes(x="", y=value, fill=variable)) +
