@@ -1,6 +1,6 @@
 # Figure 6
 MSAID
-2024-12-17
+2025-01-23
 
 - [Setup](#setup)
 - [Library](#library)
@@ -115,10 +115,11 @@ corLfq <- dtLfqCor[, round(cor(log10(2^CHIMERYS), log10(2^Minora), method = "pea
 corLfq <- paste("Pearson", corLfq)
 
 p_lfq_cor <- ggplot(dtLfqCor, aes(x=log10(2^CHIMERYS), y=log10(2^Minora))) +
-  rasterise(geom_point(shape = 16L, size = 0.05, stroke = 0), dpi = 600) +
-  geom_density2d(linewidth = 0.2, color = msaid_blue) +
-  annotate("text", x = mean(range(log10(2^dtLfqCor$CHIMERYS))), y = max(log10(2^dtLfqCor$Minora)),
-           label = corLfq, size = 6/.pt, family = "Montserrat Light", color = msaid_darkgray) +
+  rasterise(geom_point(shape = 16L, size = 0.25, alpha = 0.01), dpi = 600) +
+  annotate("text", x = 6, y = 8.5, label = corLfq,
+           size = 5/.pt, family = "Montserrat Light", color = msaid_darkgray) +
+  annotate("text", x = 8.5, y = 7, label = "y = x",
+           size = 5/.pt, family = "Montserrat Light", color = msaid_darkgray) +
   geom_abline(slope = 1, intercept = 0, color = msaid_darkgray, linetype = "dashed") +
   xlab("DIA\nCHIMERYS MS2 Quan") + ylab("DIA\nMinora MS1 Quan")
 ```
