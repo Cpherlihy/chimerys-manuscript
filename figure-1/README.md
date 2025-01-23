@@ -1,6 +1,6 @@
 # Figure 1
 MSAID
-2024-12-20
+2025-01-23
 
 - [Setup](#setup)
 - [Data](#data)
@@ -100,7 +100,8 @@ fwrite(dt_spectra$spectra, file.path(figurePath, "figure-1C-decon-mirror.csv"))
 #mirror plot inset
 dt_inset <- dt_spectra$spectra[mz_recal>129 & mz_recal<148]
 spec_color <- c(msaid_gray, msaid_red, msaid_col[-6], viridis(1))
-ptm_label <- data_sub[order(-score_coefficient_normalized), paste0(ptm, " (", charge, "+)")]
+ptm_label <- data_sub[order(-score_coefficient_normalized),
+                      paste0(ptm, " (", charge, "+, ", round(retention_time_predicted, 2), "min)")]
 names(spec_color) <- c("measured", "precursor", ptm_label)
 dt_inset[!is.na(annotation), annotationMax := ifelse(fraction_end==max(fraction_end), annotation, NA), by=mz]
 

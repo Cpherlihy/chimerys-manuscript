@@ -12,7 +12,8 @@ data_ptm <- readPtmGroups(searchEnginePath, sampleNamesPath, loadBackup = F, wri
 ##deconvolution mirror plot
 rawScans <- 115649L
 data_sub <- data_psm[sample %in% "CHIMERYS_1" & scan_ms2 %in% rawScans, .SD,
-                     .SDcols = c("sample", "scan_ms2", "mz_ratio", "ptm", "charge", "nce", "score_coefficient_normalized")]
+                     .SDcols = c("sample", "scan_ms2", "mz_ratio", "ptm", "charge", "nce",
+                                 "score_coefficient_normalized", "retention_time_predicted")]
 #export file for plotting
 fwrite(data_sub, file.path(dataPath, "data/figure-1/intermediate/scan-115649-decon-mirror.csv"))
 
