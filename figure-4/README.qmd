@@ -53,8 +53,10 @@ p_cor <- ggplot(data_cor, aes(x=log10(CHIMERYS), y=log10(SkylineNew))) +
   geom_abline(slope = 1, intercept = 0, color = msaid_darkgray, linetype = "dashed") +
   geom_smooth(method="lm", formula= y~x, col = msaid_blue, linewidth = 0.5) +
   geom_point(shape = 1L, stroke = 0.25, size = 1, color = msaid_darkgray) +
-  annotate("text", x=6.5, y=8, label="y = x", color = msaid_darkgray, size=6/.pt) +
-  annotate("text", x=7.75, y=5.25, label=text_lm, color = msaid_blue, size=6/.pt) +
+  annotate("text", x=6.5, y=8, label="y = x", color = msaid_darkgray,
+           family="Montserrat Light", size=5/.pt) +
+  annotate("text", x=7.75, y=5.25, label=text_lm, color = msaid_blue,
+           family="Montserrat Light", size=5/.pt) +
   xlab("CHIMERYS\nlog10 intensity") + ylab("Skyline\nlog10 intensity")
 ```
 
@@ -82,20 +84,18 @@ dtCvCount[is.na(N), N := 0]
 dtCvCount[is.na(maxCv) | N<2, maxCv := 0]
 dtCvCount[, labelN := format(N, big.mark=",", trim=T)]
 
-p_cv <- ggplot(dtCv[!is.na(CV)], aes(x=CV, y=LABEL, fill=LABEL)) +
+p_cv <- ggplot(dtCv[!is.na(CV)], aes(x=CV, y=LABEL)) +
   geom_vline(data=dtCvMed, aes(xintercept = medianCv), linetype = "longdash",
              color = msaid_darkgray, linewidth = 0.25) +
   geom_violin(draw_quantiles = c(0.25, 0.5, 0.75), linewidth = 0.25) +
   geom_text(data=dtCvCount, aes(x=maxCv+max(maxCv)*0.02, label=labelN),
             position = position_dodge(0.9), color=msaid_darkgray,
             family="Montserrat Light", size=5/.pt, hjust = 0) +
-  scale_x_continuous(labels = label_percent(), limits = c(0, 2.35)) +
+  scale_x_continuous(labels = label_percent(), breaks = pretty_breaks(3), limits = c(0, 2.35)) +
   scale_fill_manual("Quantified fragments", values = colorRampPalette(c(msaid_red, msaid_darkgray))(4L),
                     breaks = c('0', '1', '2', '≥ 3'), drop = F) +
   facet_grid(cols = vars(SOFTWARE), rows = vars(TYPE)) +
-  xlab("Precursor CVs") + ylab("Quantified fragments") +
-  theme(legend.position = "none", plot.background = element_rect(fill = "transparent", colour = NA),
-        strip.text = element_text(size = 5), axis.text.x = element_text(size = 5))
+  xlab("Precursor CVs") + ylab("Quantified fragments")
 
 #list median CVs for the manuscript
 dtCv[TYPE=="eFDR min 1 per\ncondition ≤ 1%" & !is.na(CV),
@@ -126,7 +126,7 @@ p_density <- ggplot(dtOrg, aes(x=LOG2RATIO, color=ORGANISM)) +
   guides(fill = guide_legend(override.aes = list(color = NA, size = 2))) +
   facet_grid(rows = vars(eFdrLabelCond), cols = vars(SOFTWARE)) +
   xlab("Log2 fold change (zoom-in)") + ylab("Density") +
-  theme(legend.position = "top", strip.text = element_text(size = 5))
+  theme(legend.position = "top")
 
 #mean and sd of log2 ratios after eFDR filtering (at least 1 per each condition)
 dtOrg[eFdrLabelCond=="eFDR min 1\nper condition ≤ 1%",
