@@ -100,13 +100,13 @@ p_lfq_org <- ggplot(dtLfqOrg, aes(x=ratio, color=organism)) +
 ```{r}
 dtLfqCor <- fread(file.path(figurePath, "figure-6D-correlation.csv"))
 corLfq <- dtLfqCor[, round(cor(log10(2^CHIMERYS), log10(2^Minora), method = "pearson"), 2)]
-corLfq <- paste("Pearson", corLfq)
+corLfq <- paste("Pearson's R = ", corLfq)
 
 p_lfq_cor <- ggplot(dtLfqCor, aes(x=log10(2^CHIMERYS), y=log10(2^Minora))) +
   rasterise(geom_point(shape = 16L, size = 0.25, alpha = 0.01), dpi = 600) +
-  annotate("text", x = 6, y = 8.5, label = corLfq,
+  annotate("text", x = 7.5, y = 8.75, label = "¦  y = x",
            size = 5/.pt, family = "Montserrat Light", color = msaid_darkgray) +
-  annotate("text", x = 8.5, y = 7, label = "y = x",
+  annotate("text", x = 7.5, y = 5.25, label = corLfq,
            size = 5/.pt, family = "Montserrat Light", color = msaid_darkgray) +
   geom_abline(slope = 1, intercept = 0, color = msaid_darkgray, linetype = "dashed") +
   xlab("DIA\nCHIMERYS MS2 Quan") + ylab("DIA\nMinora MS1 Quan")

@@ -1,6 +1,6 @@
 # Figure 4
 MSAID
-2025-01-23
+2025-01-24
 
 - [Setup](#setup)
 - [Data](#data)
@@ -58,13 +58,13 @@ data_cor <- merge(data_cor, data_new, by="Peptide", all=T)
 fwrite(data_cor, file.path(figurePath, "figure-4B-correlation.csv"))
 
 data_lm <- data_cor[, coefficients(lm(log10(SkylineNew)~log10(CHIMERYS)))]
-text_lm <- paste0("y = ", round(data_lm[2], 2), "*x", round(data_lm[1], 2))
+text_lm <- paste0("|  y = ", round(data_lm[2], 2), "*x", round(data_lm[1], 2))
 
 p_cor <- ggplot(data_cor, aes(x=log10(CHIMERYS), y=log10(SkylineNew))) +
   geom_abline(slope = 1, intercept = 0, color = msaid_darkgray, linetype = "dashed") +
   geom_smooth(method="lm", formula= y~x, col = msaid_blue, linewidth = 0.5) +
   geom_point(shape = 1L, stroke = 0.25, size = 1, color = msaid_darkgray) +
-  annotate("text", x=6.5, y=8, label="y = x", color = msaid_darkgray,
+  annotate("text", x=7.5, y=8.75, label="¦  y = x", color = msaid_darkgray,
            family="Montserrat Light", size=5/.pt) +
   annotate("text", x=7.75, y=5.25, label=text_lm, color = msaid_blue,
            family="Montserrat Light", size=5/.pt) +
