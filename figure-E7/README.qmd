@@ -38,7 +38,7 @@ Runtimes were recorded manually as `figure-E7A-runtimes.csv`
 ```{r}
 dtRuntimes <- fread(file.path(figurePath, "figure-E7A-runtimes.csv"))
 softwareLevels <- c('CHIMERYS 2', 'CHIMERYS 4', 'DIA-NN', 'Spectronaut')
-softwareLabels <- c('CHIMERYS\n2', 'CHIMERYS\n4', 'DIA-NN', 'Spectronaut')
+softwareLabels <- c('CHIMERYS\n2.7.9', 'CHIMERYS\n4.0.21', 'DIA-NN\n1.8.1', 'Spectronaut\n19')
 dtRuntimes[, Software := factor(Software, softwareLevels, softwareLabels)]
 
 p_runtimes <- ggplot(dtRuntimes, aes(x=Software, y=Runtime)) +

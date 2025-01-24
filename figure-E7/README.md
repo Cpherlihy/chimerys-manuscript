@@ -1,6 +1,6 @@
 # Figure E7
 MSAID
-2025-01-20
+2025-01-24
 
 - [Setup](#setup)
 - [Data](#data)
@@ -51,7 +51,7 @@ Runtimes were recorded manually as `figure-E7A-runtimes.csv`
 ``` r
 dtRuntimes <- fread(file.path(figurePath, "figure-E7A-runtimes.csv"))
 softwareLevels <- c('CHIMERYS 2', 'CHIMERYS 4', 'DIA-NN', 'Spectronaut')
-softwareLabels <- c('CHIMERYS\n2', 'CHIMERYS\n4', 'DIA-NN', 'Spectronaut')
+softwareLabels <- c('CHIMERYS\n2.7.9', 'CHIMERYS\n4.0.21', 'DIA-NN\n1.8.1', 'Spectronaut\n19')
 dtRuntimes[, Software := factor(Software, softwareLevels, softwareLabels)]
 
 p_runtimes <- ggplot(dtRuntimes, aes(x=Software, y=Runtime)) +
@@ -238,6 +238,10 @@ ggsave2(file.path(path, "figure-E7.eps"), plot = p_S_dia,
     family 'Source Sans 3' not found in PostScript font database
     Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
     family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+    family 'Source Sans 3' not found in PostScript font database
 
     Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
     'Source Sans 3' not found in PostScript font database
@@ -747,6 +751,26 @@ ggsave2(file.path(path, "figure-E7.eps"), plot = p_S_dia,
 
     Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
     font family 'Montserrat Light' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    font family 'Source Sans 3' not found in PostScript font database
+
+    Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+    family 'Source Sans 3' not included in postscript() device
 
     Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
     font family 'Source Sans 3' not found in PostScript font database
