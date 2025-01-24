@@ -1,6 +1,6 @@
 # Figure E4
 MSAID
-2025-01-20
+2025-01-24
 
 - [Setup](#setup)
 - [Data](#data)
@@ -90,7 +90,7 @@ dt_mean[, .(studies, mean, relative = percent((mean[studies=="CHIMERYS"] - mean)
           studies     mean relative
            <fctr>    <num>   <char>
     1: Sequest HT 1336.538      21%
-    2:  MSFragger 1464.692      11%
+    2:  MSFragger 1460.231      11%
     3:   CHIMERYS 1618.692       0%
 
 ## CSF
