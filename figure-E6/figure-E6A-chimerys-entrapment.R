@@ -1,7 +1,6 @@
 # ---- setup ----
 source(here::here("scripts/load-dependencies.R"))
 source(here::here("scripts/data-processing-3.R"))
-path <- file.path(here::here(), "figure-E6")
 figurePath <- file.path(dataPath, "data/figure-E6")
 
 efdrLevels <- c("REGULAR", "PEPTIDE", "CONCATENATED")
@@ -91,7 +90,7 @@ combined[,CONDITION:=ifelse(grepl("Condition_A", SAMPLE),
                             "B")]
 
 # ---- intermediate save ----
-write.fst(combined, file.path(dataPath, 'data/figure-S8/fst-backup/20241111_figureS8a_pdresult_combined_pcms_localPcmEfdr_apexQuan_entr.fst'), compress = 100)
+write.fst(combined, file.path(dataPath, 'data/figure-E6/fst-backup/20241111_figureS8a_pdresult_combined_pcms_localPcmEfdr_apexQuan_entr.fst'), compress = 100)
 
 data_efdr <- combined[Q_VALUE<=0.055]
 data_efdr[, SOFTWARE := factor(SOFTWARE, efdrLevels, efdrLabels)]
@@ -111,7 +110,7 @@ mean_efdrChimerys[, ENTRAPMENT_Q_VALUE_MIXED := ifelse(SOFTWARE=="Concatenated e
 fwrite(mean_efdrChimerys, file.path(figurePath, "figure-E6A-chimerys.csv"))
 
 # # ---- re-read intermediately saved data ----
-# combined <- read.fst(file.path(dataPath, 'data/figure-S8/fst-backup/20241111_figureS8a_pdresult_combined_pcms_localPcmEfdr_apexQuan_entr.fst'), as.data.table = T)
+# combined <- read.fst(file.path(dataPath, 'data/figure-E6/fst-backup/20241111_figureS8a_pdresult_combined_pcms_localPcmEfdr_apexQuan_entr.fst'), as.data.table = T)
 # combined[SOFTWARE == 'CONCATENATED', ENTRAPMENT_Q_VALUE:=ENTRAPMENT_Q_VALUE_1]
 #
 # # ---- plot fdr vs efdr; preliminary plot for testing ----

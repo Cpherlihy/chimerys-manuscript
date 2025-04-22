@@ -1,7 +1,8 @@
 # ---- setup ----
 source(here::here("scripts/load-dependencies.R"))
 source(here::here("scripts/data-processing-3.R"))
-path <- file.path(here::here(), "figure-S8-entrapment")
+figurePath <- file.path(dataPath, "data/figure-E6")
+
 efdrLevels <- c("REGULAR", "PEPTIDE", "CONCATENATED")
 efdrLabels <- c("Classic eFDR", "Peptide eFDR", "Concatenated eFDR")
 
@@ -96,7 +97,7 @@ combined[,CONDITION:=ifelse(grepl("Condition_A", SAMPLE),
                             "B")]
 
 # ---- intermediate save ----
-write.fst(combined, file.path(dataPath, 'data/figure-S8/fst-backup/20241111_figureS8c_sn19_combined_pcms_localPcmEfdr_apexQuan_entr.fst'), compress = 100)
+write.fst(combined, file.path(dataPath, 'data/figure-E6/fst-backup/20241111_figureS8c_sn19_combined_pcms_localPcmEfdr_apexQuan_entr.fst'), compress = 100)
 
 data_efdr <- combined[Q_VALUE<=0.055]
 data_efdr[, SOFTWARE := factor(SOFTWARE, efdrLevels, efdrLabels)]
@@ -113,7 +114,7 @@ mean_efdrSpectronaut <-
 fwrite(mean_efdrSpectronaut, file.path(figurePath, "figure-E6C-spectronaut.csv"))
 
 # # ---- re-read intermediately saved data ----
-# combined <- read.fst(file.path(dataPath, 'data/figure-S8/fst-backup/20241111_figureS8c_sn19_combined_pcms_localPcmEfdr_apexQuan_entr.fst'), as.data.table = T)
+# combined <- read.fst(file.path(dataPath, 'data/figure-E6/fst-backup/20241111_figureS8c_sn19_combined_pcms_localPcmEfdr_apexQuan_entr.fst'), as.data.table = T)
 #
 # # ---- plot fdr vs efdr; preliminary plot for testing ----
 # combined[is.na(Q_VALUE)]
