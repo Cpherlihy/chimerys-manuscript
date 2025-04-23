@@ -1,12 +1,13 @@
 # Figure E10
 MSAID
-2025-01-20
+2025-04-23
 
 - [Setup](#setup)
 - [Data](#data)
   - [PSMs](#psms)
   - [Protein groups](#protein-groups)
   - [Ratio densities](#ratio-densities)
+  - [Correction: Methionine](#correction-methionine)
 - [Figure](#figure)
 
 # Setup
@@ -157,10 +158,11 @@ contrastLabels <- c("DDA (Minora MS1 Quan)",
                     "DIA (Minora MS1 Quan)",
                     "DIA (CHIMERYS MS2 Quan)")
 dtRatios[, contrastLabel := factor(contrastLabel, contrastLabels)]
-dtRatios[, nRatios := .N, by=contrastLabel]
-dtRatios[, contrasLabelN := paste0(contrastLabel, " n = ", format(nRatios, big.mark=",", trim=T))]
+dtRatiosNoMet <- dtRatios[hasMethionine=="no Met"]
+dtRatiosNoMet[, nRatios := .N, by=contrastLabel]
+dtRatiosNoMet[, contrasLabelN := paste0(contrastLabel, " n = ", format(nRatios, big.mark=",", trim=T))]
 
-p_ratio <- ggplot(dtRatios, aes(x=ratio, color=organism)) +
+p_ratio <- ggplot(dtRatiosNoMet, aes(x=ratio, color=organism)) +
   geom_density(linewidth=0.25) +
   geom_vline(data=dtLines, aes(xintercept=YINTERCEPT, color=organism),
              linetype = "dashed", linewidth = 0.25, show.legend = F) +
@@ -171,6 +173,77 @@ p_ratio <- ggplot(dtRatios, aes(x=ratio, color=organism)) +
   xlab("Log2 fold change (zoom-in)") + ylab("Density") +
   theme(legend.position = "top")
 ```
+
+</details>
+
+## Correction: Methionine
+
+It was brought to our attention that figure E10 panel C does not filter
+out Methionine-containing peptides, as stated in the [paper Methods
+section](https://www.nature.com/articles/s41592-025-02663-w#data-availability):
+
+> Notably, peptides containing methionine residues were excluded from
+> all analyses of the LFQBench-type dataset, as raw files might show
+> differential oxidation.
+
+Even though this filter was created in figure E10 (see [R code to
+generate input file `figure-E10C-density.csv` line
+36](figure-E10C-density.R)), it was not used to actually filter - thus
+the figure still includes Methionine-containing peptides at time of
+publication. In this version of the Github code, this was corrected. The
+figure below shows how Methionine-containing peptides in the DIA files
+are regulated substantially differently than those that are
+Methionine-free (in both MS1 and MS2 quantification approaches).
+
+<details>
+<summary>
+Details on figure generation
+</summary>
+
+``` r
+contrastLabels2 <- c("DDA (Minora MS1 Quan)", "DIA (CHIMERYS MS2 Quan)", "DIA (Minora MS1 Quan)")
+dtRatios[, contrastLabel2 := factor(contrastLabel, contrastLabels2)]
+
+p_ratio_Met <- ggplot(dtRatios, aes(x=ratio, color=organism)) +
+  geom_density(linewidth=0.25) +
+  geom_vline(data=dtLines, aes(xintercept=YINTERCEPT, color=organism),
+             linetype = "dashed", linewidth = 0.25, show.legend = F) +
+  scale_color_manual(NULL, values = msaid_organism) +
+  scale_x_continuous(breaks = pretty_breaks(), limits = c(-4, 3)) +
+  guides(fill = guide_legend(override.aes = list(color = NA, size = 2))) +
+  facet_grid(cols = vars(contrastLabel2), rows = vars(hasMethionine)) +
+  xlab("Log2 fold change (zoom-in)") + ylab("Density") +
+  theme(legend.position = "top")
+
+ggsave2(file.path(path, "figure-E10-Met.png"), plot = p_ratio_Met,
+        width = 90, height = 45, units = "mm")
+```
+
+    Warning: Removed 1919 rows containing non-finite outside the scale range
+    (`stat_density()`).
+
+</details>
+
+![figure-E10-Met](figure-E10-Met.png)
+
+<details>
+<summary>
+Details on raw file meta information
+</summary>
+
+Looking into the raw file meta information, we can see that these 150
+min gradient files were measured over the course of **four days**, and
+although the order was preserved for conditions, this may have
+contributed to sample degradation, e.g. via oxidation.
+
+| Raw_file | File_header | Comment |
+|----|----|----|
+| LFQ_Orbitrap_AIF_Condition_A_Sample_Alpha_01 | 2021-03-14 11:45:19 | Cal 29-01-2021-colonne Thermo 2um -U3000 CHR011 |
+| LFQ_Orbitrap_AIF_Condition_A_Sample_Alpha_02 | 2021-03-10 11:37:06 | Cal 29-01-2021-colonne Thermo 2um -U3000 CHR011 |
+| LFQ_Orbitrap_AIF_Condition_A_Sample_Alpha_03 | 2021-03-11 20:49:00 | Cal 29-01-2021-colonne Thermo 2um -U3000 CHR011 |
+| LFQ_Orbitrap_AIF_Condition_B_Sample_Alpha_01 | 2021-03-14 15:08:35 | Cal 29-01-2021-colonne Thermo 2um -U3000 CHR011 |
+| LFQ_Orbitrap_AIF_Condition_B_Sample_Alpha_02 | 2021-03-10 15:00:22 | Cal 29-01-2021-colonne Thermo 2um -U3000 CHR011 |
+| LFQ_Orbitrap_AIF_Condition_B_Sample_Alpha_03 | 2021-03-12 00:12:17 | Cal 29-01-2021-colonne Thermo 2um -U3000 CHR011 |
 
 </details>
 
@@ -193,7 +266,7 @@ ggsave2(file.path(path, "figure-E10.pdf"), plot = p,
         width = 180, height = 100, units = "mm", device = cairo_pdf)
 ```
 
-    Warning: Removed 1919 rows containing non-finite outside the scale range
+    Warning: Removed 406 rows containing non-finite outside the scale range
     (`stat_density()`).
 
 ``` r
@@ -201,7 +274,7 @@ ggsave2(file.path(path, "figure-E10.png"), plot = p,
         width = 180, height = 100, units = "mm")
 ```
 
-    Warning: Removed 1919 rows containing non-finite outside the scale range
+    Warning: Removed 406 rows containing non-finite outside the scale range
     (`stat_density()`).
 
 ``` r
@@ -438,15 +511,9 @@ ggsave2(file.path(path, "figure-E10.eps"), plot = p,
     Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
     family 'Source Sans 3' not found in PostScript font database
 
-    Warning: Removed 1919 rows containing non-finite outside the scale range
+    Warning: Removed 406 rows containing non-finite outside the scale range
     (`stat_density()`).
 
-    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-    family 'Source Sans 3' not found in PostScript font database
-    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-    family 'Source Sans 3' not found in PostScript font database
-    Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-    family 'Source Sans 3' not found in PostScript font database
     Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
     family 'Source Sans 3' not found in PostScript font database
     Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
@@ -912,7 +979,7 @@ ggsave2(file.path(path, "figure-E10.jpeg"), plot = p,
         width = 180, height = 100, units = "mm")
 ```
 
-    Warning: Removed 1919 rows containing non-finite outside the scale range
+    Warning: Removed 406 rows containing non-finite outside the scale range
     (`stat_density()`).
 
 ``` r
@@ -920,7 +987,7 @@ ggsave2(file.path(path, "figure-E10.tiff"), plot = p,
         width = 180, height = 100, units = "mm")
 ```
 
-    Warning: Removed 1919 rows containing non-finite outside the scale range
+    Warning: Removed 406 rows containing non-finite outside the scale range
     (`stat_density()`).
 
 </details>

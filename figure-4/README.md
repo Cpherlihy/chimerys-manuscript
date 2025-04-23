@@ -1,12 +1,13 @@
 # Figure 4
 MSAID
-2025-01-24
+2025-04-23
 
 - [Setup](#setup)
 - [Data](#data)
   - [Skyline correlation](#skyline-correlation)
   - [CV violins](#cv-violins)
   - [Density plot](#density-plot)
+  - [Methionine](#methionine)
 - [Figure](#figure)
 
 # Setup
@@ -154,6 +155,56 @@ dtOrg[eFdrLabelCond=="eFDR min 1\nper condition ≤ 1%",
 
     Key: <SOFTWARE, ORGANISM>
     Empty data.table (0 rows and 4 cols): SOFTWARE,ORGANISM,mean,sd
+
+## Methionine
+
+Same density plot as above, but this time keeping Methionine. This is to
+show that Methionine-containing peptides impact all search engines
+equally negatively.
+
+[R code to generate input file
+`figure-4D-density-keepMet.csv`](figure-4D-ma-keep-Met.R)
+
+``` r
+dtOrg <- fread(file.path(figurePath, "figure-4D-density-keepMet.csv"))
+softwareLabels <- c("CHIMERYS", "DIA-NN", "Spectronaut", "Spectronaut\n(curated)")
+dtOrg[, SOFTWARE := factor(SOFTWARE, softwareLabels)]
+organismLabels <- c("Yeast", "Human", "E. coli")
+organismRatios <- setNames(log2(c(2, 1, 0.25)), organismLabels)
+dtOrg[, ORGANISM := factor(ORGANISM, organismLabels)]
+efdrLabels <- c("eFDR min 1 per\ncondition ≤ 1%", "eFDR all in any\ncondition > 1%")
+dtOrg[, eFdrLabelCond := factor(eFdrLabelCond, efdrLabels)]
+dtMaLines <- data.table(YINTERCEPT = organismRatios, ORGANISM = factor(organismLabels))
+
+p_density_Met <- ggplot(dtOrg, aes(x=LOG2RATIO, color=ORGANISM)) +
+  geom_density(linewidth=0.25) +
+  geom_vline(data=dtMaLines, aes(xintercept=YINTERCEPT, color=ORGANISM),
+             linetype = "dashed", linewidth = 0.25, show.legend = F) +
+  scale_color_manual(NULL, values = msaid_organism) +
+  scale_x_continuous(breaks = pretty_breaks(), limits = c(-4, 3)) +
+  guides(fill = guide_legend(override.aes = list(color = NA, size = 2))) +
+  facet_grid(rows = vars(eFdrLabelCond), cols = vars(SOFTWARE)) +
+  xlab("Log2 fold change (zoom-in)") + ylab("Density") +
+  theme(legend.position = "top")
+
+ggsave2(file.path(path, "figure-4-density-Met.png"), plot = p_density_Met,
+        width = 90, height = 60, units = "mm")
+```
+
+    Warning: Removed 2195 rows containing non-finite outside the scale range
+    (`stat_density()`).
+
+``` r
+#mean and sd of log2 ratios after eFDR filtering (at least 1 per each condition)
+dtOrg[eFdrLabelCond=="eFDR min 1\nper condition ≤ 1%",
+      .(mean = round(mean(LOG2RATIO, na.rm=T), 2),
+        sd = round(sd(LOG2RATIO, na.rm=T), 2)), keyby=.(SOFTWARE, ORGANISM)]
+```
+
+    Key: <SOFTWARE, ORGANISM>
+    Empty data.table (0 rows and 4 cols): SOFTWARE,ORGANISM,mean,sd
+
+![figure-4-density-Met](figure-4-density-Met.png)
 
 </details>
 
